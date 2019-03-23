@@ -18,6 +18,7 @@ class CPU<Unit: Numeric> { // Unit specifies the memory type. (e.g. Int64, Doubl
     }
     
     func get(_ addr: Int) -> Unit {
+        // you'll never guess what this does
         return mem[addr]
     }
     
@@ -26,6 +27,9 @@ class CPU<Unit: Numeric> { // Unit specifies the memory type. (e.g. Int64, Doubl
     }
     
     func copyTo(start: Int, buffer: [Unit], _length: Int? = nil) {
+        // Copy [length] items from array (default: size of array) to memory starting from address [start]
+        // Equivalent to C++ "memcpy"
+        
         let length = _length==nil ? buffer.count : _length!
         
         var bufferIndex = 0
