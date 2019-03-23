@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8D03AD792245785D00D956C7 /* util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D03AD782245785D00D956C7 /* util.swift */; };
+		8D03AD7B2245E71400D956C7 /* sapCPU.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D03AD7A2245E71400D956C7 /* sapCPU.swift */; };
 		8DD3E2192245725B002083B5 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DD3E2182245725B002083B5 /* main.swift */; };
 /* End PBXBuildFile section */
 
@@ -25,6 +26,7 @@
 
 /* Begin PBXFileReference section */
 		8D03AD782245785D00D956C7 /* util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = util.swift; sourceTree = "<group>"; };
+		8D03AD7A2245E71400D956C7 /* sapCPU.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sapCPU.swift; sourceTree = "<group>"; };
 		8DD3E2152245725B002083B5 /* simple-assembly-programming */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "simple-assembly-programming"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DD3E2182245725B002083B5 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -61,6 +63,7 @@
 			children = (
 				8DD3E2182245725B002083B5 /* main.swift */,
 				8D03AD782245785D00D956C7 /* util.swift */,
+				8D03AD7A2245E71400D956C7 /* sapCPU.swift */,
 			);
 			path = "simple-assembly-programming";
 			sourceTree = "<group>";
@@ -124,6 +127,7 @@
 			files = (
 				8DD3E2192245725B002083B5 /* main.swift in Sources */,
 				8D03AD792245785D00D956C7 /* util.swift in Sources */,
+				8D03AD7B2245E71400D956C7 /* sapCPU.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
