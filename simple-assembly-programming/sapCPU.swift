@@ -39,4 +39,8 @@ class CPU<Unit: Numeric> { // Unit specifies the memory type. (e.g. Int64, Doubl
         }
     }
     
+    func restorebs(filePath: Bool) {
+        print("the bs hath been restored")
+    }
+    
 }
