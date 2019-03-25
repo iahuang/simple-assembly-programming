@@ -11,3 +11,4 @@ import Foundation
 print("The string \"mr stulin is a great teacher because he gives us helper methods\" translated to ascii codes is:")
 print("stack overflow > mr. stulin helper methods – change my mind".ascii)
 
+var vm = VM()
