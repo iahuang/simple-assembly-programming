@@ -8,7 +8,58 @@
 
 import Foundation
 
+class Reference<Unit : Numeric> {
+    var cpu: CPU<Unit>
+    init (_ cpu: CPU<Unit>) {
+        self.cpu = cpu
+    }
+    var value: Unit {
+        get {
+            return 0
+        }
+        set (to) {
+            
+        }
+    }
+}
+
+class RegisterReference<Unit : Numeric> : Reference<Unit>  {
+    var registerNum = 0
+    
+    init (_ cpu: CPU<Unit>, _ registerNum: Int) {
+        self.registerNum = registerNum
+        super.init(cpu)
+    }
+    
+    override var value: Unit {
+        get {
+            return cpu.reg[registerNum]
+        }
+        set (to) {
+            cpu.reg[registerNum] = to
+        }
+    }
+}
+
+class MemoryReference<Unit : Numeric> : Reference<Unit>  {
+    var addr = 0
+    
+    init (_ cpu: CPU<Unit>, _ addr: Int) {
+        self.addr = addr
+        super.init(cpu)
+    }
+    
+    override var value: Unit {
+        get {
+            return cpu.get(addr)
+        } set (to) {
+            cpu.set(addr, to)
+        }
+    }
+}
+
 class CPU<Unit: Numeric> { // Unit specifies the memory type. (e.g. Int64, Double)
+    typealias Ref = Reference<Unit>
     var reg = [Unit]()
     var rpc: Int = 0 // Program counter
     var rcp: Unit = 0 // Compare register
@@ -38,7 +89,7 @@ class CPU<Unit: Numeric> { // Unit specifies the memory type. (e.g. Int64, Doubl
         return mem[addr] as! Int
     }
     
-    func set(_ addr: Int, to: Unit) {
+    func set(_ addr: Int, _ to: Unit) {
         mem[addr] = to
     }
     
@@ -70,7 +121,7 @@ class CPU<Unit: Numeric> { // Unit specifies the memory type. (e.g. Int64, Doubl
         
         var bufferIndex = 0
         for addr in start...start+length {
-            set(addr, to: buffer[bufferIndex])
+            set(addr, buffer[bufferIndex])
             bufferIndex+=1
         }
     }
@@ -80,7 +131,7 @@ class CPU<Unit: Numeric> { // Unit specifies the memory type. (e.g. Int64, Doubl
         let data = prg.getData()
         var addr = offset
         for word in data {
-            set(addr, to: Unit.init(exactly: word)!)
+            set(addr, Unit.init(exactly: word)!)
             addr+=1
         }
     }
@@ -99,5 +150,4 @@ class CPU<Unit: Numeric> { // Unit specifies the memory type. (e.g. Int64, Doubl
     func restorebs(filePath: Bool) {
         print("the bs hath been restored")
     }
-    
 }

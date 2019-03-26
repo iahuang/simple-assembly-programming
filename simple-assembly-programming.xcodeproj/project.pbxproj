@@ -11,6 +11,7 @@
 		87937A922248723B00137B95 /* Commands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87937A912248723B00137B95 /* Commands.swift */; };
 		8D03AD792245785D00D956C7 /* util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D03AD782245785D00D956C7 /* util.swift */; };
 		8D03AD7B2245E71400D956C7 /* sapCPU.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D03AD7A2245E71400D956C7 /* sapCPU.swift */; };
+		8D29FD03224AC03400A99116 /* instructions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D29FD02224AC03400A99116 /* instructions.swift */; };
 		8D4AD3B52249C4830021D7B3 /* Disassembler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4AD3B42249C4830021D7B3 /* Disassembler.swift */; };
 		8DB28F662249188F0057C6F5 /* BigInt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DB28F652249188F0057C6F5 /* BigInt.swift */; };
 		8DD3E2192245725B002083B5 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DD3E2182245725B002083B5 /* main.swift */; };
@@ -34,6 +35,7 @@
 		87937A912248723B00137B95 /* Commands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Commands.swift; sourceTree = "<group>"; };
 		8D03AD782245785D00D956C7 /* util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = util.swift; sourceTree = "<group>"; };
 		8D03AD7A2245E71400D956C7 /* sapCPU.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sapCPU.swift; sourceTree = "<group>"; };
+		8D29FD02224AC03400A99116 /* instructions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = instructions.swift; sourceTree = "<group>"; };
 		8D4AD3B42249C4830021D7B3 /* Disassembler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Disassembler.swift; sourceTree = "<group>"; };
 		8DB28F652249188F0057C6F5 /* BigInt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BigInt.swift; path = ../../../Desktop/BigInt.swift; sourceTree = "<group>"; };
 		8DD3E2152245725B002083B5 /* simple-assembly-programming */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "simple-assembly-programming"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -74,6 +76,7 @@
 				8DD3E2182245725B002083B5 /* main.swift */,
 				8D03AD782245785D00D956C7 /* util.swift */,
 				8D03AD7A2245E71400D956C7 /* sapCPU.swift */,
+				8D29FD02224AC03400A99116 /* instructions.swift */,
 				87937A8F224871A900137B95 /* OracleVirtualBox.swift */,
 				8DEA612A22498D63002DB7A9 /* Program.swift */,
 				87937A912248723B00137B95 /* Commands.swift */,
@@ -141,6 +144,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DEA612B22498D63002DB7A9 /* Program.swift in Sources */,
+				8D29FD03224AC03400A99116 /* instructions.swift in Sources */,
 				8DD3E2192245725B002083B5 /* main.swift in Sources */,
 				8D03AD792245785D00D956C7 /* util.swift in Sources */,
 				8D4AD3B52249C4830021D7B3 /* Disassembler.swift in Sources */,
