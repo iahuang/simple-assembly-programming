@@ -34,6 +34,10 @@ class CPU<Unit: Numeric> { // Unit specifies the memory type. (e.g. Int64, Doubl
         return mem[addr]
     }
     
+    func getInt(_ addr: Int) -> Int {
+        return mem[addr] as! Int
+    }
+    
     func set(_ addr: Int, to: Unit) {
         mem[addr] = to
     }
@@ -78,6 +82,17 @@ class CPU<Unit: Numeric> { // Unit specifies the memory type. (e.g. Int64, Doubl
         for word in data {
             set(addr, to: Unit.init(exactly: word)!)
             addr+=1
+        }
+    }
+    
+    func runIteration() {
+        let inst = getInt(rpc)
+        switch inst {
+        case 0:
+            abort()
+        default:
+            print("Illegal instruction")
+            abort()
         }
     }
     
