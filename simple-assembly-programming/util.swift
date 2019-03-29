@@ -25,3 +25,21 @@ extension StringProtocol {
         return compactMap { $0.ascii }
     }
 }
+
+func splitStringIntoParts(expression: String) -> [String]{
+    return expression.split{$0 == " "}.map{ String($0) }
+}
+
+func splitStringIntoLines(expression: String) -> [String]{
+    return expression.split{$0 == "\n"}.map{ String($0) }
+}
+
+func readTextFile(_ path: String) -> (message: String?, fileText: String?){
+    let text: String
+    do{
+        text = try String(contentsOfFile: path, encoding: String.Encoding.utf8)
+    } catch {
+        return ("\(error)", nil)
+    }
+    return (nil, text)
+}

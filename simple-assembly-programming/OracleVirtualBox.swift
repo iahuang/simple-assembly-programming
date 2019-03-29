@@ -13,7 +13,14 @@
  class VM{
     var inteli7 = CPU<Int64>(memSize: 420, numRegisters: 69)
     var disasm = Disassembler()
+    var quit = false
     
+    func run(){
+        while(!quit){
+            let com = readLine()
+            print(com)
+        }
+    }
  }
 
  
