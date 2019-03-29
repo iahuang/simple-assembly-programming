@@ -95,11 +95,14 @@ class CPU<Unit: BinaryInteger> { // Unit specifies the memory type. (e.g. Int64,
     var rpc: Int = 0 // Program counter
     var rcp: Unit = 0 // Compare register
     var rst: Int = 0 // Stack pointer
+    var programSize = 0
     
     var mem = [Unit]()
     
     let memSize: Int
     let numRegisters: Int
+    
+    var safeMode = false
     
     init (memSize:Int, numRegisters:Int = 10) {
         self.memSize = memSize
@@ -111,21 +114,32 @@ class CPU<Unit: BinaryInteger> { // Unit specifies the memory type. (e.g. Int64,
         rst = memSize-1
     }
     
+    func safetyCheck(_ addr: Int) -> Bool {
+        if (addr < 0 || addr >= memSize) {
+            return false
+        }
+        return true
+    }
+    
     func get(_ addr: Int) -> Unit {
+        if !safetyCheck(addr) {
+            print("Segmentation fault 11: ex dumped")
+            abort()
+        }
         // you'll never guess what this does
         return mem[addr]
     }
     
-    func get(_ addr: Unit) -> Unit {
-        // you'll never guess what this does
-        return mem[addr as! Int]
-    }
-    
     func getInt(_ addr: Int) -> Int {
-        return mem[addr] as! Int
+        return get(addr) as! Int
     }
     
     func set(_ addr: Int, _ to: Unit) {
+        if !safetyCheck(addr) || addr < programSize {
+            print("Segmentation fault 11: ex dumped")
+            abort()
+        }
+        
         mem[addr] = to
     }
     
