@@ -78,7 +78,18 @@ extension CPU {
         for regNum in 1...9 {
             stackPush(reg[regNum])
         }
-        
     }
-    
+    func ret() {
+        let returnTo = srStack.popLast()! as! Unit
+        jmp(to: ConstantReference(self, returnTo))
+        for regNum in 9...1 {
+            reg[regNum] = stackPop()
+        }
+    }
+    func push(n: Ref) {
+        stackPush(n.value)
+    }
+    func pop(into: Ref) {
+        into.value = stackPop()
+    }
 }
