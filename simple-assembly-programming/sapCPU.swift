@@ -58,6 +58,24 @@ class MemoryReference<Unit : Numeric> : Reference<Unit>  {
     }
 }
 
+class ConstantReference<Unit : Numeric> : Reference<Unit> {
+    var _value: Unit
+    
+    init (_ cpu: CPU<Unit>, _ value: Unit) {
+        self._value = value
+        super.init(cpu)
+    }
+    
+    override var value: Unit {
+        get {
+            return _value
+        } set (to) {
+            print("Error: Cannot set value of constant")
+            abort()
+        }
+    }
+}
+
 class CPU<Unit: Numeric> { // Unit specifies the memory type. (e.g. Int64, Double)
     typealias Ref = Reference<Unit>
     var reg = [Unit]()
