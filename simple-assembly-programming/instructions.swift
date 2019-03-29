@@ -80,11 +80,5 @@ extension CPU {
         }
         
     }
-    func ret() {
-        var returnTo = srStack.popLast()!
-        jmp(to: ConstantReference(self, returnTo))
-        for regNum in 9...1 {
-            reg[regNum] = stackPop()
-        }
-    }
+    
 }

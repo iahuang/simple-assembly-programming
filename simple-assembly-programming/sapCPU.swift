@@ -117,8 +117,20 @@ class CPU<Unit: BinaryInteger> { // Unit specifies the memory type. (e.g. Int64,
             abort()
         }
     }
-
     func restorebs(filePath: Bool) {
         print("the bs hath been restored")
+    }
+    func ret() {
+        let returnTo = srStack.popLast()! as! Unit
+        jmp(to: ConstantReference(self, returnTo))
+        for regNum in 9...1 {
+            reg[regNum] = stackPop()
+        }
+    }
+    func push(n: Ref) {
+        stackPush(n.value)
+    }
+    func pop(into: Ref) {
+        into.value = stackPop()
     }
 }
