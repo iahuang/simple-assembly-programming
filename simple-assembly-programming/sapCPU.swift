@@ -23,6 +23,8 @@ class CPU<Unit: BinaryInteger> { // Unit specifies the memory type. (e.g. Int64,
     
     var safeMode = false
     
+    var srStack = [Int]()
+    
     init (memSize:Int, numRegisters:Int = 10) {
         self.memSize = memSize
         self.numRegisters = numRegisters
