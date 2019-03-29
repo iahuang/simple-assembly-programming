@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Reference<Unit : Numeric> {
+class Reference<Unit : BinaryInteger> {
     var cpu: CPU<Unit>
     init (_ cpu: CPU<Unit>) {
         self.cpu = cpu
@@ -23,7 +23,7 @@ class Reference<Unit : Numeric> {
     }
 }
 
-class RegisterReference<Unit : Numeric> : Reference<Unit>  {
+class RegisterReference<Unit : BinaryInteger> : Reference<Unit>  {
     var registerNum = 0
     
     init (_ cpu: CPU<Unit>, _ registerNum: Int) {
@@ -41,7 +41,7 @@ class RegisterReference<Unit : Numeric> : Reference<Unit>  {
     }
 }
 
-class MemoryReference<Unit : Numeric> : Reference<Unit>  {
+class MemoryReference<Unit : BinaryInteger> : Reference<Unit>  {
     var addr = 0
     
     init (_ cpu: CPU<Unit>, _ addr: Int) {
@@ -54,6 +54,24 @@ class MemoryReference<Unit : Numeric> : Reference<Unit>  {
             return cpu.get(addr)
         } set (to) {
             cpu.set(addr, to)
+        }
+    }
+}
+
+class ConstantReference<Unit : BinaryInteger> : Reference<Unit> {
+    var _value: Unit
+    
+    init (_ cpu: CPU<Unit>, _ value: Unit) {
+        self._value = value
+        super.init(cpu)
+    }
+    
+    override var value: Unit {
+        get {
+            return _value
+        } set (to) {
+            print("Error: Cannot set value of constant")
+            abort()
         }
     }
 }

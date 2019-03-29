@@ -8,7 +8,7 @@
 
 import Foundation
 
-class CPU<Unit: Numeric> { // Unit specifies the memory type. (e.g. Int64, Double)
+class CPU<Unit: BinaryInteger> { // Unit specifies the memory type. (e.g. Int64, Double)
     typealias Ref = Reference<Unit>
     var reg = [Unit]()
     var rpc: Int = 0 // Program counter
