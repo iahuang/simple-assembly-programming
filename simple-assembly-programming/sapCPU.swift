@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Reference<Unit : Numeric> {
+class Reference<Unit : BinaryInteger> {
     var cpu: CPU<Unit>
     init (_ cpu: CPU<Unit>) {
         self.cpu = cpu
@@ -23,7 +23,7 @@ class Reference<Unit : Numeric> {
     }
 }
 
-class RegisterReference<Unit : Numeric> : Reference<Unit>  {
+class RegisterReference<Unit : BinaryInteger> : Reference<Unit>  {
     var registerNum = 0
     
     init (_ cpu: CPU<Unit>, _ registerNum: Int) {
@@ -41,7 +41,7 @@ class RegisterReference<Unit : Numeric> : Reference<Unit>  {
     }
 }
 
-class MemoryReference<Unit : Numeric> : Reference<Unit>  {
+class MemoryReference<Unit : BinaryInteger> : Reference<Unit>  {
     var addr = 0
     
     init (_ cpu: CPU<Unit>, _ addr: Int) {
@@ -58,7 +58,7 @@ class MemoryReference<Unit : Numeric> : Reference<Unit>  {
     }
 }
 
-class ConstantReference<Unit : Numeric> : Reference<Unit> {
+class ConstantReference<Unit : BinaryInteger> : Reference<Unit> {
     var _value: Unit
     
     init (_ cpu: CPU<Unit>, _ value: Unit) {
@@ -76,7 +76,20 @@ class ConstantReference<Unit : Numeric> : Reference<Unit> {
     }
 }
 
-class CPU<Unit: Numeric> { // Unit specifies the memory type. (e.g. Int64, Double)
+class IndirectReference<Unit : BinaryInteger> : RegisterReference<Unit> {
+    override init (_ cpu: CPU<Unit>, _ registerNum: Int) {
+        super.init(cpu, registerNum)
+    }
+    override var value: Unit {
+        get {
+            return cpu.get(cpu.reg[registerNum] as! Int)
+        } set (to) {
+            cpu.set(cpu.reg[registerNum] as! Int, to)
+        }
+    }
+}
+
+class CPU<Unit: BinaryInteger> { // Unit specifies the memory type. (e.g. Int64, Double)
     typealias Ref = Reference<Unit>
     var reg = [Unit]()
     var rpc: Int = 0 // Program counter
@@ -101,6 +114,11 @@ class CPU<Unit: Numeric> { // Unit specifies the memory type. (e.g. Int64, Doubl
     func get(_ addr: Int) -> Unit {
         // you'll never guess what this does
         return mem[addr]
+    }
+    
+    func get(_ addr: Unit) -> Unit {
+        // you'll never guess what this does
+        return mem[addr as! Int]
     }
     
     func getInt(_ addr: Int) -> Int {
