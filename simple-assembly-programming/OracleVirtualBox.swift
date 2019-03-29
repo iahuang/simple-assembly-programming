@@ -8,19 +8,39 @@
  //
  
  import Foundation
- 
 
  class VM{
     var inteli7 = CPU<Int64>(memSize: 420, numRegisters: 69)
-    var disasm = Disassembler()
+    //var disasm = Disassembler()
     var quit = false
     
     func run(){
+        print("Enter path")
         while(!quit){
             let com = readLine()
-            print(com)
+            if let out = com{
+                let nice = readTextFile(out)
+                if(nice.message == nil){
+                    exeBinary(arrStrToInt(splitStringIntoLines(expression: nice.fileText!)))
+                } else {
+                    print(nice.message!)
+                }
+            }
         }
     }
+    
+    func exeBinary(_ arr: [Int]){
+        print(arr)
+    }
+    
+    func arrStrToInt(_ arr: [String])-> [Int]{
+        var newArr = [Int](repeating: 0, count: arr.count)
+        for n in 0..<arr.count{
+            newArr[n] = Int(arr[n])!
+        }
+        return(newArr)
+    }
+    
  }
 
  

@@ -61,6 +61,5 @@ class Disassembler {
                 instructionCode+=1
             }
         }
-        print(mnemonics)
     }
 }
