@@ -99,4 +99,17 @@ extension CPU {
     func pop(into: Ref) {
         into.value = stackPop()
     }
+    func outcr(char: Ref) {
+        print((char.value as! Int).correspondingLetter()!)
+    }
+    func outs(label: MemoryReference<Unit>) {
+        let dataStart = label.addr
+        let stringLength = get(dataStart).intValue
+        let stringStart = dataStart+1
+        
+        for addr in stringStart...stringStart+stringLength {
+            print(get(addr).intValue.correspondingLetter()!, terminator:"")
+        }
+    }
+    // outcr outs
 }

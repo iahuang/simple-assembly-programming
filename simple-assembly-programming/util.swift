@@ -25,6 +25,16 @@ extension StringProtocol {
         return compactMap { $0.ascii }
     }
 }
+extension Int {
+    func correspondingLetter(inUppercase uppercase: Bool = false) -> String? {
+        let firstLetter = uppercase ? "A" : "a"
+        let startingValue = Int(UnicodeScalar(firstLetter)!.value)
+        if let scalar = UnicodeScalar(self + startingValue) {
+            return String(scalar)
+        }
+        return nil
+    }
+}
 
 func splitStringIntoParts(expression: String) -> [String]{
     return expression.split{$0 == " "}.map{ String($0) }
