@@ -73,11 +73,13 @@ extension CPU {
         }
     }
     func jsr(to: Ref) {
-        srStack.append(rpc)
+        stackPush(rpc as! Unit)
         jmp(to: to)
+        
         for regNum in 1...9 {
             stackPush(reg[regNum])
         }
+        
     }
     func ret() {
         let returnTo = srStack.popLast()! as! Unit

@@ -14,6 +14,9 @@
 		8D03AD7B2245E71400D956C7 /* sapCPU.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D03AD7A2245E71400D956C7 /* sapCPU.swift */; };
 		8D29FD03224AC03400A99116 /* instructions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D29FD02224AC03400A99116 /* instructions.swift */; };
 		8D4AD3B52249C4830021D7B3 /* Disassembler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4AD3B42249C4830021D7B3 /* Disassembler.swift */; };
+		8DC5CDDB22530160002288E2 /* Assembler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DC5CDDA22530160002288E2 /* Assembler.swift */; };
+		8DC5CDE5225303D2002288E2 /* Doubles.sasm in Resources */ = {isa = PBXBuildFile; fileRef = 8DC5CDE222530373002288E2 /* Doubles.sasm */; };
+		8DC5CDEB2253072E002288E2 /* test.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8DC5CDEA2253072E002288E2 /* test.txt */; };
 		8DD3E2192245725B002083B5 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DD3E2182245725B002083B5 /* main.swift */; };
 		8DEA612B22498D63002DB7A9 /* Program.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DEA612A22498D63002DB7A9 /* Program.swift */; };
 /* End PBXBuildFile section */
@@ -38,6 +41,10 @@
 		8D03AD7A2245E71400D956C7 /* sapCPU.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sapCPU.swift; sourceTree = "<group>"; };
 		8D29FD02224AC03400A99116 /* instructions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = instructions.swift; sourceTree = "<group>"; };
 		8D4AD3B42249C4830021D7B3 /* Disassembler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Disassembler.swift; sourceTree = "<group>"; };
+		8DC5CDD9225300EE002288E2 /* Doubles.binary */ = {isa = PBXFileReference; lastKnownFileType = text; path = Doubles.binary; sourceTree = "<group>"; };
+		8DC5CDDA22530160002288E2 /* Assembler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assembler.swift; sourceTree = "<group>"; };
+		8DC5CDE222530373002288E2 /* Doubles.sasm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Doubles.sasm; sourceTree = "<group>"; };
+		8DC5CDEA2253072E002288E2 /* test.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.txt; sourceTree = SOURCE_ROOT; };
 		8DD3E2152245725B002083B5 /* simple-assembly-programming */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "simple-assembly-programming"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DD3E2182245725B002083B5 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		8DEA612A22498D63002DB7A9 /* Program.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Program.swift; sourceTree = "<group>"; };
@@ -76,8 +83,12 @@
 				8DD3E2182245725B002083B5 /* main.swift */,
 				8D03AD782245785D00D956C7 /* util.swift */,
 				8D03AD7A2245E71400D956C7 /* sapCPU.swift */,
+				8DC5CDEA2253072E002288E2 /* test.txt */,
 				8D29FD02224AC03400A99116 /* instructions.swift */,
+				8DC5CDD9225300EE002288E2 /* Doubles.binary */,
 				87937A8F224871A900137B95 /* OracleVirtualBox.swift */,
+				8DC5CDE222530373002288E2 /* Doubles.sasm */,
+				8DC5CDDA22530160002288E2 /* Assembler.swift */,
 				8DEA612A22498D63002DB7A9 /* Program.swift */,
 				87937A93224DA43E00137B95 /* Referance.swift */,
 				87937A912248723B00137B95 /* Commands.swift */,
@@ -96,6 +107,7 @@
 				8DD3E2112245725B002083B5 /* Sources */,
 				8DD3E2122245725B002083B5 /* Frameworks */,
 				8DD3E2132245725B002083B5 /* CopyFiles */,
+				8DC5CDE3225303A7002288E2 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -138,6 +150,18 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		8DC5CDE3225303A7002288E2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8DC5CDEB2253072E002288E2 /* test.txt in Resources */,
+				8DC5CDE5225303D2002288E2 /* Doubles.sasm in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		8DD3E2112245725B002083B5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -147,6 +171,7 @@
 				87937A94224DA43E00137B95 /* Referance.swift in Sources */,
 				8D29FD03224AC03400A99116 /* instructions.swift in Sources */,
 				8DD3E2192245725B002083B5 /* main.swift in Sources */,
+				8DC5CDDB22530160002288E2 /* Assembler.swift in Sources */,
 				8D03AD792245785D00D956C7 /* util.swift in Sources */,
 				8D4AD3B52249C4830021D7B3 /* Disassembler.swift in Sources */,
 				8D03AD7B2245E71400D956C7 /* sapCPU.swift in Sources */,

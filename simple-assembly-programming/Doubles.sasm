@@ -1,0 +1,16 @@
+.Start Test
+Begin: .Integer #0
+End: .Integer #20
+NewLine: .Integer #10
+IntroMess: .String "A Program To Print Doubles"
+DoubleMess: .String " Doubled is "
+
+Test: movmr Begin r8
+    movmr End r9
+    movmr NewLine r0
+
+    outs IntroMess
+    outcr 0
+
+Do01: movrr r8 r1
+
