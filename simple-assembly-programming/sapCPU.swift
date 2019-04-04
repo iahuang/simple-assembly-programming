@@ -26,8 +26,6 @@ class CPU { // Int specifies the memory type. (e.g. Int64, Double)
     let memSize: Int
     let numRegisters: Int
     
-    var safeMode = false
-    
     var srStack = [Int]()
     
     init (memSize:Int, numRegisters:Int = 10) {
@@ -40,9 +38,10 @@ class CPU { // Int specifies the memory type. (e.g. Int64, Double)
         rst = memSize-1
     }
     
+    //Increments program counter by 1 and returns next value in memory
     func digest()-> Int{
         rpc+=1
-        return(Int(get(rpc)))
+        return((get(rpc)))
     }
     
     func safetyCheck(_ addr: Int) -> Bool {
@@ -62,7 +61,7 @@ class CPU { // Int specifies the memory type. (e.g. Int64, Double)
     }
 
     func getInt(_ addr: Int) -> Int {
-        return get(addr) as! Int
+        return get(addr)
     }
 
     func set(_ addr: Int, _ to: Int) {
@@ -133,15 +132,15 @@ class CPU { // Int specifies the memory type. (e.g. Int64, Double)
         var result = ""
         while(digest() != 0){
             switch mem[rpc]{
-            case 8: mov(src: MemoryReference(self, digest()), dest: RegisterReference(self, digest()))
             case 6: mov(src: RegisterReference(self, digest()), dest: RegisterReference(self, digest()))
+            case 8: mov(src: MemoryReference(self, digest()), dest: RegisterReference(self, digest()))
+            case 12: add(src: ConstantReference(self, digest()), dest: RegisterReference(self, digest()))
             case 13: add(src: RegisterReference(self, digest()), dest: RegisterReference(self, digest()))
             case 34: cmp(a: RegisterReference(self, digest()), b: RegisterReference(self, digest()))
-            case 57: jmpne(to: ConstantReference(self, digest()))
-            case 55: result += outs(label: MemoryReference(self, digest()))
-            case 49: result += printi(int: RegisterReference(self, digest()))
             case 45: result += outcr(char: RegisterReference(self, digest()))
-            case 12: add(src: ConstantReference(self, digest()), dest: RegisterReference(self, digest()))
+            case 49: result += printi(int: RegisterReference(self, digest()))
+            case 55: result += outs(label: MemoryReference(self, digest()))
+            case 57: jmpne(to: ConstantReference(self, digest()))
             default:
                 print("FBI OPEN UP")
             }
@@ -152,5 +151,4 @@ class CPU { // Int specifies the memory type. (e.g. Int64, Double)
     func restorebs(filePath: Bool) {
         print("the bs hath been restored")
     }
-    
 }

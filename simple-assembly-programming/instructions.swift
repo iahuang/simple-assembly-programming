@@ -78,7 +78,7 @@ extension CPU {
         }
     }
     func jsr(to: Ref) {
-        stackPush(rpc as! Int)
+        stackPush(rpc)
         jmp(to: to)
         
         for regNum in 1...9 {
@@ -87,7 +87,7 @@ extension CPU {
         
     }
     func ret() {
-        let returnTo = srStack.popLast()! as! Int
+        let returnTo = srStack.popLast()!
         jmp(to: ConstantReference(self, returnTo))
         for regNum in 9...1 {
             reg[regNum] = stackPop()
