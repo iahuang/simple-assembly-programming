@@ -10,7 +10,7 @@
  import Foundation
 
  class VM{
-    var inteli7 = CPU<Int64>(memSize: 420, numRegisters: 69)
+    var inteli7 = CPU(memSize: 420, numRegisters: 69)
     //var disasm = Disassembler()
     var quit = false
     
@@ -30,6 +30,7 @@
     }
     
     func exeBinary(_ arr: [Int]){
+        
         var data = arr
         let arrData = [arr[0], arr[1]]
         data.removeFirst(2)

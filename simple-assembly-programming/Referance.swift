@@ -8,12 +8,12 @@
 
 import Foundation
 
-class Reference<Unit : BinaryInteger> {
-    var cpu: CPU<Unit>
-    init (_ cpu: CPU<Unit>) {
+class Reference{
+    var cpu: CPU
+    init (_ cpu: CPU) {
         self.cpu = cpu
     }
-    var value: Unit {
+    var value: Int {
         get {
             return 0
         }
@@ -23,15 +23,15 @@ class Reference<Unit : BinaryInteger> {
     }
 }
 
-class RegisterReference<Unit : BinaryInteger> : Reference<Unit>  {
+class RegisterReference: Reference {
     var registerNum = 0
     
-    init (_ cpu: CPU<Unit>, _ registerNum: Int) {
+    init (_ cpu: CPU, _ registerNum: Int) {
         self.registerNum = registerNum
         super.init(cpu)
     }
     
-    override var value: Unit {
+    override var value: Int {
         get {
             return cpu.reg[registerNum]
         }
@@ -41,15 +41,15 @@ class RegisterReference<Unit : BinaryInteger> : Reference<Unit>  {
     }
 }
 
-class MemoryReference<Unit : BinaryInteger> : Reference<Unit>  {
+class MemoryReference: Reference {
     var addr = 0
     
-    init (_ cpu: CPU<Unit>, _ addr: Int) {
+    init (_ cpu: CPU, _ addr: Int) {
         self.addr = addr
         super.init(cpu)
     }
     
-    override var value: Unit {
+    override var value: Int {
         get {
             return cpu.get(addr)
         } set (to) {
@@ -58,15 +58,15 @@ class MemoryReference<Unit : BinaryInteger> : Reference<Unit>  {
     }
 }
 
-class ConstantReference<Unit : BinaryInteger> : Reference<Unit> {
-    var _value: Unit
+class ConstantReference: Reference {
+    var _value: Int
     
-    init (_ cpu: CPU<Unit>, _ value: Unit) {
+    init (_ cpu: CPU, _ value: Int) {
         self._value = value
         super.init(cpu)
     }
     
-    override var value: Unit {
+    override var value: Int {
         get {
             return _value
         } set (to) {
