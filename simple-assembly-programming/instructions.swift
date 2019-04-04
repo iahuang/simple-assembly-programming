@@ -64,7 +64,7 @@ extension CPU {
     }
     func jmpne(to: Ref){
         if rcp != 0{
-            rmp(to: to)
+            jmp(to: to)
         }
     }
     func jmpz(to: Ref) {
@@ -99,16 +99,19 @@ extension CPU {
     func pop(into: Ref) {
         into.value = stackPop()
     }
-    func outcr(char: Ref) {
-        print((char.value as! Int).correspondingLetter()!)
+    func outcr(char: Ref){
+        print((Int(char.value)).correspondingLetter()!)
     }
-    func outs(label: MemoryReference<Unit>) {
+    func printi(int: Ref){
+        print("\(Int(int.value))")
+    }
+    func outs(label: MemoryReference<Unit>){
         let dataStart = label.addr
-        let stringLength = get(dataStart).intValue
+        let stringLength = Int(get(dataStart))
         let stringStart = dataStart+1
-        
+    
         for addr in stringStart...stringStart+stringLength {
-            print(get(addr).intValue.correspondingLetter()!, terminator:"")
+            print(Int(get(addr)).correspondingLetter()!)
         }
     }
     // outcr outs

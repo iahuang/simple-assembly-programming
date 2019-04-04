@@ -9,9 +9,7 @@
 import Foundation
 
 extension Numeric {
-    var intValue: Int {
-        return self as! Int
-    }
+   
 }
 
 class CPU<Unit: BinaryInteger> { // Unit specifies the memory type. (e.g. Int64, Double)
@@ -44,7 +42,7 @@ class CPU<Unit: BinaryInteger> { // Unit specifies the memory type. (e.g. Int64,
     
     func digest()-> Int{
         rpc+=1
-        return(get(rpc) as! Int)
+        return(Int(get(rpc)))
     }
     
     func safetyCheck(_ addr: Int) -> Bool {
@@ -110,7 +108,7 @@ class CPU<Unit: BinaryInteger> { // Unit specifies the memory type. (e.g. Int64,
     }
 
     func loadProgram(prg: Program, _ offset:Int = 0) {
-        rpc = prg.entry+offset
+        rpc = prg.entry+offset-1
         let data = prg.getData()
         var addr = offset
         for word in data {
@@ -131,15 +129,18 @@ class CPU<Unit: BinaryInteger> { // Unit specifies the memory type. (e.g. Int64,
     }
     
     
-    func execProg()->String{
-        var result = ""
-        while(mem[rpc] != 0){
+    func execProg(){
+        while(digest() != 0){
+            
             switch mem[rpc]{
-            case 8: mov(src: MemoryReference(self, Int(mem[digest()])), dest: RegisterReference(self, Int(mem[digest()])))
-            case 6: mov(src: RegisterReference(self, Int(mem[digest()])), dest: RegisterReference(self, Int(mem[digest()])))
-            case 13: add(src: RegisterReference(self, Int(mem[digest()])), dest: RegisterReference(self, Int(mem[digest()])))
-            case 34: cmp(a: RegisterReference(self, Int(mem[digest()])), b: RegisterReference(self, Int(mem[digest()])))
-            case 57: jmpne(to: MemoryReference(self, Int(mem[digest()])))
+            case 8: mov(src: MemoryReference(self, digest()), dest: RegisterReference(self, digest()))
+            case 6: mov(src: RegisterReference(self, digest()), dest: RegisterReference(self, digest()))
+            case 13: add(src: RegisterReference(self, digest()), dest: RegisterReference(self, digest()))
+            case 34: cmp(a: RegisterReference(self, digest()), b: RegisterReference(self, digest()))
+            case 57: jmpne(to: MemoryReference(self, digest()))
+            case 55: outs(label: MemoryReference(self, digest()))
+            case 49: printi(int: RegisterReference(self, digest()))
+            case 45: outcr(char: RegisterReference(self, digest()))
             default:
                 print("FBI OPEN UP")
             }
