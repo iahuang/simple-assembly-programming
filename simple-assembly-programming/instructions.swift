@@ -62,6 +62,11 @@ extension CPU {
             jmp(to: to)
         }
     }
+    func jmpne(to: Ref){
+        if rcp != 0{
+            rmp(to: to)
+        }
+    }
     func jmpz(to: Ref) {
         if rcp == 0 {
             jmp(to: to)

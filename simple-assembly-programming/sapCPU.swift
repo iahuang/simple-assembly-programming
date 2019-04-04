@@ -35,6 +35,11 @@ class CPU<Unit: BinaryInteger> { // Unit specifies the memory type. (e.g. Int64,
         rst = memSize-1
     }
     
+    func digest()-> Int{
+        rpc+=1
+        return(get(rpc) as! Int)
+    }
+    
     func safetyCheck(_ addr: Int) -> Bool {
         if (addr < 0 || addr >= memSize) {
             return false
@@ -117,6 +122,23 @@ class CPU<Unit: BinaryInteger> { // Unit specifies the memory type. (e.g. Int64,
             abort()
         }
     }
+    
+    
+    func execProg()->String{
+        var result = ""
+        while(mem[rpc] != 0){
+            switch mem[rpc]{
+            case 8: mov(src: MemoryReference(self, Int(mem[digest()])), dest: RegisterReference(self, Int(mem[digest()])))
+            case 6: mov(src: RegisterReference(self, Int(mem[digest()])), dest: RegisterReference(self, Int(mem[digest()])))
+            case 13: add(src: RegisterReference(self, Int(mem[digest()])), dest: RegisterReference(self, Int(mem[digest()])))
+            case 34: cmp(a: RegisterReference(self, Int(mem[digest()])), b: RegisterReference(self, Int(mem[digest()])))
+            case 57: jmpne(to: MemoryReference(self, Int(mem[digest()])))
+            default:
+                print("FBI OPEN UP")
+            }
+        }
+    }
+    
     func restorebs(filePath: Bool) {
         print("the bs hath been restored")
     }

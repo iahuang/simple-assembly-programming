@@ -8,12 +8,5 @@
 
 import Foundation
 
-print(Bundle.main.resourcePath!)
-if let filepath = Bundle.main.path(forResource: "test", ofType: "txt") {
-    print("file exists")
-} else {
-    print("file does not exist")
-}
-
-//var vm = VM()
-//vm.run()
+var vm = VM()
+vm.run()

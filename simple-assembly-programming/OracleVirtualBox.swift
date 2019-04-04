@@ -30,7 +30,9 @@
     }
     
     func exeBinary(_ arr: [Int]){
-        print(arr)
+        let loadProg = Program(entry: 43, data: arr)
+        inteli7.loadProgram(prg: loadProg)
+        inteli7.runIteration()
     }
     
     func arrStrToInt(_ arr: [String])-> [Int]{
