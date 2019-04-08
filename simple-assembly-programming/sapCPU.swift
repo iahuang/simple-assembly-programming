@@ -132,6 +132,9 @@ class CPU { // Int specifies the memory type. (e.g. Int64, Double)
         var result = ""
         while(digest() != 0){
             switch mem[rpc]{
+            case 1: clr(target: RegisterReference(self, digest()))
+            case 2: clr(target: MemoryReference(self, digest()))
+            case 3: clr(target: MemoryReference(self, digest()))
             case 6: mov(src: RegisterReference(self, digest()), dest: RegisterReference(self, digest()))
             case 8: mov(src: MemoryReference(self, digest()), dest: RegisterReference(self, digest()))
             case 12: add(src: ConstantReference(self, digest()), dest: RegisterReference(self, digest()))
