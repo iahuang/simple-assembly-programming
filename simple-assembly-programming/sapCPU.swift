@@ -8,8 +8,10 @@
 
 import Foundation
 
-extension Numeric {
-   
+extension BinaryInteger {
+    var intvalue: Int {
+        return self as! Int
+    }
 }
 
 class CPU { // Int specifies the memory type. (e.g. Int64, Double)
