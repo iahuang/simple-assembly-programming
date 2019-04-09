@@ -76,20 +76,20 @@ class ConstantReference: Reference {
     }
 }
 
-class IndirectReference<Unit : BinaryInteger> : Reference<Unit>  {
+class IndirectReference: Reference {
     var registerNum = 0
     
-    init (_ cpu: CPU<Unit>, _ registerNum: Int) {
+    init (_ cpu: CPU, _ registerNum: Int) {
         self.registerNum = registerNum
         super.init(cpu)
     }
     
-    override var value: Unit {
+    override var value: Int {
         get {
-            return cpu.get(cpu.reg[registerNum].intvalue)
+            return cpu.get(cpu.reg[registerNum])
         }
         set (to) {
-            return cpu.set(cpu.reg[registerNum].intvalue, to)
+            return cpu.set(cpu.reg[registerNum], to)
         }
     }
 }
