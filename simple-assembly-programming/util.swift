@@ -36,6 +36,10 @@ extension Int {
     }
 }
 
+func unicodeValueToCharacter(_ n: Int)-> Character{
+    return(Character(UnicodeScalar(n)!))
+}
+
 func splitStringIntoParts(expression: String) -> [String]{
     return expression.split{$0 == " "}.map{ String($0) }
 }

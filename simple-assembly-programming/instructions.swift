@@ -28,7 +28,7 @@ extension CPU {
         dest.value /= src.value
     }
     func jmp(to: Ref) {
-        rpc = to.value as! Int
+        rpc = to.value - 1
     }
     func sojz(target: Ref, jump: Ref) {
         target.value -= 1
@@ -78,7 +78,7 @@ extension CPU {
         }
     }
     func jsr(to: Ref) {
-        stackPush(rpc as! Unit)
+        stackPush(rpc)
         jmp(to: to)
         
         for regNum in 1...9 {
@@ -87,7 +87,7 @@ extension CPU {
         
     }
     func ret() {
-        let returnTo = srStack.popLast()! as! Unit
+        let returnTo = srStack.popLast()!
         jmp(to: ConstantReference(self, returnTo))
         for regNum in 9...1 {
             reg[regNum] = stackPop()
@@ -99,20 +99,22 @@ extension CPU {
     func pop(into: Ref) {
         into.value = stackPop()
     }
-    func outcr(char: Ref){
-        print((Int(char.value)).correspondingLetter()!)
+    func outcr(char: Ref)-> String{
+        return(String(unicodeValueToCharacter(char.value)))
     }
-    func printi(int: Ref){
-        print("\(Int(int.value))")
+    func printi(int: Ref)-> String{
+        return("\(Int(int.value))")
     }
-    func outs(label: MemoryReference<Unit>){
+    func outs(label: MemoryReference)-> String{
         let dataStart = label.addr
         let stringLength = Int(get(dataStart))
         let stringStart = dataStart+1
-    
+        
+        var result = ""
         for addr in stringStart...stringStart+stringLength {
-            print(Int(get(addr)).correspondingLetter()!)
+            result += String((unicodeValueToCharacter(get(addr))))
         }
+        return(result)
     }
     // outcr outs
 }

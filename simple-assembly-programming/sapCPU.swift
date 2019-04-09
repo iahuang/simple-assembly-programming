@@ -14,21 +14,19 @@ extension BinaryInteger {
     }
 }
 
-class CPU<Unit: BinaryInteger> { // Unit specifies the memory type. (e.g. Int64, Double)
-    typealias Ref = Reference<Unit>
+class CPU { // Int specifies the memory type. (e.g. Int64, Double)
+    typealias Ref = Reference
     
-    var reg = [Unit]()
+    var reg = [Int]()
     var rpc: Int = 0 // Program counter
-    var rcp: Unit = 0 // Compare register
+    var rcp: Int = 0 // Compare register
     var rst: Int = 0 // Stack pointer
     var programSize = 0
     
-    var mem = [Unit]()
+    var mem = [Int]()
 
     let memSize: Int
     let numRegisters: Int
-    
-    var safeMode = false
     
     var srStack = [Int]()
     
@@ -42,9 +40,10 @@ class CPU<Unit: BinaryInteger> { // Unit specifies the memory type. (e.g. Int64,
         rst = memSize-1
     }
     
+    //Increments program counter by 1 and returns next value in memory
     func digest()-> Int{
         rpc+=1
-        return(Int(get(rpc)))
+        return((get(rpc)))
     }
     
     func safetyCheck(_ addr: Int) -> Bool {
@@ -54,7 +53,7 @@ class CPU<Unit: BinaryInteger> { // Unit specifies the memory type. (e.g. Int64,
         return true
     }
     
-    func get(_ addr: Int) -> Unit {
+    func get(_ addr: Int) -> Int {
         if !safetyCheck(addr) {
             print("Segmentation fault 11: ex dumped")
             abort()
@@ -64,10 +63,10 @@ class CPU<Unit: BinaryInteger> { // Unit specifies the memory type. (e.g. Int64,
     }
 
     func getInt(_ addr: Int) -> Int {
-        return get(addr) as! Int
+        return get(addr)
     }
 
-    func set(_ addr: Int, _ to: Unit) {
+    func set(_ addr: Int, _ to: Int) {
         if !safetyCheck(addr) || addr < programSize {
             print("Segmentation fault 11: ex dumped")
             abort()
@@ -76,12 +75,12 @@ class CPU<Unit: BinaryInteger> { // Unit specifies the memory type. (e.g. Int64,
         mem[addr] = to
     }
 
-    func stackPush(_ data: Unit) {
+    func stackPush(_ data: Int) {
         rst+=1
         mem[rst] = data
     }
 
-    func stackPop() -> Unit {
+    func stackPop() -> Int {
         let data = mem[rst]
         rst-=1
         return data
@@ -96,7 +95,7 @@ class CPU<Unit: BinaryInteger> { // Unit specifies the memory type. (e.g. Int64,
         rst = memSize-1
     }
 
-    func copyTo(start: Int, buffer: [Unit], _length: Int? = nil) {
+    func copyTo(start: Int, buffer: [Int], _length: Int? = nil) {
         // Copy [length] items from array (default: size of array) to memory starting from address [start]
         // Equivalent to C++ "memcpy"
 
@@ -114,12 +113,12 @@ class CPU<Unit: BinaryInteger> { // Unit specifies the memory type. (e.g. Int64,
         let data = prg.getData()
         var addr = offset
         for word in data {
-            set(addr, Unit.init(exactly: word)!)
+            set(addr, Int.init(exactly: word)!)
             addr+=1
         }
     }
 
-    func runIteration() {
+    func rInteration() {
         let inst = getInt(rpc)
         switch inst {
         case 0:
@@ -131,26 +130,30 @@ class CPU<Unit: BinaryInteger> { // Unit specifies the memory type. (e.g. Int64,
     }
     
     
-    func execProg(){
+    func execProg()-> String{
+        var result = ""
         while(digest() != 0){
-            
             switch mem[rpc]{
-            case 8: mov(src: MemoryReference(self, digest()), dest: RegisterReference(self, digest()))
+            case 1: clr(target: RegisterReference(self, digest()))
+            case 2: clr(target: MemoryReference(self, digest()))
+            case 3: clr(target: MemoryReference(self, digest()))
             case 6: mov(src: RegisterReference(self, digest()), dest: RegisterReference(self, digest()))
+            case 8: mov(src: MemoryReference(self, digest()), dest: RegisterReference(self, digest()))
+            case 12: add(src: ConstantReference(self, digest()), dest: RegisterReference(self, digest()))
             case 13: add(src: RegisterReference(self, digest()), dest: RegisterReference(self, digest()))
             case 34: cmp(a: RegisterReference(self, digest()), b: RegisterReference(self, digest()))
-            case 57: jmpne(to: MemoryReference(self, digest()))
-            case 55: outs(label: MemoryReference(self, digest()))
-            case 49: printi(int: RegisterReference(self, digest()))
-            case 45: outcr(char: RegisterReference(self, digest()))
+            case 45: result += outcr(char: RegisterReference(self, digest()))
+            case 49: result += printi(int: RegisterReference(self, digest()))
+            case 55: result += outs(label: MemoryReference(self, digest()))
+            case 57: jmpne(to: ConstantReference(self, digest()))
             default:
                 print("FBI OPEN UP")
             }
         }
+        return(result)
     }
     
     func restorebs(filePath: Bool) {
         print("the bs hath been restored")
     }
-    
 }
