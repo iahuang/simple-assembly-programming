@@ -99,7 +99,7 @@ extension CPU {
     func pop(into: Ref) {
         into.value = stackPop()
     }
-    func outcr(char: Ref)-> String{
+    func outc(char: Ref)-> String{
         return(String(unicodeValueToCharacter(char.value)))
     }
     func printi(int: Ref)-> String{

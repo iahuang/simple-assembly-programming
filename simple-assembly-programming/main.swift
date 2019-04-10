@@ -8,7 +8,5 @@
 
 import Foundation
 
-print("A Program To Print Doubles")
-for n in 0...20{print("\(n) Doubled is \(n * 2)")}
 var vm = VM()
 vm.run()
