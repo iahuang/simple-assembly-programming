@@ -80,7 +80,6 @@
 		8DD3E2172245725B002083B5 /* simple-assembly-programming */ = {
 			isa = PBXGroup;
 			children = (
-				8DD3E2182245725B002083B5 /* main.swift */,
 				8D03AD782245785D00D956C7 /* util.swift */,
 				8D03AD7A2245E71400D956C7 /* sapCPU.swift */,
 				8DC5CDEA2253072E002288E2 /* test.txt */,
@@ -89,10 +88,11 @@
 				87937A8F224871A900137B95 /* OracleVirtualBox.swift */,
 				8DC5CDE222530373002288E2 /* Doubles.sasm */,
 				8DC5CDDA22530160002288E2 /* Assembler.swift */,
-				8DEA612A22498D63002DB7A9 /* Program.swift */,
 				87937A93224DA43E00137B95 /* Referance.swift */,
 				87937A912248723B00137B95 /* Commands.swift */,
 				8D4AD3B42249C4830021D7B3 /* Disassembler.swift */,
+				8DD3E2182245725B002083B5 /* main.swift */,
+				8DEA612A22498D63002DB7A9 /* Program.swift */,
 			);
 			path = "simple-assembly-programming";
 			sourceTree = "<group>";

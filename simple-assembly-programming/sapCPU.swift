@@ -76,13 +76,13 @@ class CPU { // Int specifies the memory type. (e.g. Int64, Double)
     }
 
     func stackPush(_ data: Int) {
-        rst+=1
+        rst-=1
         mem[rst] = data
     }
 
     func stackPop() -> Int {
         let data = mem[rst]
-        rst-=1
+        rst+=1
         return data
     }
 
@@ -192,7 +192,8 @@ class CPU { // Int specifies the memory type. (e.g. Int64, Double)
             case 56: nop()
             case 57: jmpne(to: ConstantReference(self, digest()))
             default:
-                print("FBI OPEN UP")
+                print("Illegal Instruction \(mem[rpc])")
+                abort()
             }
         }
         return(result)

@@ -1,13 +1,21 @@
-.Tuple \ 12 x 13 y r \
-tape: .allocate #100
-initialString: .string "_010101_"
-copyInitial: nop ; copy the initialString to the tape
-    movar initialString r5 ;
-    movxr r5 r10
-..........Wrong paramaters for movxr
-    addir #1 r5
-    movar tape r7
-    move r5 r7 r6
-..........Expected Instruction or Directive
-    ret
-jsr copyInitial
+0:                   
+0: 12 120 13 121     .Tuple \ 12 x 13 y r \
+5: 0 0 0 0           tape: .allocate #100
+105: 8 95 48 49      initialString: .string "_010101_"
+114: 0               head: .integer #0
+115: 56              copyInitial: nop ; copy the initialString to the tape
+116: 10 105 5            movar initialString r5 ;
+119: 9 5 6               movxr r5 r6
+122: 12 1 5              addir #1 r5
+125: 10 5 7              movar tape r7
+128: 11 5 7 6            movb r5 r7 r6
+132: 40                  ret
+133: 39 115          begin: jsr copyInitial
+
+Symbol Table:
+begin 133 
+runiteration 135 
+copyinitial 115 
+initialstring 105 
+head 114 
+tape 5 

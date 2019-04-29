@@ -2,11 +2,12 @@ import os
 from subprocess import Popen, PIPE, STDOUT
 from termcolor import colored
 import subprocess
+import sys
 
 config = {
     "exec_path": "./Assembler_OSX",
     "project": "asm/turing",
-
+    "build_path": "/Users/ianhuang/Library/Developer/Xcode/DerivedData/simple-assembly-programming-gnkvfuybsgspupfkllwjuukonxmf/Build/Products/Debug/simple-assembly-programming"
 }
 
 def clean_path(path): # Stulin lazy
@@ -29,23 +30,34 @@ def clean_dir():
 
 def assemble():
     clean_dir()
-    cmd = f'printf "path {project_dir}\\nasm {project_name}" | {config["exec_path"]}'
-    p = subprocess.Popen([config['exec_path']], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, stdin=subprocess.PIPE, shell=True)
-    p.communicate(input=bytes(f'path {project_dir}\nasm {project_name}', 'utf8'))
-    # ps = subprocess.Popen(('printf', f'"path {project_dir}\nasm {project_name}"'), stdout=subprocess.PIPE)
-    # output = subprocess.run(('./Assembler_OSX'), stdin=ps.stdout, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+    p = subprocess.Popen([config['exec_path']], stdout=subprocess.PIPE, stdin=subprocess.PIPE, shell=True)
+    s = p.communicate(input=bytes(f'path {project_dir}\nasm {project_name}\nquit', 'utf8'))
+    if p.returncode != 0:
+        print(colored("Assembler returned non-zero error code "+str(p.returncode), "red"))
+        raise SystemExit
+def run():
+    p = subprocess.Popen([config['build_path']], stdin=subprocess.PIPE, shell=True)
+    p.communicate(input=bytes(project+".bin\nquit", 'utf8'))
 
 clean_dir()
 assemble()
 print("\nAssembling...\n")
+with open(project+".txt") as fl:
+    src_lines = fl.read().split("\n")
+warnings = []
+if not any([l.startswith(".start") for l in src_lines]):
+    warnings.append("Assembly contains no given entry point; defaulting to start of file")
+
+for w in warnings:
+    print(colored("Warning: "+w,"yellow"))
+if warnings:
+    print()
 
 if os.path.exists(project+".bin"):
     print(colored("Project compiled successfully","green"))
 else:
     err_prefix = ".........."
     all_indices = lambda my_list,search: [i for i, x in enumerate(my_list) if x == search]
-    with open(project+".txt") as fl:
-        src_lines = fl.read().split("\n")
     with open(project+".lst") as fl:
         errs = 0
         prev = ""
@@ -59,5 +71,11 @@ else:
                 print()
                 errs+=1
             prev = line
+    
     print("")
     print(colored("Project compiled with "+str(errs)+" errors!","yellow"))
+
+args = sys.argv[1:]
+if "run" in args:
+    print("\nRunning...\n")
+    run()

@@ -1,6 +1,8 @@
+.start begin
 .Tuple \ 12 x 13 y r \
 tape: .allocate #100
 initialString: .string "_010101_"
+head: .integer #0
 
 copyInitial: nop ; copy the initialString to the tape
     movar initialString r5 ;
@@ -10,4 +12,6 @@ copyInitial: nop ; copy the initialString to the tape
     movb r5 r7 r6
     ret
 
-jsr copyInitial
+begin: jsr copyInitial
+
+runIteration: nop

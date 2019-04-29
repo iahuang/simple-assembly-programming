@@ -14,17 +14,24 @@
     //var disasm = Disassembler()
     var quit = false
     
+    
     func run(){
-        print("Enter path")
+        
         while(!quit){
+            print("Enter path")
             let com = readLine()
             if let out = com{
+                if out == "quit" {
+                    break
+                }
                 let nice = readTextFile(out)
                 if(nice.message == nil){
                     exeBinary(arrStrToInt(splitStringIntoLines(expression: nice.fileText!)))
+                    print("Assembly program ended with no errors")
                 } else {
                     print(nice.message!)
                 }
+                
             }
         }
     }
