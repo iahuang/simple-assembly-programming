@@ -1,0 +1,13 @@
+.Tuple \ 12 x 13 y r \
+tape: .allocate #100
+initialString: .string "_010101_"
+copyInitial: nop ; copy the initialString to the tape
+    movar initialString r5 ;
+    movxr r5 r10
+..........Wrong paramaters for movxr
+    addir #1 r5
+    movar tape r7
+    move r5 r7 r6
+..........Expected Instruction or Directive
+    ret
+jsr copyInitial
