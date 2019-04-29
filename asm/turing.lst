@@ -29,18 +29,18 @@
 165: 35 118 4            cmpmr state r4 ; check whether tape matches
 168: 57 219              jmpne skipTuple
 170: 12 1 3              addir #1 r3
-173: 9 3 4               movxr r3 r4
+173: 9 3 4           movxr r3 r4
 176: 34 4 2              cmprr r4 r2 ; checks whether tape character matches
 179: 57 219              jmpne skipTuple
 181: 12 1 3              addir #1 r3
-184: 9 3 4               movxr r3 r4
+184: 9 3 4           movxr r3 r4
 187: 7 4 118             movrm r4 state ; set new state
 190: 12 1 3              addir #1 r3
-193: 9 3 4               movxr r3 r4
+193: 9 3 4           movxr r3 r4
 196: 8 117 5             movmr head r5 ; set new character
 199: 53 4 5              movrx r4 r5 
 202: 12 1 3              addir #1 r3
-205: 9 3 4               movxr r3 r4
+205: 9 3 4           movxr r3 r4
 208: 8 117 1             movmr head r1 ; move head
 211: 13 4 1              addrr r4 r1
 214: 7 1 117             movrm r1 head

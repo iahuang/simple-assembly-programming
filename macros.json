@@ -28,5 +28,9 @@
         "addir #int r1",
         "movrm r1 label",
         "pop r1"
+    ],
+    "nextTupleValue":[
+        "addir #1 r3",
+        "movxr r3 r4"
     ]
 }

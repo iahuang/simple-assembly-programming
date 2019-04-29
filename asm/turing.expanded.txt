@@ -40,24 +40,24 @@ searchTuples: nop
     jmpne skipTuple
 
     addir #1 r3
-    movxr r3 r4
+movxr r3 r4
 
     cmprr r4 r2 ; checks whether tape character matches
     jmpne skipTuple
 
     addir #1 r3
-    movxr r3 r4
+movxr r3 r4
 
     movrm r4 state ; set new state
 
     addir #1 r3
-    movxr r3 r4
+movxr r3 r4
 
     movmr head r5 ; set new character
     movrx r4 r5 
 
     addir #1 r3
-    movxr r3 r4
+movxr r3 r4
 
     movmr head r1 ; move head
     addrr r4 r1

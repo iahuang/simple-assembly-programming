@@ -39,25 +39,21 @@ searchTuples:
     cmpmr state r4 ; check whether tape matches
     jmpne skipTuple
 
-    addir #1 r3
-    movxr r3 r4
+    $nextTupleValue
 
     cmprr r4 r2 ; checks whether tape character matches
     jmpne skipTuple
 
-    addir #1 r3
-    movxr r3 r4
+    $nextTupleValue
 
     movrm r4 state ; set new state
 
-    addir #1 r3
-    movxr r3 r4
+    $nextTupleValue
 
     movmr head r5 ; set new character
     movrx r4 r5 
 
-    addir #1 r3
-    movxr r3 r4
+    $nextTupleValue
 
     movmr head r1 ; move head
     addrr r4 r1
@@ -72,7 +68,10 @@ skipTuple:
     subrr r2 r1
     divir #5 r1
     cmpmr tupleSearchIndex r1
-    jmpz endSearch
+    jmpz stop
+
     jmp searchTuples
 
 endSearch: ret
+
+stop: halt
