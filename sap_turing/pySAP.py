@@ -1,3 +1,10 @@
+'''
+pySAP
+
+A command-line wrapper for the SAP Assembler
+
+'''
+
 import os
 from subprocess import Popen, PIPE, STDOUT
 from termcolor import colored

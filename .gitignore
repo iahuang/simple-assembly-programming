@@ -68,3 +68,8 @@ fastlane/screenshots/**/*.png
 fastlane/test_output
 
 **/.DS_Store
+sap_turing/asm/turing.bak
+sap_turing/asm/turing.bin
+sap_turing/asm/turing.expanded.txt
+sap_turing/asm/turing.lst
+sap_turing/asm/turing.sym
