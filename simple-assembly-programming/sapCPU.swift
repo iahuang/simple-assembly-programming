@@ -28,7 +28,9 @@ class CPU { // Int specifies the memory type. (e.g. Int64, Double)
     let memSize: Int
     let numRegisters: Int
     
-    var srStack = [Int]()
+    var stack = [Int]()
+    
+    var debugDisassembler = Disassembler()
     
     init (memSize:Int, numRegisters:Int = 10) {
         self.memSize = memSize
@@ -43,7 +45,7 @@ class CPU { // Int specifies the memory type. (e.g. Int64, Double)
     //Increments program counter by 1 and returns next value in memory
     func digest()-> Int{
         rpc+=1
-        return((get(rpc)))
+        return get(rpc)
     }
     
     func safetyCheck(_ addr: Int) -> Bool {
@@ -76,14 +78,13 @@ class CPU { // Int specifies the memory type. (e.g. Int64, Double)
     }
 
     func stackPush(_ data: Int) {
-        rst-=1
-        mem[rst] = data
+        rst+=1
+        stack.append(data)
     }
 
     func stackPop() -> Int {
-        let data = mem[rst]
-        rst+=1
-        return data
+        rst-=1
+        return stack.popLast()!
     }
 
     func reset() {
@@ -132,7 +133,9 @@ class CPU { // Int specifies the memory type. (e.g. Int64, Double)
     
     func execProg()-> String{
         var result = ""
-        while(digest() != 0){
+        var opcode = digest()
+        while(opcode != 0){
+            //print("\(debugDisassembler.mnemonics[opcode]) \(rpc)")
             switch mem[rpc]{
             case 1: clr(target: RegisterReference(self, digest()))
             case 2: clr(target: MemoryReference(self, digest()))
@@ -143,8 +146,9 @@ class CPU { // Int specifies the memory type. (e.g. Int64, Double)
             case 7: mov(src: RegisterReference(self, digest()), dest: MemoryReference(self, digest()))
             case 8: mov(src: MemoryReference(self, digest()), dest: RegisterReference(self, digest()))
             case 9: mov(src: MemoryReference(self, digest()), dest: MemoryReference(self, digest()))
-            case 10: mov(src: MemoryReference(self, digest()), dest: RegisterReference(self, digest()))
-            //case 11: movb()
+            case 10: mov(src: ConstantReference(self, digest()), dest: RegisterReference(self, digest()))
+            case 11:
+                movb(src: digest(), dest: digest(), count: digest())
             case 12: add(src: ConstantReference(self, digest()), dest: RegisterReference(self, digest()))
             case 13: add(src: RegisterReference(self, digest()), dest: RegisterReference(self, digest()))
             case 14: add(src: MemoryReference(self, digest()), dest: RegisterReference(self, digest()))
@@ -161,18 +165,18 @@ class CPU { // Int specifies the memory type. (e.g. Int64, Double)
             case 25: div(src: RegisterReference(self, digest()), dest: RegisterReference(self, digest()))
             case 26: div(src: MemoryReference(self, digest()), dest: RegisterReference(self, digest()))
             case 27: div(src: IndirectReference(self, digest()), dest: RegisterReference(self, digest()))
-            case 28: jmp(to: MemoryReference(self, digest()))
-            case 29: sojz(target: RegisterReference(self, digest()), jump: MemoryReference(self, digest()))
-            case 30: sojnz(target: RegisterReference(self, digest()), jump: MemoryReference(self, digest()))
-            case 31: aojz(target: RegisterReference(self, digest()), jump: MemoryReference(self, digest()))
-            case 32: aojnz(target: RegisterReference(self, digest()), jump: MemoryReference(self, digest()))
+            case 28: jmp(to: digest())
+            case 29: sojz(target: RegisterReference(self, digest()), jump: digest())
+            case 30: sojnz(target: RegisterReference(self, digest()), jump: digest())
+            case 31: aojz(target: RegisterReference(self, digest()), jump: digest())
+            case 32: aojnz(target: RegisterReference(self, digest()), jump: digest())
             case 33: cmp(a: ConstantReference(self, digest()), b: RegisterReference(self, digest()))
             case 34: cmp(a: RegisterReference(self, digest()), b: RegisterReference(self, digest()))
             case 35: cmp(a: MemoryReference(self, digest()), b: RegisterReference(self, digest()))
-            case 36: jmpn(to: MemoryReference(self, digest()))
-            case 37: jmpz(to: MemoryReference(self, digest()))
-            case 38: jmpp(to: MemoryReference(self, digest()))
-            case 39: jsr(to: MemoryReference(self, digest()))
+            case 36: jmpn(to: digest())
+            case 37: jmpz(to: digest())
+            case 38: jmpp(to: digest())
+            case 39: jsr(to: digest())
             case 40: ret()
             case 41: push(n: RegisterReference(self, digest()))
             case 42: pop(into: RegisterReference(self, digest()))
@@ -190,11 +194,12 @@ class CPU { // Int specifies the memory type. (e.g. Int64, Double)
             case 54: mov(src: IndirectReference(self, digest()), dest: IndirectReference(self, digest()))
             case 55: result += outs(label: MemoryReference(self, digest()))
             case 56: nop()
-            case 57: jmpne(to: ConstantReference(self, digest()))
+            case 57: jmpne(to: digest())
             default:
-                print("Illegal Instruction \(mem[rpc])")
+                print("Illegal Instruction \(opcode)")
                 abort()
             }
+            opcode = digest()
         }
         return(result)
     }

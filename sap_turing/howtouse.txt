@@ -1,0 +1,10 @@
+python pySAP.py to assemble
+python pySAP.py to assemble and run
+
+config.json:
+
+verbose - display additional information?
+exec_path - path to the compiled assembler executable
+project - path to the project: if your assembly source file is at asm/turing.txt then the project would be "asm/turing"
+macro_path - where the macro file is stored
+xcode-proj-name - name of the xcode project for SAP

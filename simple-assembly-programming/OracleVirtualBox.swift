@@ -16,7 +16,6 @@
     
     
     func run(){
-        
         while(!quit){
             print("Enter path")
             let com = readLine()

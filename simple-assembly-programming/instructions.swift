@@ -17,6 +17,12 @@ extension CPU {
         dest.value = src.value
     }
     
+    func movb(src: Int, dest: Int, count: Int) {
+        for offset in 0...count-1 {
+            set(dest+offset, get(src+offset))
+        }
+    }
+    
     func add(src: Ref, dest: Ref) {
         dest.value += src.value
     }
@@ -33,32 +39,34 @@ extension CPU {
         dest.value /= src.value
     }
     
-    func jmp(to: Ref) {
-        rpc = to.value - 1
+    func jmp(to: Int) {
+        //print("jumping to \(to)")
+        //usleep(200000)
+        rpc = to - 1
     }
     
-    func sojz(target: Ref, jump: Ref) {
+    func sojz(target: Ref, jump: Int) {
         target.value -= 1
         if target.value == 0 {
             jmp(to: jump)
         }
     }
     
-    func sojnz(target: Ref, jump: Ref) {
+    func sojnz(target: Ref, jump: Int) {
         target.value -= 1
         if target.value != 0 {
             jmp(to: jump)
         }
     }
     
-    func aojz(target: Ref, jump: Ref) {
+    func aojz(target: Ref, jump: Int) {
         target.value += 1
         if target.value == 0 {
             jmp(to: jump)
         }
     }
     
-    func aojnz(target: Ref, jump: Ref) {
+    func aojnz(target: Ref, jump: Int) {
         target.value += 1
         if target.value != 0 {
             jmp(to: jump)
@@ -69,32 +77,33 @@ extension CPU {
         rcp = b.value-a.value
     }
     
-    func jmpn(to: Ref) {
+    func jmpn(to: Int) {
         if rcp < 0 {
             jmp(to: to)
         }
     }
     
-    func jmpne(to: Ref){
+    func jmpne(to: Int){
         if rcp != 0{
             jmp(to: to)
         }
     }
     
-    func jmpz(to: Ref) {
+    func jmpz(to: Int) {
         if rcp == 0 {
             jmp(to: to)
         }
     }
     
-    func jmpp(to: Ref) {
+    func jmpp(to: Int) {
         if rcp > 0 {
             jmp(to: to)
         }
     }
     
-    func jsr(to: Ref) {
-        stackPush(rpc)
+    func jsr(to: Int) {
+        print("jumping to subroutine \(to)")
+        stackPush(rpc+1)
         jmp(to: to)
         
         for regNum in 1...9 {
@@ -104,11 +113,12 @@ extension CPU {
     }
     
     func ret() {
-        let returnTo = srStack.popLast()!
-        jmp(to: ConstantReference(self, returnTo))
-        for regNum in 9...1 {
+        for regNum in (1...9).reversed() {
             reg[regNum] = stackPop()
         }
+        let returnTo = stackPop()
+        print("returning to \(returnTo)")
+        jmp(to: returnTo)
     }
     
     func push(n: Ref) {
@@ -120,10 +130,12 @@ extension CPU {
     }
     
     func outc(char: Ref)-> String{
+        print((String(unicodeValueToCharacter(char.value))))
         return(String(unicodeValueToCharacter(char.value)))
     }
     
     func printi(int: Ref)-> String{
+        print("\(Int(int.value))")
         return("\(Int(int.value))")
     }
     
@@ -136,6 +148,7 @@ extension CPU {
         for addr in stringStart...stringStart+stringLength {
             result += String((unicodeValueToCharacter(get(addr))))
         }
+        print(result)
         return(result)
     }
     // outcr outs

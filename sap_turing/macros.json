@@ -5,6 +5,12 @@
         "movrm r1 label",
         "pop r1"
     ],
+    "printm label":[
+        "push r1",
+        "movmr label r1",
+        "printi r1",
+        "pop r1"
+    ],
     "incr reg":[
         "addir #1 reg"
     ],
@@ -14,6 +20,9 @@
         "addir #1 r1",
         "movrm r1 label",
         "pop r1"
+    ],
+    "incr $reg":[
+        "addir #1 r$reg"
     ],
     "index label i":[
         "push r1",
@@ -32,5 +41,10 @@
     "nextTupleValue":[
         "addir #1 r3",
         "movxr r3 r4"
+    ],
+    "memdump start count":[
+        "movir #start r1",
+        "movir #count r2",
+        "jsr memoryDump"
     ]
 }

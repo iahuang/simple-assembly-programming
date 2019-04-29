@@ -14,6 +14,12 @@ import json
 import glob
 import getpass
 
+sysargs = sys.argv[1:]
+
+if "-h" in sysargs or "--help" in sysargs:
+    print("""Use "python pySAP.py run" to also run the assembly program. Open config.json for options and more parameters. """)
+    raise SystemExit
+
 with open("config.json") as fl:
     config = json.load(fl)
 
@@ -104,11 +110,18 @@ for w in warnings:
 if warnings:
     print()
 
-clean_dir()
-assemble()
+try:
+    clean_dir()
+    assemble()
+finally:
+    with open(project+".txt", "w") as fl:
+        fl.write(src_bak)
 
 if os.path.exists(project+".bin"):
     print(colored("Project compiled successfully","green"))
+    if "run" in sysargs:
+        print(colored("\nRunning...\n","blue"))
+        run()
 else:
     err_prefix = ".........."
     all_indices = lambda my_list,search: [i for i, x in enumerate(my_list) if x == search]
@@ -128,9 +141,3 @@ else:
     
     print("")
     print(colored("Project compiled with "+str(errs)+" errors!","yellow"))
-with open(project+".txt", "w") as fl:
-    fl.write(src_bak)
-args = sys.argv[1:]
-if "run" in args:
-    print(colored("\nRunning...\n","blue"))
-    run()

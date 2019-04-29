@@ -1,5 +1,5 @@
 {
-    "verbose": false,
+    "verbose": true,
     "exec_path": "./lib/Assembler_OSX",
     "project": "asm/turing",
     "macro_path": "macros.json",
