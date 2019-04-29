@@ -1,0 +1,10 @@
+{
+    "verbose": true,
+    "exec_path": "./Assembler_OSX",
+    "project": "asm/turing",
+    "macro_path": "macros.json",
+    "build_path": "/Users/ianhuang/Library/Developer/Xcode/DerivedData/simple-assembly-programming-gnkvfuybsgspupfkllwjuukonxmf/Build/Products/Debug/simple-assembly-programming",
+    "preprocessing": {
+        "emptyLabelToNOP":true
+    }
+}

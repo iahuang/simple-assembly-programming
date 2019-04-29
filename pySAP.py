@@ -3,12 +3,10 @@ from subprocess import Popen, PIPE, STDOUT
 from termcolor import colored
 import subprocess
 import sys
+import json
 
-config = {
-    "exec_path": "./Assembler_OSX",
-    "project": "asm/turing",
-    "build_path": "/Users/ianhuang/Library/Developer/Xcode/DerivedData/simple-assembly-programming-gnkvfuybsgspupfkllwjuukonxmf/Build/Products/Debug/simple-assembly-programming"
-}
+with open("config.json") as fl:
+    config = json.load(fl)
 
 def clean_path(path): # Stulin lazy
     if not path.endswith("/"):
@@ -39,11 +37,53 @@ def run():
     p = subprocess.Popen([config['build_path']], stdin=subprocess.PIPE, shell=True)
     p.communicate(input=bytes(project+".bin\nquit", 'utf8'))
 
-clean_dir()
-assemble()
-print("\nAssembling...\n")
+print(colored("\nLoading macros...\n", "blue"))
+with open(config["macro_path"]) as fl:
+    macros = json.load(fl)
+
+print(colored("\nApplying macros...\n", "blue"))
+with open(project+".txt") as fl:
+    src_bak = fl.read()
+    src_lines = src_bak.split("\n")
+
+
+print(colored("\nApplying pre-processing modifications...\n", "blue"))
+for name in config["preprocessing"]:
+    value = config["preprocessing"][name]
+    if name=="emptyLabelToNOP" and value:
+        for i,ln in enumerate(src_lines):
+            if ln.split(";")[0].strip().endswith(":"):
+                src_lines[i] = ln.split(";")[0].strip() + " nop"
+
+with open(project+".bak", "w") as fl:
+    fl.write(src_bak)
+
+for macro in macros:
+    parts = macro.split(" ")
+    query = "$"+parts[0]
+    argnames = parts[1:]
+    for i,line in enumerate(src_lines):
+        if query in line:
+            words = line.split(" ")
+            args = words[words.index(query)+1:words.index(query)+len(argnames)+1]
+            insertion = "\n".join(macros[macro])
+            for argname, argvalue in zip(argnames, args):
+                insertion = insertion.replace(argname, argvalue)
+            src_lines[i] = line.replace(" ".join([query]+args), insertion)
+
+if config["verbose"]:
+    print(colored("Expanded macro output:\n", "blue"))
+    print(colored("\n".join([str(i)+":\t"+l for i,l in enumerate(("\n".join(src_lines)).split("\n"))]), "cyan"))
+
+with open(project+".txt", "w") as fl:
+    fl.write("\n".join(src_lines))
+with open(project+".expanded.txt", "w") as fl:
+    fl.write("\n".join(src_lines))
+
+print(colored("\nAssembling...\n", "blue"))
 with open(project+".txt") as fl:
     src_lines = fl.read().split("\n")
+
 warnings = []
 if not any([l.startswith(".start") for l in src_lines]):
     warnings.append("Assembly contains no given entry point; defaulting to start of file")
@@ -52,6 +92,9 @@ for w in warnings:
     print(colored("Warning: "+w,"yellow"))
 if warnings:
     print()
+
+clean_dir()
+assemble()
 
 if os.path.exists(project+".bin"):
     print(colored("Project compiled successfully","green"))
@@ -74,8 +117,9 @@ else:
     
     print("")
     print(colored("Project compiled with "+str(errs)+" errors!","yellow"))
-
+with open(project+".txt", "w") as fl:
+    fl.write(src_bak)
 args = sys.argv[1:]
 if "run" in args:
-    print("\nRunning...\n")
+    print(colored("\nRunning...\n","blue"))
     run()
