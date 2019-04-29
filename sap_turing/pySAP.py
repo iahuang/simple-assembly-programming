@@ -11,6 +11,8 @@ from termcolor import colored
 import subprocess
 import sys
 import json
+import glob
+import getpass
 
 with open("config.json") as fl:
     config = json.load(fl)
@@ -23,6 +25,8 @@ def clean_path(path): # Stulin lazy
 project = config["project"]
 project_dir = clean_path(os.path.dirname(project))
 project_name = os.path.basename(project)
+
+vm_path = glob.glob("/Users/"+getpass.getuser()+"/Library/Developer/Xcode/DerivedData/"+config["xcode-proj-name"]+"*")[0]+"/Build/Products/Debug/"+config["xcode-proj-name"]
 
 def safe_rm(p):
     if os.path.exists(p):
@@ -41,7 +45,7 @@ def assemble():
         print(colored("Assembler returned non-zero error code "+str(p.returncode), "red"))
         raise SystemExit
 def run():
-    p = subprocess.Popen([config['build_path']], stdin=subprocess.PIPE, shell=True)
+    p = subprocess.Popen([vm_path], stdin=subprocess.PIPE, shell=True)
     p.communicate(input=bytes(project+".bin\nquit", 'utf8'))
 
 print(colored("\nLoading macros...\n", "blue"))
