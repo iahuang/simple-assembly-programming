@@ -17,9 +17,10 @@ extension CPU {
         dest.value = src.value
     }
     
-    func movb(src: Int, dest: Int, count: Int) {
-        for offset in 0...count-1 {
-            set(dest+offset, get(src+offset))
+    func movb(src: Ref, dest: Ref, count: Ref) {
+        print("src: \(src.value) dest: \(dest.value) count: \(count.value)")
+        for offset in 0...count.value-1 {
+            set(dest.value+offset, get(src.value+offset))
         }
     }
     

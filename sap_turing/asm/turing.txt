@@ -19,12 +19,14 @@ state: .integer #0
 mess1: .string "Welcome to Turing!"
 mess2: .string "Tuples:"
 mess3: .string "r1"
+newline: .integer #1
+.integer #10 
 
 bp: .string "HMMM"
 
 copyInitial:
     movar initialString r5 ;
-    movxr r5 r6
+    movmr initialString r6
     addir #1 r5
     movar tape r7
     movb r5 r7 r6
@@ -38,7 +40,6 @@ runIteration:
     clrm tupleSearchIndex
 
 searchTuples:
-    $printm tupleSearchIndex
     movmr head r1 ; move character at head to r2
     movxr r1 r2
 
@@ -71,14 +72,14 @@ searchTuples:
     addrr r4 r1
     movrm r1 head
 
-    $memdump 0 200
     jmp endSearch
 
 memoryDump:
     movrr r1 r4
+
 mdumpIter:
     movxr r4 r3
-    printi r3
+    outcr r3
     $incr r4
     cmprr r4 r2
     jmpne mdumpIter
@@ -90,8 +91,7 @@ skipTuple:
 
     movar endTuples r1
     addir #1 r1
-    outs mess3
-    printi r1
+
     movar startTuples r2
     subrr r2 r1
     divir #5 r1
@@ -102,7 +102,7 @@ skipTuple:
 endSearch: jmp runIteration
 
 stop:
-    movir #0 r1
-    movir #200 r2
+    movar tape r1
+    movir #100 r2
     jsr memoryDump
     halt

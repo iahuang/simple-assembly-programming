@@ -59,18 +59,10 @@ with open(config["macro_path"]) as fl:
     macros = json.load(fl)
 
 print(colored("\nApplying macros...\n", "blue"))
+
 with open(project+".txt") as fl:
     src_bak = fl.read()
     src_lines = src_bak.split("\n")
-
-
-print(colored("\nApplying pre-processing modifications...\n", "blue"))
-for name in config["preprocessing"]:
-    value = config["preprocessing"][name]
-    if name=="emptyLabelToNOP" and value:
-        for i,ln in enumerate(src_lines):
-            if ln.split(";")[0].strip().endswith(":"):
-                src_lines[i] = ln.split(";")[0].strip() + " nop"
 
 with open(project+".bak", "w") as fl:
     fl.write(src_bak)
@@ -81,12 +73,25 @@ for macro in macros:
     argnames = parts[1:]
     for i,line in enumerate(src_lines):
         if query in line:
+            line_insert_prefix = ""
+            if line.startswith("    ") or line.startswith("\t"):
+                line_insert_prefix = "    "
+
             words = line.split(" ")
             args = words[words.index(query)+1:words.index(query)+len(argnames)+1]
-            insertion = "\n".join(macros[macro])
+            insertion = "\n".join([line_insert_prefix+line for line in macros[macro]])
+            insertion = insertion.strip()
             for argname, argvalue in zip(argnames, args):
                 insertion = insertion.replace(argname, argvalue)
             src_lines[i] = line.replace(" ".join([query]+args), insertion)
+
+print(colored("\nApplying pre-processing modifications...\n", "blue"))
+for name in config["preprocessing"]:
+    value = config["preprocessing"][name]
+    if name=="emptyLabelToNOP" and value:
+        for i,ln in enumerate(src_lines):
+            if ln.split(";")[0].strip().endswith(":"):
+                src_lines[i] = ln.split(";")[0].strip() + " nop"
 
 if config["verbose"]:
     print(colored("Expanded macro output:\n", "blue"))
