@@ -145,7 +145,7 @@ class CPU { // Int specifies the memory type. (e.g. Int64, Double)
             case 6: mov(src: RegisterReference(self, digest()), dest: RegisterReference(self, digest()))
             case 7: mov(src: RegisterReference(self, digest()), dest: MemoryReference(self, digest()))
             case 8: mov(src: MemoryReference(self, digest()), dest: RegisterReference(self, digest()))
-            case 9: mov(src: MemoryReference(self, digest()), dest: MemoryReference(self, digest()))
+            case 9: mov(src: IndirectReference(self, digest()), dest: RegisterReference(self, digest()))
             case 10: mov(src: ConstantReference(self, digest()), dest: RegisterReference(self, digest()))
             case 11:
                 movb(src: digest(), dest: digest(), count: digest())

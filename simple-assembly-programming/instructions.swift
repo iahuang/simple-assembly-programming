@@ -102,7 +102,7 @@ extension CPU {
     }
     
     func jsr(to: Int) {
-        print("jumping to subroutine \(to)")
+        //print("jumping to subroutine \(to)")
         stackPush(rpc+1)
         jmp(to: to)
         
@@ -117,7 +117,7 @@ extension CPU {
             reg[regNum] = stackPop()
         }
         let returnTo = stackPop()
-        print("returning to \(returnTo)")
+        //print("returning to \(returnTo)")
         jmp(to: returnTo)
     }
     
@@ -130,12 +130,10 @@ extension CPU {
     }
     
     func outc(char: Ref)-> String{
-        print((String(unicodeValueToCharacter(char.value))))
         return(String(unicodeValueToCharacter(char.value)))
     }
     
     func printi(int: Ref)-> String{
-        print("\(Int(int.value))")
         return("\(Int(int.value))")
     }
     
@@ -145,10 +143,9 @@ extension CPU {
         let stringStart = dataStart+1
         
         var result = ""
-        for addr in stringStart...stringStart+stringLength {
+        for addr in stringStart...stringStart+stringLength-1 {
             result += String((unicodeValueToCharacter(get(addr))))
         }
-        print(result)
         return(result)
     }
     // outcr outs
