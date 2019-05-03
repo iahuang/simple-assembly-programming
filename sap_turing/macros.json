@@ -50,5 +50,9 @@
         "jsr memoryDump",
         "pop r2",
         "pop r1"
+    ],
+    "println label":[
+        "outs label",
+        "outs newline"
     ]
 }

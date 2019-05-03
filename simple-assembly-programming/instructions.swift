@@ -18,7 +18,7 @@ extension CPU {
     }
     
     func movb(src: Ref, dest: Ref, count: Ref) {
-        print("src: \(src.value) dest: \(dest.value) count: \(count.value)")
+        // print("src: \(src.value) dest: \(dest.value) count: \(count.value)")
         for offset in 0...count.value-1 {
             set(dest.value+offset, get(src.value+offset))
         }

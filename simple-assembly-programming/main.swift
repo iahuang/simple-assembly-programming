@@ -9,4 +9,5 @@
 import Foundation
 
 var vm = VM()
+
 vm.run()
