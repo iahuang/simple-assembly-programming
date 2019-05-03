@@ -40,12 +40,16 @@ func unicodeValueToCharacter(_ n: Int)-> Character{
     return(Character(UnicodeScalar(n)!))
 }
 
+func charactorToValue(_ n: String){
+    print(n.unicodeScalars)
+}
+
 func splitStringIntoParts(expression: String) -> [String]{
     return expression.split{$0 == " "}.map{ String($0) }
 }
 
 func splitStringIntoLines(expression: String) -> [String]{
-    return expression.split{$0 == "\n"}.map{ String($0) }
+    return expression.split{$0 == "\n" || $0 == "\r" || $0 == "\r\n"}.map{ String($0) }
 }
 
 func readTextFile(_ path: String) -> (message: String?, fileText: String?){
