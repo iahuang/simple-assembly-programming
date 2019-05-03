@@ -44,7 +44,7 @@ class Disassembler {
     ]
     
     var mnemonics = Dictionary<Int, String>()
-    
+    var names = [String]()
     init() {
         var instructionCode = 0
         
@@ -58,6 +58,7 @@ class Disassembler {
             for i in 1...parts.count-1 {
                 let suffix = parts[i]
                 mnemonics[instructionCode] = base+String(suffix)
+                names.append(base+String(suffix))
                 instructionCode+=1
             }
         }

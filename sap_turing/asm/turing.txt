@@ -7,6 +7,7 @@ startTuples: nop
 .Tuple \ 1 0 1 1 r \
 .Tuple \ 1 1 1 0 r \
 endTuples: nop
+numTuples: .integer #0
 
 tupleSearchIndex: .integer #0
 
@@ -15,47 +16,94 @@ initialString: .string "_010101_"
 
 head: .integer #0
 state: .integer #0
+steps: .integer #0
 
-mess1: .string "Welcome to Turing!"
-mess2: .string "Tuples:"
-mess3: .string "r1"
+welcome: .string "Welcome to Turing!"
+tuplesTitle: .string "Tuples:"
+initialstate: .string "Initial State: "
+initialhead: .string "Initial Tape Head: "
+initialtape: .string "Initial Tape: "
+done: .string "Turing run complete"
+finaltape: .string "Final Tape: "
+thattook: .string "That took "
+nsteps: .string " steps"
 
-bp: .string "HMMM"
+newline: .integer #1
+.integer #10 
+space: .string " "
+leftbracket: .string "["
+rightbracket: .string "]"
 
 copyInitial:
     movar initialString r5 ;
-    movxr r5 r6
+    movmr initialString r6
     addir #1 r5
     movar tape r7
     movb r5 r7 r6
     ret
 
 begin:
-    outs mess1
+    movar endTuples r1
+    movar startTuples r2
+    addir #1 r2
+    subrr r2 r1
+    divir #5 r1
+    movrm r1 numTuples
+
     jsr copyInitial
+
+    $println welcome
+    outs newline
+    $println tuplesTitle
+
+    clrr r1
+printNextTuple:
+    jsr printTuple
+    outs newline
+    addir #1 r1
+    movmr numTuples r2
+    cmprr r1 r2
+    jmpz endPrint
+    jmp printNextTuple
+endPrint:
+    outs initialstate
+    $printm state
+    outs newline
+    outs initialhead
+    $printm head
+    outs newline
+    outs initialtape
+    outs initialString
+    outs newline
+    outs newline
+
+startTuring:
+    nop
 
 runIteration:
     clrm tupleSearchIndex
 
 searchTuples:
-    $printm tupleSearchIndex
     movmr head r1 ; move character at head to r2
+    movar tape r3
+    addrr r3 r1
     movxr r1 r2
-
+    
     movmr tupleSearchIndex r3 ; r3 stores the pointer to a specific value (nextState, direction, etc) in the tuple being searched
     mulir #5 r3
     movar startTuples r4
+    addir #1 r3
     addrr r4 r3
     movxr r3 r4 ; r4 stores said specific value
 
-    cmpmr state r4 ; check whether tape matches
+    cmpmr state r4 ; check whether state matches
     jmpne skipTuple
 
     $nextTupleValue
 
     cmprr r4 r2 ; checks whether tape character matches
     jmpne skipTuple
-
+    
     $nextTupleValue
 
     movrm r4 state ; set new state
@@ -63,7 +111,9 @@ searchTuples:
     $nextTupleValue
 
     movmr head r5 ; set new character
-    movrx r4 r5 
+    movar tape r6
+    addrr r6 r5
+    movrx r4 r5
 
     $nextTupleValue
 
@@ -71,38 +121,114 @@ searchTuples:
     addrr r4 r1
     movrm r1 head
 
-    $memdump 0 200
-    jmp endSearch
+    movmr head r5 ; head before being moved
+    subrr r4 r5
+    movar tape r1 ; tape pointer
+    clrr r4 ; tape index, starting from 0
+    
+headedTapeDisplayIter:
+    movxr r1 r3 ; r3 is the tape character
 
-memoryDump:
-    movrr r1 r4
-mdumpIter:
-    movxr r4 r3
-    printi r3
+    cmprr r5 r4
+    jmpne noHead
+    outs leftbracket
+    outcr r3
+    outs rightbracket
+    jmp finishDrawingHeadOrNot
+noHead:
+    outcr r3
+finishDrawingHeadOrNot:
+    cmpir #100 r1
+    $incr r1
     $incr r4
-    cmprr r4 r2
-    jmpne mdumpIter
-    ret
+    jmpne headedTapeDisplayIter
 
+    outs space
+    movmr tupleSearchIndex r1
+    jsr printTuple
+    outs newline
+
+    $incm steps
+
+    jmp endSearch
 
 skipTuple:
     $incm tupleSearchIndex
 
-    movar endTuples r1
-    addir #1 r1
-    outs mess3
-    printi r1
-    movar startTuples r2
-    subrr r2 r1
-    divir #5 r1
+    movmr numTuples r1
     cmpmr tupleSearchIndex r1
     jmpz stop
     jmp searchTuples
 
 endSearch: jmp runIteration
 
+printTuple:
+    ; args:
+    ; r1 Tuple index
+    ; 
+    ; local vars:
+    ; r5 tuple value pointer
+    ; r6 tmp
+    ; r7 tuple value
+    ; r8
+
+    movrr r1 r5
+    mulir #5 r5
+    movar startTuples r6
+    addir #1 r6
+    addrr r6 r5
+
+    movxr r5 r7
+
+    printi r7 ; current state
+    outs space
+
+    addir #1 r5
+    movxr r5 r7
+
+    outcr r7 ; current character
+    outs space
+
+    addir #1 r5
+    movxr r5 r7
+
+    printi r7 ; new state
+    outs space
+
+    addir #1 r5
+    movxr r5 r7
+
+    outcr r7
+    outs space ; new character
+
+    addir #1 r5
+    movxr r5 r7
+
+    printi r7
+    outs space ; direction
+
+    addir #1 r5
+    movxr r5 r7
+
+    ret
+
+memoryDump:
+    movrr r1 r4
+mdumpIter:
+    movxr r4 r3
+    outcr r3
+    $incr r4
+    cmprr r4 r2
+    jmpne mdumpIter
+    ret
+
 stop:
-    movir #0 r1
-    movir #200 r2
-    jsr memoryDump
+    $println done
+    outs finaltape
+    $printTape
+    outs newline
+    outs thattook
+    $printm steps
+    outs nsteps
+    outs newline
     halt
