@@ -6,18 +6,18 @@ PATTERNS = {
 }
 
 
-class x86Line:
+class Line:
     def __init__(self, type):
         self.type = type
 
 
-class x86Token:
+class Token:
     def __init__(self, type, value):
         self.type = type
         self.value = value
 
 
-class x86Inst(x86Line):
+class Inst(Line):
     @staticmethod
     def parse_token(value):
         t = 'undefined'
@@ -30,13 +30,26 @@ class x86Inst(x86Line):
         else:
             t = 'label'
 
-        return x86Token(t, value)
+        return Token(t, value)
 
     def __init__(self, inst, args):
         self.inst = inst
-        self.args = tuple([x86Inst.parse_token(arg) for arg in args])
+        self.args = tuple([Inst.parse_token(arg) for arg in args])
 
         super().__init__("instruction")
+
+
+class Label(Line):
+    def __init__(self, name):
+        self.name = name
+        super().__init__("label")
+
+
+class Directive(Line):
+    def __init__(self, name, args):
+        self.name = name
+        self.args = args
+        super().__init__("directive")
 
 
 def parse_line(line):
@@ -53,24 +66,30 @@ def parse_line(line):
         return None
 
     if line.startswith("."):
-        pass
+        name = line.split(" ")[0]
+        content = lcut(line, name).strip()
+        args = content.split(", ")
+
+        return Directive(name.strip("."), args)
     elif line.endswith(":"):
-        pass
+        return Label(line[:-1])
 
     else:
         inst = line.split(" ")[0]
         content = lcut(line, inst).strip()
         args = content.split(", ")
 
-        return x86Inst(inst, args)
+        return Inst(inst, args)
 
-    pass
+    return Line("undefined")
 
 
-class x86Parser:
+class Parser:
     def __init__(self):
-        pass
+        self.lines = []
 
     def parse(self, source):
-        for line in source.split("\n"):
-            line = parse_line(line)
+        for linetext in source.split("\n"):
+            line = parse_line(linetext)
+            if line != None:
+                self.lines.append(line)

@@ -1,0 +1,168 @@
+.start main
+eax: .integer #4294967295 
+ebx: .integer #0
+ecx: .integer #0
+edx: .integer #0
+esi: .integer #0
+edi: .integer #0
+
+esp: .integer #0
+ebp: .integer #0
+
+bin1: .allocate #32
+
+endl: .integer #1
+    .integer #10
+
+tobinary: nop
+    ; r1 is the value
+    ; r2 is the pointer to the bytedump
+    ; r5 is a copy of r1
+    ; r6 is the remainder
+    ; r7 is the number of bits pushed
+    ; r8 is r1/2
+    clrr r7
+    addir #32 r2
+biniter: nop
+    movrr r1 r5
+    divir #2 r1
+    movrr r1 r8
+    mulir #2 r1
+    cmprr r1 r5
+    movrr r8 r1
+    clrr r6
+    jmpne remainder1 ; if remainder is 1
+    jmpz remainder0 ; if remainder is 0
+remainder1: nop
+    movir #1 r6
+remainder0: nop
+    cmpir #0 r5
+    jmpz endbin
+    push r6
+    addir #1 r7
+
+    jmp biniter
+
+endbin: nop
+    subrr r7 r2
+ebiniter: nop
+    pop r6
+    movrx r6 r2
+    addir #1 r2
+    subir #1 r7
+    cmpir #0 r7
+    jmpne ebiniter
+    
+    ret
+
+power: nop
+    ; r0 a^b
+    ; r1 a
+    ; r2 b
+    movir #1 r0
+    cmpir #0 r2
+    jmpz endpower
+poweriter: nop
+    mulrr r1 r0
+    subir #1 r2
+    cmpir #0 r2
+    jmpne poweriter
+endpower: nop
+    ret
+
+todecimal: nop
+    ; r0 total
+    ; r1 pointer to the bytedump
+    ; r5 the exponent
+    ; r6 digit term (n*2^x)
+
+    addir #31 r1
+    clrr r0
+    clrr r5
+
+todeciter: nop
+    movxr r1 r6
+    push r1
+    push r2
+    push r0
+    movir #2 r1
+    movrr r5 r2
+    jsr power
+    mulrr r0 r6
+
+    pop r0
+    pop r2
+    pop r1
+
+    addrr r6 r0    
+    
+    addir #1 r5
+    subir #1 r1
+
+    cmpir #32 r5
+    jmpne todeciter
+
+    ret
+
+low16: nop
+    ; r1 address of eNx register where N is a-d
+    movxr r1 r1
+    push r2
+    movar bin1 r2
+    jsr tobinary
+    pop r2
+
+    movar bin1 r5
+    movir #16 r6
+    clrb r5 r6
+
+    movar bin1 r1
+    jsr todecimal
+    ret
+
+high8: nop
+    ; r1 address of eNx register where N is a-d
+
+    movxr r1 r1
+    push r2
+    movar bin1 r2
+    jsr tobinary
+    pop r2
+
+    movar bin1 r5
+    movrr r5 r6
+    addir #24 r6
+    movir #8 r7
+
+    movar bin1 r5
+    movir #24 r6
+    clrb r5 r6
+
+    movb r5 r6 r7
+
+    movar bin1 r1
+    jsr todecimal
+
+    ret
+
+low8: nop
+    ; r1 address of eNx register where N is a-d
+    movxr r1 r1
+    push r2
+    movar bin1 r2
+    jsr tobinary
+    pop r2
+
+    movar bin1 r5
+    movir #24 r6
+    clrb r5 r6
+
+    movar bin1 r1
+    jsr todecimal
+    ret
+
+main: nop
+    movar eax r1
+    jsr high8
+    printi r0
+    

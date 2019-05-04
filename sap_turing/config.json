@@ -1,7 +1,7 @@
 {
     "verbose": true,
     "exec_path": "./lib/Assembler_OSX",
-    "project": "asm/turing",
+    "project": "asm/header",
     "macro_path": "macros.json",
     "xcode-proj-name": "simple-assembly-programming",
     "preprocessing": {

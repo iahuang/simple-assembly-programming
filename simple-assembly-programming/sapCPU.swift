@@ -147,12 +147,14 @@ class CPU { // Int specifies the memory type. (e.g. Int64, Double)
         var result = ""
         var opcode = digest()
         while(opcode != 0){
-            //print("\(debugDisassembler.mnemonics[opcode]) \(rpc)")
+//            print(reg)
+//            print("\(debugDisassembler.mnemonics[opcode])")
+            
             switch mem[rpc]{
             case 1: clr(target: digestReg())
             case 2: clr(target: digestAddr())
             case 3: clr(target: digestAddr())
-            //case 4: clrb()
+            case 4: clrb(start: digestReg(), count: digestReg())
             case 5: mov(src: digestConst(), dest: digestReg())
             case 6: mov(src: digestReg(), dest: digestReg())
             case 7: mov(src: digestReg(), dest: digestAddr())
@@ -213,6 +215,7 @@ class CPU { // Int specifies the memory type. (e.g. Int64, Double)
             }
             opcode = digest()
         }
+
         return(result)
     }
     

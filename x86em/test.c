@@ -4,6 +4,7 @@ void print(char* msg) {
 void printi(int n) {
 }
 int n = 5;
+char* hmm = "hmmm";
 int main() {
     int i, t1 = 0, t2 = 1, nextTerm;
 

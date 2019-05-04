@@ -1,15 +1,20 @@
 import subprocess
 import sys
 from termcolor import colored
-from assembly.x86 import x86Parser
+from assembly.conversion import x86toSAP
 import os
 
 argv = sys.argv[1:]
 
 
 def c_compile(path, optimization=1):
-    p = subprocess.run(["gcc", "-S", "-O"+str(optimization), "-m32",
-                        "-fno-asynchronous-unwind-tables", "-masm=intel", path])
+    p = subprocess.run(["gcc",
+                        "-S",
+                        "-O"+str(optimization),
+                        "-m32",
+                        "-fno-asynchronous-unwind-tables",
+                        "-masm=intel",
+                        path])
     return p
 
 
@@ -25,9 +30,9 @@ def run():
         exit(0)
 
     asm_path = os.path.splitext(src_path)[0]+'.s'
-    parser = x86Parser()
+    converter = x86toSAP()
     with open(asm_path) as fl:
-        parser.parse(fl.read())
+        print(converter.convert(fl.read()))
 
 
 if __name__ == "__main__":
