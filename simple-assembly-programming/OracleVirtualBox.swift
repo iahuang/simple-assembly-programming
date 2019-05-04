@@ -6,15 +6,15 @@
  //  Created by Ethan Zhang on 3/24/19.
  //  Copyright © 2019 Ian Huang. All rights reserved.
  //
- 
+
  import Foundation
 
  class VM{
     var inteli7 = CPU(memSize: 1000, numRegisters: 10)
     //var disasm = Disassembler()
     var quit = false
-    
-    
+
+
     func run(){
         while(!quit){
             print("Enter path")
@@ -30,13 +30,13 @@
                 } else {
                     print(nice.message!)
                 }
-                
+
             }
         }
     }
-    
+
     func exeBinary(_ arr: [Int]){
-        
+
         var data = arr
         let arrData = [arr[0], arr[1]]
         data.removeFirst(2)
@@ -44,7 +44,7 @@
         inteli7.loadProgram(prg: loadProg)
         print(inteli7.execProg())
     }
-    
+
     func arrStrToInt(_ arr: [String])-> [Int]{
         var newArr = [Int](repeating: 0, count: arr.count)
         for n in 0..<arr.count{
@@ -52,7 +52,5 @@
         }
         return(newArr)
     }
-    
- }
 
- 
+ }

@@ -16,22 +16,22 @@ extension BinaryInteger {
 
 class CPU { // Int specifies the memory type. (e.g. Int64, Double)
     typealias Ref = Reference
-    
+
     var reg = [Int]()
     var rpc: Int = 0 // Program counter
     var rcp: Int = 0 // Compare register
     var rst: Int = 0 // Stack pointer
     var programSize = 0
-    
+
     var mem = [Int]()
 
     let memSize: Int
     let numRegisters: Int
-    
+
     var stack = [Int]()
-    
+
     var debugDisassembler = Disassembler()
-    
+
     init (memSize:Int, numRegisters:Int = 10) {
         self.memSize = memSize
         self.numRegisters = numRegisters
@@ -41,20 +41,20 @@ class CPU { // Int specifies the memory type. (e.g. Int64, Double)
 
         rst = memSize-1
     }
-    
+
     //Increments program counter by 1 and returns next value in memory
     func digest()-> Int{
         rpc+=1
         return get(rpc)
     }
-    
+
     func safetyCheck(_ addr: Int) -> Bool {
         if (addr < 0 || addr >= memSize) {
             return false
         }
         return true
     }
-    
+
     func get(_ addr: Int) -> Int {
         if !safetyCheck(addr) {
             print("Segmentation fault 11: ex dumped")
@@ -73,7 +73,7 @@ class CPU { // Int specifies the memory type. (e.g. Int64, Double)
             print("Segmentation fault 11: ex dumped")
             abort()
         }
-        
+
         mem[addr] = to
     }
 
@@ -129,20 +129,20 @@ class CPU { // Int specifies the memory type. (e.g. Int64, Double)
             abort()
         }
     }
-    
+
     func digestReg() -> RegisterReference {
         return RegisterReference(self, digest())
     }
-    
+
     func digestAddr() -> MemoryReference {
         return MemoryReference(self, digest())
     }
-    
+
     func digestConst() -> ConstantReference {
         return ConstantReference(self, digest())
     }
-    
-    
+
+
     func execProg()-> String{
         var result = ""
         var opcode = digest()
@@ -218,7 +218,7 @@ class CPU { // Int specifies the memory type. (e.g. Int64, Double)
 
         return(result)
     }
-    
+
     func restorebs(filePath: Bool) {
         print("the bs hath been restored")
     }
