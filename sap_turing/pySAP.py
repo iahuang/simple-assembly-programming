@@ -89,7 +89,7 @@ for macro in macros:
         if query in line:
             line_insert_prefix = ""
             if line.startswith("    ") or line.startswith("\t"):
-                line_insert_prefix = "    "
+                line_insert_prefix = "\t"
 
             words = line.split(" ")
             args = words[words.index(

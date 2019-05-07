@@ -1,8 +1,12 @@
 import re
 import os
 from assembly.util import resource_path
-from assembly.x86 import Parser
+from assembly.x86 import Parser, Token
 
+REG32 = ["eax", "ebx", "ecx", "edx", "edi", "esi", "esp", "ebp"]
+REG16 = ["ax", "bx", "cx", "dx"]
+HI8 = ["ah", "bh", "ch", "dh"]
+LO8 = ["al", "bl", "cl", "dl"]
 
 class SAPLine:
     def __init__(self, type, name, *args):
@@ -17,6 +21,10 @@ class SAPLine:
             return "\t."+self.name+" "+" ".join(self.args)
         elif self.type == "label":
             return self.name+":"
+        elif self.type == "comment":
+            return "\t; "+self.name
+        elif self.type == "raw":
+            return "\t"+self.name
 
 
 class SAPProgramSegment:
@@ -32,24 +40,36 @@ class SAPProgramSegment:
     def write_label(self, name):
         self.lines.append(SAPLine("label", name))
 
-    def write_inline(self, seg):
+    def write_comment(self, seg):
+        self.lines.append(SAPLine("comment", seg))
+
+    def write_spacer(self):
+        self.write_raw("")
+
+    def write_raw(self, seg):
+        self.lines.append(SAPLine("raw", seg))
+
+    def write_seg(self, seg):
         self.lines += seg.lines
     
     def get_last(self):
         return self.lines[-1]
+    
+    def get_first(self):
+        return self.lines[0]
 
 
 class x86toSAP:
-    def __init__(self):
+    def __init__(self, header):
         self.parser = Parser()
 
-        with open(resource_path("res/header.sap")) as fl:
-            self.header = fl.read()
+        self.header = header
 
         self.init = SAPProgramSegment()
         self.prg = SAPProgramSegment()
 
         self.init.write_label("x86_init")
+        self.init.write_inst("nop")
 
     def convert_directive(self, directive):
         name = directive.name
@@ -76,11 +96,57 @@ class x86toSAP:
     def convert_label(self, label):
         self.prg.write_label(label.name)
 
-    def convert_inst(self, inst):
-        mne = inst.inst
-        args = inst.args
-        self.prg.write_inst("movir", "r1", "r2")
+    def to_register(self, token, reg):
+        seg = SAPProgramSegment()
+        reg = "r"+str(reg)
 
+        if token.type == "register":
+            seg.write_inst("movmr", token.value, reg)
+        elif token.type == "constant":
+            seg.write_inst("movir", "#"+token.value, reg)
+        else:
+            seg.write_comment("unknown token type "+token.type)
+        return seg
+    
+    def to_ptr_register(self, token, reg):
+        seg = SAPProgramSegment()
+        reg = "r"+str(reg)
+        
+        if token.type == "register":
+            seg.write_inst("movar", token.value, reg)
+        elif token.type == "constant":
+            print("A constant cannot be assigned to")
+        elif token.type == "label":
+            seg.write_inst("movar", token.value, reg)
+        else:
+            seg.write_comment("unknown token type "+token.type)
+
+        return seg
+
+    def convert_inst(self, inst):
+        seg = SAPProgramSegment()
+        mne = inst.inst # mne pohoi
+        args = inst.args
+        if mne == "push":
+            seg.write_seg(self.to_register(args[0], reg=1))
+            seg.write_raw("call x86push r1")
+        elif mne == "pop":
+            seg.write_seg(self.to_ptr_register(args[0], reg=1))
+            seg.write_raw("call x86pop")
+            seg.write_inst("movrx", "r0", "r1")
+        elif mne == "mov":
+            seg.write_seg(self.to_register(args[1], reg=1))
+            seg.write_seg(self.to_ptr_register(args[0], reg=2))
+            seg.write_inst("movrx", "r1", "r2")
+        elif mne == "call":
+            seg.write_raw("call x86push #0") # Pretend to push the program counter on the stack
+            seg.write_inst("jsr", args[0].value)
+        elif mne == "ret":
+            seg.write_raw("call x86pop") # Pretend to pop the program counter off the stack
+            seg.write_inst("ret")
+        else:
+            seg.write_comment("unknown command "+inst.inst)
+        return seg
     def dump_program_segment(self, seg):
         output = ""
         for line in seg.lines:
@@ -104,6 +170,8 @@ class x86toSAP:
             elif line.type == "label":
                 self.convert_label(line)
             elif line.type == "instruction":
-                self.convert_inst(line)
+                seg = self.convert_inst(line)
+                self.prg.write_seg(seg)
+                self.prg.write_spacer()
 
         return self.finalize()

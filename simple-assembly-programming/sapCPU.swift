@@ -215,7 +215,7 @@ class CPU { // Int specifies the memory type. (e.g. Int64, Double)
             }
             opcode = digest()
         }
-
+        
         return(result)
     }
 

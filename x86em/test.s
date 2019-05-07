@@ -4,28 +4,43 @@
 	.globl	_print                  ## -- Begin function print
 	.p2align	4, 0x90
 _print:                                 ## @print
+	.cfi_startproc
 ## %bb.0:
 	push	ebp
+	.cfi_def_cfa_offset 8
+	.cfi_offset ebp, -8
 	mov	ebp, esp
+	.cfi_def_cfa_register ebp
 	pop	ebp
 	ret
+	.cfi_endproc
                                         ## -- End function
 	.globl	_printi                 ## -- Begin function printi
 	.p2align	4, 0x90
 _printi:                                ## @printi
+	.cfi_startproc
 ## %bb.0:
 	push	ebp
+	.cfi_def_cfa_offset 8
+	.cfi_offset ebp, -8
 	mov	ebp, esp
+	.cfi_def_cfa_register ebp
 	pop	ebp
 	ret
+	.cfi_endproc
                                         ## -- End function
 	.globl	_main                   ## -- Begin function main
 	.p2align	4, 0x90
 _main:                                  ## @main
+	.cfi_startproc
 ## %bb.0:
 	push	ebp
+	.cfi_def_cfa_offset 8
+	.cfi_offset ebp, -8
 	mov	ebp, esp
+	.cfi_def_cfa_register ebp
 	push	esi
+	.cfi_offset esi, -12
 	call	L2$pb
 L2$pb:
 	pop	eax
@@ -41,10 +56,15 @@ L2$pb:
 ## %bb.3:
 	xor	edx, edx
 	mov	esi, 1
-	jmp	LBB2_6
+	mov	eax, edx
+	test	ecx, ecx
+	jne	LBB2_7
+	jmp	LBB2_9
 LBB2_1:
 	xor	eax, eax
-	jmp	LBB2_9
+	pop	esi
+	pop	ebp
+	ret
 LBB2_4:
 	mov	eax, ecx
 	sub	eax, edx
@@ -62,11 +82,11 @@ LBB2_5:                                 ## =>This Inner Loop Header: Depth=1
 	add	esi, edx
 	add	eax, 8
 	jne	LBB2_5
-LBB2_6:
+## %bb.6:
 	mov	eax, edx
 	test	ecx, ecx
 	je	LBB2_9
-## %bb.7:
+LBB2_7:
 	neg	ecx
 	.p2align	4, 0x90
 LBB2_8:                                 ## =>This Inner Loop Header: Depth=1
@@ -80,6 +100,7 @@ LBB2_9:
 	pop	esi
 	pop	ebp
 	ret
+	.cfi_endproc
                                         ## -- End function
 	.section	__DATA,__data
 	.globl	_n                      ## @n

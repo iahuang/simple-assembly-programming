@@ -217,7 +217,19 @@ sethigh8:
     
     ret
 
+x86push:
+    ; r1 value
+    addim #1 esp
+    movmr esp r4
+    movrx r1 r4
+    ret
 
+x86pop:
+    movmr esp r4
+    movxr r4 r0
+    subim #1 esp
+    ret
+    
 main:
     movar eax r1
     jsr low8

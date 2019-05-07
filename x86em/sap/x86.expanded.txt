@@ -199,6 +199,18 @@ sethigh8: push r1 ; call tobinary *r1 &bin1
     pop r1
     movrx r0 r1
     ret
+x86push: push r1 ; addim #1 esp
+    movmr esp r1
+    addir #1 r1
+    movrm r1 esp
+    pop r1
+    movrm r1 esp
+x86pop: movmr esp r0
+    push r1 ; subim #1 esp
+    movmr esp r1
+    subir #1 r1
+    movrm r1 esp
+    pop r1
 main: movar eax r1
     jsr low8
     printi r0

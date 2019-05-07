@@ -3,6 +3,7 @@ import sys
 from termcolor import colored
 from assembly.conversion import x86toSAP
 import os
+from sapplus import preprocess
 
 argv = sys.argv[1:]
 
@@ -30,9 +31,18 @@ def run():
         exit(0)
 
     asm_path = os.path.splitext(src_path)[0]+'.s'
-    converter = x86toSAP()
+
+    with open("sap/x86.sap") as fl:
+        header = fl.read()
+
+    converter = x86toSAP(header)
     with open(asm_path) as fl:
-        print(converter.convert(fl.read()))
+        output = converter.convert(fl.read())
+
+        print(output)
+    
+    with open("out.sap", "w") as fl:
+        fl.write(preprocess(output))
 
 
 if __name__ == "__main__":

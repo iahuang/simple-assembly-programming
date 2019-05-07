@@ -1,0 +1,258 @@
+0:                   
+0: 3                 eax: .integer #3
+1: 0                 ebx: .integer #0
+2: 0                 ecx: .integer #0
+3: 0                 edx: .integer #0
+4: 0                 esi: .integer #0
+5: 0                 edi: .integer #0
+6: 0                 esp: .integer #0
+7: 0                 ebp: .integer #0
+8: 0 0 0 0           bin1: .allocate #32
+40: 0 0 0 0          bin2: .allocate #32
+72: 1                endl: .integer #1
+73: 10                   .integer #10
+74: 1 7              tobinary: clrr r7
+76: 5 32 9               movir #32 r9
+79: 4 2 9                clrb r2 r9
+82: 33 0 1               cmpir #0 r1
+85: 37 148               jmpz tobinret
+87: 12 32 2              addir #32 r2
+90: 6 1 5            biniter: movrr r1 r5
+93: 24 2 1               divir #2 r1
+96: 6 1 8                movrr r1 r8
+99: 20 2 1               mulir #2 r1
+102: 34 1 5              cmprr r1 r5
+105: 6 8 1               movrr r8 r1
+108: 1 6                 clrr r6
+110: 57 114              jmpne remainder1
+112: 37 117              jmpz remainder0
+114: 5 1 6           remainder1: movir #1 r6
+117: 33 0 5          remainder0: cmpir #0 r5
+120: 37 129              jmpz endbin
+122: 41 6                push r6
+124: 12 1 7              addir #1 r7
+127: 28 90               jmp biniter
+129: 17 7 2          endbin: subrr r7 r2
+132: 42 6            ebiniter: pop r6
+134: 53 6 2              movrx r6 r2
+137: 12 1 2              addir #1 r2
+140: 16 1 7              subir #1 r7
+143: 33 0 7              cmpir #0 r7
+146: 57 132              jmpne ebiniter
+148: 40              tobinret: ret
+149: 5 1 0           power: movir #1 r0
+152: 33 0 2              cmpir #0 r2
+155: 37 168              jmpz endpower
+157: 21 1 0          poweriter: mulrr r1 r0
+160: 16 1 2              subir #1 r2
+163: 33 0 2              cmpir #0 r2
+166: 57 157              jmpne poweriter
+168: 40              endpower: ret
+169: 12 31 1         todecimal: addir #31 r1
+172: 1 0                 clrr r0
+174: 1 5                 clrr r5
+176: 9 1 6           todeciter: movxr r1 r6
+179: 41 1                push r1
+181: 41 2                push r2
+183: 41 0                push r0
+185: 5 2 1               movir #2 r1
+188: 6 5 2               movrr r5 r2
+191: 39 149              jsr power
+193: 21 0 6              mulrr r0 r6
+196: 42 0                pop r0
+198: 42 2                pop r2
+200: 42 1                pop r1
+202: 13 6 0              addrr r6 r0    
+205: 12 1 5              addir #1 r5
+208: 16 1 1              subir #1 r1
+211: 33 32 5             cmpir #32 r5
+214: 57 176              jmpne todeciter
+216: 40                  ret
+217: 41 1            low16: push r1 ; call tobinary *r1 &bin2
+219: 6 1 1               movrr r1 r1
+222: 9 1 1               movxr r1 r1
+225: 41 2                push r2
+227: 10 40 2             movar bin2 r2
+230: 39 74               jsr tobinary
+232: 42 2                pop r2
+234: 42 1                pop r1
+236: 10 8 5              movar bin1 r5
+239: 5 16 6              movir #16 r6
+242: 4 5 6               clrb r5 r6
+245: 10 8 1              movar bin1 r1
+248: 39 169              jsr todecimal
+250: 40                  ret
+251: 41 1            high8: push r1 ; call tobinary *r1 &bin2
+253: 6 1 1               movrr r1 r1
+256: 9 1 1               movxr r1 r1
+259: 41 2                push r2
+261: 10 40 2             movar bin2 r2
+264: 39 74               jsr tobinary
+266: 42 2                pop r2
+268: 42 1                pop r1
+270: 10 8 5              movar bin1 r5
+273: 12 16 5             addir #16 r5
+276: 6 5 6               movrr r5 r6
+279: 12 8 6              addir #8 r6
+282: 5 8 7               movir #8 r7
+285: 11 5 6 7            movb r5 r6 r7
+289: 10 8 5              movar bin1 r5
+292: 5 24 6              movir #24 r6
+295: 4 5 6               clrb r5 r6
+298: 10 8 1              movar bin1 r1
+301: 39 169              jsr todecimal
+303: 40                  ret
+304: 41 1            low8: push r1 ; call tobinary *r1 &bin1
+306: 6 1 1               movrr r1 r1
+309: 9 1 1               movxr r1 r1
+312: 41 2                push r2
+314: 10 8 2              movar bin1 r2
+317: 39 74               jsr tobinary
+319: 42 2                pop r2
+321: 42 1                pop r1
+323: 10 8 5              movar bin1 r5
+326: 5 24 6              movir #24 r6
+329: 4 5 6               clrb r5 r6
+332: 10 8 1              movar bin1 r1
+335: 39 169              jsr todecimal
+337: 40                  ret
+338: 41 1            setlow16: push r1 ; call tobinary *r1 &bin1
+340: 6 1 1               movrr r1 r1
+343: 9 1 1               movxr r1 r1
+346: 41 2                push r2
+348: 10 8 2              movar bin1 r2
+351: 39 74               jsr tobinary
+353: 42 2                pop r2
+355: 42 1                pop r1
+357: 41 1                push r1 ; call tobinary r2 &bin2
+359: 6 2 1               movrr r2 r1
+362: 41 2                push r2
+364: 10 40 2             movar bin2 r2
+367: 39 74               jsr tobinary
+369: 42 2                pop r2
+371: 42 1                pop r1
+373: 10 40 5             movar bin2 r5
+376: 10 8 6              movar bin1 r6
+379: 12 16 5             addir #16 r5
+382: 12 16 6             addir #16 r6
+385: 5 16 7              movir #16 r7
+388: 11 5 6 7            movb r5 r6 r7
+392: 41 1                push r1 ; call todecimal &bin1
+394: 10 8 1              movar bin1 r1
+397: 39 169              jsr todecimal
+399: 42 1                pop r1
+401: 53 0 1              movrx r0 r1
+404: 40                  ret
+405: 41 1            setlow8: push r1 ; call tobinary *r1 &bin1
+407: 6 1 1               movrr r1 r1
+410: 9 1 1               movxr r1 r1
+413: 41 2                push r2
+415: 10 8 2              movar bin1 r2
+418: 39 74               jsr tobinary
+420: 42 2                pop r2
+422: 42 1                pop r1
+424: 41 1                push r1 ; call tobinary r2 &bin2
+426: 6 2 1               movrr r2 r1
+429: 41 2                push r2
+431: 10 40 2             movar bin2 r2
+434: 39 74               jsr tobinary
+436: 42 2                pop r2
+438: 42 1                pop r1
+440: 10 40 5             movar bin2 r5
+443: 10 8 6              movar bin1 r6
+446: 12 24 5             addir #24 r5
+449: 12 24 6             addir #24 r6
+452: 5 8 7               movir #8 r7
+455: 11 5 6 7            movb r5 r6 r7
+459: 41 1                push r1 ; call todecimal &bin1
+461: 10 8 1              movar bin1 r1
+464: 39 169              jsr todecimal
+466: 42 1                pop r1
+468: 53 0 1              movrx r0 r1
+471: 40                  ret
+472: 41 1            sethigh8: push r1 ; call tobinary *r1 &bin1
+474: 6 1 1               movrr r1 r1
+477: 9 1 1               movxr r1 r1
+480: 41 2                push r2
+482: 10 8 2              movar bin1 r2
+485: 39 74               jsr tobinary
+487: 42 2                pop r2
+489: 42 1                pop r1
+491: 41 1                push r1 ; call tobinary r2 &bin2
+493: 6 2 1               movrr r2 r1
+496: 41 2                push r2
+498: 10 40 2             movar bin2 r2
+501: 39 74               jsr tobinary
+503: 42 2                pop r2
+505: 42 1                pop r1
+507: 10 40 5             movar bin2 r5
+510: 10 8 6              movar bin1 r6
+513: 12 24 5             addir #24 r5
+516: 12 16 6             addir #16 r6
+519: 5 8 7               movir #8 r7
+522: 11 5 6 7            movb r5 r6 r7
+526: 41 1                push r1 ; call todecimal &bin1
+528: 10 8 1              movar bin1 r1
+531: 39 169              jsr todecimal
+533: 42 1                pop r1
+535: 53 0 1              movrx r0 r1
+538: 40                  ret
+539: 41 1            x86push: push r1 ; addim #1 esp
+541: 8 6 1               movmr esp r1
+544: 12 1 1              addir #1 r1
+547: 7 1 6               movrm r1 esp
+550: 42 1                pop r1
+552: 7 1 6               movrm r1 esp
+555: 8 6 0           x86pop: movmr esp r0
+558: 41 1                push r1 ; subim #1 esp
+560: 8 6 1               movmr esp r1
+563: 16 1 1              subir #1 r1
+566: 7 1 6               movrm r1 esp
+569: 42 1                pop r1
+571: 10 0 1          main: movar eax r1
+574: 39 304              jsr low8
+576: 49 0                printi r0
+578: 55 72               outs endl
+580: 41 1                push r1 ; call sethigh8 &eax #122
+582: 10 0 1              movar eax r1
+585: 41 2                push r2
+587: 5 122 2             movir #122 r2
+590: 39 472              jsr sethigh8
+592: 42 2                pop r2
+594: 42 1                pop r1
+596: 8 0 6               movmr eax r6
+599: 49 6                printi r6
+
+Symbol Table:
+ebp 7 
+main 571 
+ebiniter 132 
+esp 6 
+tobinary 74 
+remainder1 114 
+x86push 539 
+sethigh8 472 
+endpower 168 
+todecimal 169 
+x86pop 555 
+low8 304 
+ebx 1 
+biniter 90 
+power 149 
+low16 217 
+esi 4 
+todeciter 176 
+endl 72 
+edi 5 
+edx 3 
+bin1 8 
+eax 0 
+ecx 2 
+setlow16 338 
+poweriter 157 
+remainder0 117 
+high8 251 
+bin2 40 
+endbin 129 
+tobinret 148 
+setlow8 405 

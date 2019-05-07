@@ -71,13 +71,13 @@ todeciter: movxr r1 r6
     jmpne todeciter
     ret
 low16: push r1 ; call tobinary *r1 &bin2
-    movrr r1 r1
-    movxr r1 r1
-    push r2
-    movar bin2 r2
-    jsr tobinary
-    pop r2
-    pop r1
+	movrr r1 r1
+	movxr r1 r1
+	push r2
+	movar bin2 r2
+	jsr tobinary
+	pop r2
+	pop r1
     movar bin1 r5
     movir #16 r6
     clrb r5 r6
@@ -85,13 +85,13 @@ low16: push r1 ; call tobinary *r1 &bin2
     jsr todecimal
     ret
 high8: push r1 ; call tobinary *r1 &bin2
-    movrr r1 r1
-    movxr r1 r1
-    push r2
-    movar bin2 r2
-    jsr tobinary
-    pop r2
-    pop r1
+	movrr r1 r1
+	movxr r1 r1
+	push r2
+	movar bin2 r2
+	jsr tobinary
+	pop r2
+	pop r1
     movar bin1 r5
     addir #16 r5
     movrr r5 r6
@@ -105,13 +105,13 @@ high8: push r1 ; call tobinary *r1 &bin2
     jsr todecimal
     ret
 low8: push r1 ; call tobinary *r1 &bin1
-    movrr r1 r1
-    movxr r1 r1
-    push r2
-    movar bin1 r2
-    jsr tobinary
-    pop r2
-    pop r1
+	movrr r1 r1
+	movxr r1 r1
+	push r2
+	movar bin1 r2
+	jsr tobinary
+	pop r2
+	pop r1
     movar bin1 r5
     movir #24 r6
     clrb r5 r6
@@ -119,97 +119,143 @@ low8: push r1 ; call tobinary *r1 &bin1
     jsr todecimal
     ret
 setlow16: push r1 ; call tobinary *r1 &bin1
-    movrr r1 r1
-    movxr r1 r1
-    push r2
-    movar bin1 r2
-    jsr tobinary
-    pop r2
-    pop r1
-    push r1 ; call tobinary r2 &bin2
-    movrr r2 r1
-    push r2
-    movar bin2 r2
-    jsr tobinary
-    pop r2
-    pop r1
+	movrr r1 r1
+	movxr r1 r1
+	push r2
+	movar bin1 r2
+	jsr tobinary
+	pop r2
+	pop r1
+	push r1 ; call tobinary r2 &bin2
+	movrr r2 r1
+	push r2
+	movar bin2 r2
+	jsr tobinary
+	pop r2
+	pop r1
     movar bin2 r5
     movar bin1 r6
     addir #16 r5
     addir #16 r6
     movir #16 r7
     movb r5 r6 r7
-    push r1 ; call todecimal &bin1
-    movar bin1 r1
-    jsr todecimal
-    pop r1
+	push r1 ; call todecimal &bin1
+	movar bin1 r1
+	jsr todecimal
+	pop r1
     movrx r0 r1
     ret
 setlow8: push r1 ; call tobinary *r1 &bin1
-    movrr r1 r1
-    movxr r1 r1
-    push r2
-    movar bin1 r2
-    jsr tobinary
-    pop r2
-    pop r1
-    push r1 ; call tobinary r2 &bin2
-    movrr r2 r1
-    push r2
-    movar bin2 r2
-    jsr tobinary
-    pop r2
-    pop r1
+	movrr r1 r1
+	movxr r1 r1
+	push r2
+	movar bin1 r2
+	jsr tobinary
+	pop r2
+	pop r1
+	push r1 ; call tobinary r2 &bin2
+	movrr r2 r1
+	push r2
+	movar bin2 r2
+	jsr tobinary
+	pop r2
+	pop r1
     movar bin2 r5
     movar bin1 r6
     addir #24 r5
     addir #24 r6
     movir #8 r7
     movb r5 r6 r7
-    push r1 ; call todecimal &bin1
-    movar bin1 r1
-    jsr todecimal
-    pop r1
+	push r1 ; call todecimal &bin1
+	movar bin1 r1
+	jsr todecimal
+	pop r1
     movrx r0 r1
     ret
 sethigh8: push r1 ; call tobinary *r1 &bin1
-    movrr r1 r1
-    movxr r1 r1
-    push r2
-    movar bin1 r2
-    jsr tobinary
-    pop r2
-    pop r1
-    push r1 ; call tobinary r2 &bin2
-    movrr r2 r1
-    push r2
-    movar bin2 r2
-    jsr tobinary
-    pop r2
-    pop r1
+	movrr r1 r1
+	movxr r1 r1
+	push r2
+	movar bin1 r2
+	jsr tobinary
+	pop r2
+	pop r1
+	push r1 ; call tobinary r2 &bin2
+	movrr r2 r1
+	push r2
+	movar bin2 r2
+	jsr tobinary
+	pop r2
+	pop r1
     movar bin2 r5
     movar bin1 r6
     addir #24 r5
     addir #16 r6
     movir #8 r7
     movb r5 r6 r7
-    push r1 ; call todecimal &bin1
-    movar bin1 r1
-    jsr todecimal
-    pop r1
+	push r1 ; call todecimal &bin1
+	movar bin1 r1
+	jsr todecimal
+	pop r1
     movrx r0 r1
+    ret
+x86push: push r1 ; addim #1 esp
+	movmr esp r1
+	addir #1 r1
+	movrm r1 esp
+	pop r1
+    movmr esp r4
+    movrx r1 r4
+    ret
+x86pop: movmr esp r4
+    movxr r4 r0
+	push r1 ; subim #1 esp
+	movmr esp r1
+	subir #1 r1
+	movrm r1 esp
+	pop r1
     ret
 main: movar eax r1
     jsr low8
     printi r0
     outs endl
-    push r1 ; call sethigh8 &eax #122
-    movar eax r1
-    push r2
-    movir #122 r2
-    jsr sethigh8
-    pop r2
-    pop r1
+	push r1 ; call sethigh8 &eax #122
+	movar eax r1
+	push r2
+	movir #122 r2
+	jsr sethigh8
+	pop r2
+	pop r1
     movmr eax r6
     printi r6
     outs endl
+x86_init:	nop 
+_main:	movmr ebp r1
+	push r1 ; call x86push r1
+	movrr r1 r1
+	jsr x86push
+	pop r1
+	movmr esp r1
+	movar ebp r2
+	movrx r1 r2
+	push r1 ; call x86push #0
+	movir #0 r1
+	jsr x86push
+	pop r1
+	jsr L0$pb
+L0$pb:	movar eax r1
+	jsr x86pop ; call x86pop
+	movrx r0 r1
+	movar eax r2
+	movrx r1 r2
+	movir #4 r1
+	movrx r1 r2
+	movir #4 r1
+	movar eax r2
+	movrx r1 r2
+	movar ebp r1
+	jsr x86pop ; call x86pop
+	movrx r0 r1
+	jsr x86pop ; call x86pop
+	ret 
+L_bees$non_lazy_ptr:	.integer #0
