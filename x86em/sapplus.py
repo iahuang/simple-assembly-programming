@@ -163,7 +163,7 @@ def apply_macro(T:type, _lines):
 
         if macro.preserve_indentation and line.lstrip()!=line:
             for j, new_line in enumerate(insertion):
-                insertion[j] = "\t"+new_line.strip()
+                insertion[j] = "    "+new_line.strip()
         
         lines[i] = "\n".join(insertion)
 

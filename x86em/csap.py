@@ -8,16 +8,28 @@ from sapplus import preprocess
 argv = sys.argv[1:]
 
 
-def c_compile(path, optimization=1):
+def gcc_compile(path, optimization=1, pic=False):
+    args = ["-O"+str(optimization), "-fno-asynchronous-unwind-tables"]
+    if not pic:
+        args.append("-fno-pic")
     p = subprocess.run(["gcc",
                         "-S",
-                        "-O"+str(optimization),
                         "-m32",
-                        "-fno-asynchronous-unwind-tables",
                         "-masm=intel",
-                        path])
+                        path]+args)
     return p
 
+def clang_compile(path, optimization=1, pic=False):
+    args = ["-O"+str(optimization), "-fno-asynchronous-unwind-tables"]
+    if not pic:
+        args.append("-fno-pic")
+    p = subprocess.run(["clang",
+                        "-S",
+                        "-m32",
+                        "-mllvm",
+                        "--x86-asm-syntax=intel",
+                        path]+args)
+    return p
 
 def run():
     src_path = argv[0]
@@ -25,7 +37,7 @@ def run():
     for arg in argv:
         if arg.startswith("-O"):
             optimization = arg[2:]
-    p = c_compile(src_path, optimization=optimization)
+    p = gcc_compile(src_path, optimization=optimization, pic=not "-nopic" in argv)
     if p.returncode != 0:
         print("GCC terminated with exit code "+str(p.returncode))
         exit(0)
@@ -42,7 +54,7 @@ def run():
         print(output)
     
     with open("out.sap", "w") as fl:
-        fl.write(preprocess(output))
+        fl.write(output)
 
 
 if __name__ == "__main__":

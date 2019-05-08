@@ -89,7 +89,7 @@ class IndirectReference: Reference {
             return cpu.get(cpu.reg[registerNum])
         }
         set (to) {
-            return cpu.set(cpu.reg[registerNum], to)
+            cpu.set(cpu.reg[registerNum], to)
         }
     }
 }

@@ -11,8 +11,8 @@ _main:                                  ## @main
 L0$pb:
 	pop	eax
 	mov	eax, dword ptr [eax + L_bees$non_lazy_ptr-L0$pb]
-	mov	dword ptr [eax], 4
-	mov	eax, 4
+	mov	dword ptr [eax], 69420
+	mov	eax, 69420
 	pop	ebp
 	ret
                                         ## -- End function

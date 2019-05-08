@@ -113,14 +113,14 @@ extension CPU {
         stackPush(rpc+1)
         jmp(to: to)
 
-        for regNum in 1...9 {
+        for regNum in 5...9 {
             stackPush(reg[regNum])
         }
 
     }
 
     func ret() {
-        for regNum in (1...9).reversed() {
+        for regNum in (5...9).reversed() {
             reg[regNum] = stackPop()
         }
         let returnTo = stackPop()
