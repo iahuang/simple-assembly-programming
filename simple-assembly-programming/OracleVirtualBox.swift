@@ -36,7 +36,6 @@
     }
 
     func exeBinary(_ arr: [Int]){
-
         var data = arr
         let arrData = [arr[0], arr[1]]
         data.removeFirst(2)
@@ -52,5 +51,28 @@
         }
         return(newArr)
     }
-
+    
+    func assmeble(_ chunks: [String]){
+        
+    }
+    
+    func runAss(){
+        while(!quit){
+            print("Enter path")
+            let com = readLine()
+            if let out = com{
+                if out == "quit" {
+                    break
+                }
+                let nice = readTextFile(out)
+                if(nice.message == nil){
+                    assemble(splitStringIntoLines(expression: nice.fileText!))
+                    print("Assembly program ended with no errors")
+                } else {
+                    print(nice.message!)
+                }
+                
+            }
+        }
+    }
  }
