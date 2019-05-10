@@ -10,7 +10,7 @@
  import Foundation
 
  class VM{
-    var inteli7 = CPU(memSize: 69420, numRegisters: 420)
+    var inteli7 = CPU(memSize: 1000, numRegisters: 10)
     //var disasm = Disassembler()
     var quit = false
 

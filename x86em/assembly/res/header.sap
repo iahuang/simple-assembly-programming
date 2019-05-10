@@ -1,0 +1,105 @@
+.start main
+eax: .integer #0
+ebx: .integer #0
+ecx: .integer #0
+edx: .integer #0
+esi: .integer #0
+edi: .integer #0
+
+esp: .integer #0
+ebp: .integer #0
+
+byte1: .allocate #32
+
+endl: .integer #1
+    .integer #10
+
+tobinary:
+    ; r1 is the value
+    ; r2 is the pointer to the bytedump
+    ; r5 is a copy of r1
+    ; r6 is the remainder
+    ; r7 is the number of bits pushed
+    ; r8 is r1/2
+    clrr r7
+    addir #32 r2
+biniter:
+    movrr r1 r5
+    divir #2 r1
+    movrr r1 r8
+    mulir #2 r1
+    cmprr r1 r5
+    movrr r8 r1
+    clrr r6
+    jmpne remainder1 ; if remainder is 1
+    jmpz remainder0 ; if remainder is 0
+remainder1:
+    movir #1 r6
+remainder0:
+    cmpir #0 r5
+    jmpz endbin
+    push r6
+    addir #1 r7
+
+    jmp biniter
+
+endbin:
+    subrr r7 r2
+ebiniter:
+    pop r6
+    movrx r6 r2
+    addir #1 r2
+    subir #1 r7
+    cmpir #0 r7
+    jmpne ebiniter
+    
+    ret
+
+power:
+    ; r0 a^b
+    ; r1 a
+    ; r2 b
+    movir #1 r0
+    cmpir #0 r2
+    jmpz endpower
+poweriter:
+    mulrr r1 r0
+    subir #1 r2
+    cmpir #0 r2
+    jmpne poweriter
+endpower:
+    ret
+
+todecimal:
+    ; r0 total
+    ; r1 pointer to the bytedump
+    ; r5 the exponent
+    ; r6 digit term (n*2^x)
+
+    addir #31 r1
+    clrr r0
+    clrr r5
+
+todeciter:
+    movxr r1 r6
+    push r1
+    push r2
+    push r0
+    movir #2 r1
+    movrr r5 r2
+    jsr power
+    mulrr r0 r6
+
+    pop r0
+    pop r2
+    pop r1
+
+    addrr r6 r0    
+    
+    addir #1 r5
+    subir #1 r1
+
+    cmpir #32 r5
+    jmpne todeciter
+
+    ret

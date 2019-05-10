@@ -12,7 +12,13 @@ extension CPU {
     func clr(target: Ref) {
         target.value = 0
     }
-
+    func clrb(start: Ref, count: Ref) {
+        //print("start: \(start.value) count: \(count.value)")
+        for offset in 0...count.value-1 {
+            clr(target: MemoryReference(self, start.value+offset))
+        }
+    }
+    
     func mov(src: Ref, dest: Ref) {
         dest.value = src.value
     }
@@ -107,14 +113,14 @@ extension CPU {
         stackPush(rpc+1)
         jmp(to: to)
 
-        for regNum in 1...9 {
+        for regNum in 5...9 {
             stackPush(reg[regNum])
         }
 
     }
 
     func ret() {
-        for regNum in (1...9).reversed() {
+        for regNum in (5...9).reversed() {
             reg[regNum] = stackPop()
         }
         let returnTo = stackPop()
