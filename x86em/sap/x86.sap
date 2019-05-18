@@ -14,6 +14,7 @@ ebp: .integer #0
 
 ; x86 flags
 zf: .integer #0
+sf: .integer #0
 cf: .integer #0
 of: .integer #0
 

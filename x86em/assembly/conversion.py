@@ -242,6 +242,7 @@ class x86toSAP:
                 "   zf = #0",
                 "endif"
             ])
+            seg.write_raw("*sf = *bin3") # set sign flag to the sign bit of the result
         elif mne == "add":
             seg.write_seg(self.to_register(args[1], 1))
             seg.write_seg(self.to_ptr_register(args[0], 2))
