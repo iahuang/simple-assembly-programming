@@ -10,7 +10,7 @@ LO8 = ["al", "bl", "cl", "dl"]
 REGS = REG32+REG16+HI8+LO8
 
 def clean_label(label):
-    return label.replace("$","D").replace("_","U")
+    return label.replace("$","D").replace("_","U").replace(".","A")
 
 class SAPLine:
     def __init__(self, type, name, *args):
@@ -57,6 +57,9 @@ class SAPProgramSegment:
     def write_seg(self, seg):
         self.lines += seg.lines
     
+    def write_raw_lines(self, lines):
+        self.lines += [SAPLine("raw", line) for line in lines]
+    
     def get_last(self):
         return self.lines[-1]
     
@@ -95,7 +98,7 @@ class x86toSAP:
                     print("Throwing")
                     exit()
                 
-                self.init.write_inst("movar", args[0], "r1")
+                self.init.write_inst("movar", clean_label(args[0]), "r1")
                 self.init.write_inst("movrm", "r1", last_label.name)
                 self.prg.write_directive("integer", "#0")
         elif name in str_directives:
@@ -203,14 +206,46 @@ class x86toSAP:
             self.next_checkpoint_id+=1
         elif mne == "ret":
             seg.write_raw("call x86ret")
+        elif mne == "jmp":
+            seg.write_inst("jmp", args[0].value)
+        elif mne == "jne":
+            seg.write_raw_lines([
+                "if *zf == #0",
+                "   jmp "+args[0].value,
+                "endif"
+            ])
+        elif mne == "je":
+            seg.write_raw_lines([
+                "if *zf == #1",
+                "   jmp "+args[0].value,
+                "endif"
+            ])
+        elif mne == "jle":
+            seg.write_raw_lines([
+                "if *zf == #1",
+                "   jmp "+args[0].value,
+                "endif"
+            ])
         elif mne == "test":
             seg.write_seg(self.to_register(args[0], 1))
             seg.write_seg(self.to_register(args[1], 2))
             seg.write_raw("call tobinary r1 &bin1")
             seg.write_raw("call tobinary r2 &bin2")
             seg.write_raw("call bitwiseand &bin1 &bin2 &bin3")
-
-            
+            seg.write_raw("call todecimal &bin3")
+            seg.write_inst("clrm", "cf")
+            seg.write_inst("clrm", "of")
+            seg.write_raw_lines([
+                "if r0 == #0",
+                "   zf = #1",
+                "else",
+                "   zf = #0",
+                "endif"
+            ])
+        elif mne == "add":
+            seg.write_seg(self.to_register(args[1], 1))
+            seg.write_seg(self.to_ptr_register(args[0], 2))
+            seg.write_inst("addrx", "r1", "r2")
         else:
             seg.write_comment("unknown command "+inst.inst)
         return seg

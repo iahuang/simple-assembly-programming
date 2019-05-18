@@ -1,5 +1,5 @@
 	.section	__TEXT,__text,regular,pure_instructions
-	.build_version macos, 10, 14
+	.build_version macos, 10, 14	sdk_version 10, 14
 	.intel_syntax noprefix
 	.globl	_print                  ## -- Begin function print
 	.p2align	4, 0x90
@@ -72,7 +72,7 @@ LBB2_6:
 	.p2align	4, 0x90
 LBB2_8:                                 ## =>This Inner Loop Header: Depth=1
 	mov	eax, edi
-	add	esi, eax
+	add	esi, edi
 	mov	edi, esi
 	mov	esi, eax
 	inc	edx

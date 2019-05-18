@@ -56,6 +56,5 @@ def run():
     with open("out.sap", "w") as fl:
         fl.write(output)
 
-
 if __name__ == "__main__":
     run()

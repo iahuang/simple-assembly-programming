@@ -1,0 +1,99 @@
+0: 4 114 49 32       
+5: 4 114 50 32       STRTMP1: .string "r2 ="
+10: 4 114 51 32      STRTMP2: .string "r3 ="
+15: 4 114 52 32      STRTMP3: .string "r4 ="
+20: 4 114 53 32      STRTMP4: .string "r5 ="
+25: 11 105 115 32    STRTMP5: .string "is equal to"
+37: 15 105 115 32    STRTMP6: .string "is not equal to"
+53:                  .start main
+53: 3 121 117 112    yes: .string "yup"
+57: 13               a: .integer #13
+58: 5 1 1            main: movir #1 r1 ; r1 = #1
+61: 5 2 2                movir #2 r2 ; r2 = #2
+64: 55 0                 outs STRTMP0 ; println "r1 =" r1
+66: 44 32                outci #32
+68: 41 1                 push r1
+70: 6 1 1                movrr r1 r1
+73: 49 1                 printi r1
+75: 42 1                 pop r1
+77: 44 10                outci #10
+79: 55 5                 outs STRTMP1 ; println "r2 =" r2
+81: 44 32                outci #32
+83: 41 1                 push r1
+85: 6 2 1                movrr r2 r1
+88: 49 1                 printi r1
+90: 42 1                 pop r1
+92: 44 10                outci #10
+94: 55 10                outs STRTMP2 ; println "r3 =" r3
+96: 44 32                outci #32
+98: 41 1                 push r1
+100: 6 3 1               movrr r3 r1
+103: 49 1                printi r1
+105: 42 1                pop r1
+107: 44 10               outci #10
+109: 55 15               outs STRTMP3 ; println "r4 =" r4
+111: 44 32               outci #32
+113: 41 1                push r1
+115: 6 4 1               movrr r4 r1
+118: 49 1                printi r1
+120: 42 1                pop r1
+122: 44 10               outci #10
+124: 55 20               outs STRTMP4 ; println "r5 =" r5
+126: 44 32               outci #32
+128: 41 1                push r1
+130: 6 5 1               movrr r5 r1
+133: 49 1                printi r1
+135: 42 1                pop r1
+137: 44 10               outci #10
+139: 41 1            push r1
+141: 41 2            push r2
+143: 6 1 1           movrr r1 r1
+146: 10 57 2         movar a r2
+149: 9 2 2           movxr r2 r2
+152: 34 1 2          cmprr r1 r2
+155: 42 2            pop r2
+157: 42 1            pop r1
+159: 37 163          jmpz bnIF0
+161: 28 194          jmp bnELSE0
+163: 41 1            bnIF0: push r1 ; println r1 "is equal to" *a
+165: 6 1 1               movrr r1 r1
+168: 49 1                printi r1
+170: 42 1                pop r1
+172: 44 32               outci #32
+174: 55 25               outs STRTMP5
+176: 44 32               outci #32
+178: 41 1                push r1
+180: 10 57 1             movar a r1
+183: 9 1 1               movxr r1 r1
+186: 49 1                printi r1
+188: 42 1                pop r1
+190: 44 10               outci #10
+192: 28 223          jmp bnEND0
+194: 41 1            bnELSE0: push r1 ; println r1 "is not equal to" *a
+196: 6 1 1               movrr r1 r1
+199: 49 1                printi r1
+201: 42 1                pop r1
+203: 44 32               outci #32
+205: 55 37               outs STRTMP6
+207: 44 32               outci #32
+209: 41 1                push r1
+211: 10 57 1             movar a r1
+214: 9 1 1               movxr r1 r1
+217: 49 1                printi r1
+219: 42 1                pop r1
+221: 44 10               outci #10
+
+Symbol Table:
+main 58 
+strtmp1 5 
+yes 53 
+strtmp5 25 
+bnend0 223 
+strtmp0 0 
+strtmp2 10 
+strtmp3 15 
+strtmp4 20 
+strtmp6 37 
+a 57 
+bnelse0 194 
+bnif0 163 
