@@ -52,6 +52,45 @@ func splitStringIntoLines(expression: String) -> [String]{
     return expression.split{$0 == "\n" || $0 == "\r" || $0 == "\r\n"}.map{ String($0) }
 }
 
+func getRidOfThePoop(_ yote: String)-> String{
+    var result = yote
+    if(yote.count == 1 || yote.count == 0){
+        return(result)
+    }
+    if(yote.first == " " || yote.first == "\"" || yote.first == "\\"){
+        print(yote)
+        result.removeFirst()
+        result.removeLast()
+    }
+    return(result)
+}
+
+func tokenize(_ str: String)-> [String]{
+    var ret = str.split{$0 == " "}.map{ String($0) }
+    var pointer = 0
+    let origSize = ret.count - 1
+    for n in ret{
+        var strArr = [String]()
+        if(n.first == ";"){
+            ret.removeSubrange(pointer..<ret.count)
+        }
+        if(n.first == "\"" || n.first == "\\"){
+            if(pointer != origSize){
+                for rem in pointer..<ret.count{
+                    strArr.append(ret[rem])
+                }
+                ret.removeSubrange(pointer..<ret.count)
+                var append = strArr.joined(separator: " ")
+                append.removeFirst()
+                append.removeLast()
+                ret.append(getRidOfThePoop(append))
+            }
+        }
+        pointer += 1
+    }
+    return(ret)
+}
+
 func readTextFile(_ path: String) -> (message: String?, fileText: String?){
     let text: String
     do{

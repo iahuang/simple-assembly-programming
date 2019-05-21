@@ -52,9 +52,15 @@
         return(newArr)
     }
     
-    func assmeble(_ chunks: [String]){
-        
+    func assmebleSAP(_ chunks: [String]){
+        var tokens = [[String]](repeating: [""], count: chunks.count)
+        for string in 0..<chunks.count{
+            tokens[string] = tokenize(chunks[string])
+        }
+        print(tokens)
     }
+    
+    
     
     func runAss(){
         while(!quit){
@@ -66,7 +72,7 @@
                 }
                 let nice = readTextFile(out)
                 if(nice.message == nil){
-                    assemble(splitStringIntoLines(expression: nice.fileText!))
+                    assmebleSAP(splitStringIntoLines(expression: nice.fileText!))
                     print("Assembly program ended with no errors")
                 } else {
                     print(nice.message!)
