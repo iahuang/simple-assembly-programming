@@ -8,13 +8,19 @@ edx: .integer #0
 esi: .integer #0
 edi: .integer #0
 
-; x86 sepcial registers
+; x86 special registers
 esp: .integer #0
 ebp: .integer #0
+
+; x86 flags
+zf: .integer #0
+cf: .integer #0
+of: .integer #0
 
 ; emulator binary registers (for bitwise operations)
 bin1: .allocate #32
 bin2: .allocate #32
+bin3: .allocate #32
 
 endl: .integer #1
     .integer #10
@@ -26,6 +32,11 @@ tobinary:
     ; r6 is the remainder
     ; r7 is the number of bits computed
     ; r8 is r1 / 2
+
+    if r1 < #0
+        mulir #-1 r1
+    endif
+
     clrr r7
     movir #32 r9
     clrb r2 r9
@@ -238,21 +249,48 @@ x86ret: ; Uses code manipulation to jump to a custom location
 retval:
     jmp labelnull
 
-test:
-    movar eax r1
-    jsr low8
-    printi r0
-    outs endl
-    call sethigh8 &eax #122
-    movmr eax r6
-    printi r6
-    outs endl
+bitwiseand:
+    ; r1 address of binary register
+    ; r2 address of binary register
+    ; r3 address of output binary register
+    ; r5 offset
+    ; r6 value1
+    ; r7 value2
+    ; r8 set value
+
+    movir #0 r5
+anditer:
+    movxr r1 r6
+    movxr r2 r7
+    cmpir #1 r6
+    jmpne andset0
+    cmprr r6 r7
+    jmpz andset1
+    jmpne andset0
+andset1:
+    movir #1 r8
+    jmp andnoset
+andset0:
+    movir #0 r8
+andnoset:
+    movrx r8 r3
+
+    addir #1 r1
+    addir #1 r2
+    addir #1 r3
+    addir #1 r5
+
+    cmpir #32 r5
+    jmpne anditer
+
+    ret
     
+
 Ufinal:
     .allocate #4
 
 x86init:
-    movar L_.str r1
+    movar LUAstr r1
     movrm r1 Uhmm
     movar programend r1
     addir #100 r1
@@ -329,9 +367,23 @@ L2Dpb:
     movar esi r2
     movrx r1 r2
     
-    ; unknown command test
+    movmr esi r1
+    movmr esi r2
+    call tobinary r1 &bin1
+    call tobinary r2 &bin2
+    call bitwiseand &bin1 &bin2 &bin3
+    call todecimal &bin3
+    clrm cf
+    clrm of
+    if r0 == #0
+       zf = #1
+    else
+       zf = #0
+    endif
     
-    ; unknown command jle
+    if *zf == #1
+       jmp LBB2U1
+    endif
     
     ; unknown command lea
     
@@ -351,12 +403,12 @@ L2Dpb:
     movar edi r2
     movrx r1 r2
     
-    ; unknown command jmp
+    jmp LBB2U6
     
 LBB2U1:
     ; unknown command xor
     
-    ; unknown command jmp
+    jmp LBB2U9
     
 LBB2U4:
     movmr edx r1
@@ -372,34 +424,68 @@ LBB2U4:
     movrx r1 r2
     
 LBB2U5:
-    ; unknown command add
+    movmr edi r1
+    movar esi r2
+    addrx r1 r2
     
-    ; unknown command add
+    movmr esi r1
+    movar edi r2
+    addrx r1 r2
     
-    ; unknown command add
+    movmr edi r1
+    movar esi r2
+    addrx r1 r2
     
-    ; unknown command add
+    movmr esi r1
+    movar edi r2
+    addrx r1 r2
     
-    ; unknown command add
+    movmr edi r1
+    movar esi r2
+    addrx r1 r2
     
-    ; unknown command add
+    movmr esi r1
+    movar edi r2
+    addrx r1 r2
     
-    ; unknown command add
+    movmr edi r1
+    movar esi r2
+    addrx r1 r2
     
-    ; unknown command add
+    movmr esi r1
+    movar edi r2
+    addrx r1 r2
     
-    ; unknown command add
+    movir #8 r1
+    movar eax r2
+    addrx r1 r2
     
-    ; unknown command jne
+    if *zf == #0
+       jmp LBB2U5
+    endif
     
 LBB2U6:
     movmr esi r1
     movar eax r2
     movrx r1 r2
     
-    ; unknown command test
+    movmr edx r1
+    movmr edx r2
+    call tobinary r1 &bin1
+    call tobinary r2 &bin2
+    call bitwiseand &bin1 &bin2 &bin3
+    call todecimal &bin3
+    clrm cf
+    clrm of
+    if r0 == #0
+       zf = #1
+    else
+       zf = #0
+    endif
     
-    ; unknown command je
+    if *zf == #1
+       jmp LBB2U9
+    endif
     
     ; unknown command neg
     
@@ -408,7 +494,9 @@ LBB2U8:
     movar eax r2
     movrx r1 r2
     
-    ; unknown command add
+    movmr edi r1
+    movar esi r2
+    addrx r1 r2
     
     movmr esi r1
     movar edi r2
@@ -420,7 +508,9 @@ LBB2U8:
     
     ; unknown command inc
     
-    ; unknown command jne
+    if *zf == #0
+       jmp LBB2U8
+    endif
     
 LBB2U9:
     movmr ecx r3
@@ -454,7 +544,7 @@ LBB2U9:
     
 Un:
     .integer #5
-LU.str:
+LUAstr:
     .string "hmmm"
 Uhmm:
     .integer #0

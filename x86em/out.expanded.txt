@@ -10,11 +10,28 @@ esi: .integer #0
 edi: .integer #0
 esp: .integer #0
 ebp: .integer #0
+zf: .integer #0
+cf: .integer #0
+of: .integer #0
 bin1: .allocate #32
 bin2: .allocate #32
+bin3: .allocate #32
 endl: .integer #1
     .integer #10
-tobinary: clrr r7
+tobinary: push r1
+push r2
+movrr r1 r1
+movir #0 r2
+cmprr r1 r2
+pop r2
+pop r1
+jmpp bnIF0
+jmp bnELSE0
+bnIF0: mulir #-1 r1
+jmp bnEND0
+bnELSE0: nop
+bnEND0: nop
+    clrr r7
     movir #32 r9
     clrb r2 r9
     cmpir #0 r1
@@ -221,22 +238,29 @@ x86ret: jsr x86pop ; call x86pop
     addir #1 r4
     movrx r0 r4
 retval: jmp labelnull
-test: movar eax r1
-    jsr low8
-    printi r0
-    outs endl
-    push r1 ; call sethigh8 &eax #122
-    movar eax r1
-    push r2
-    movir #122 r2
-    jsr sethigh8
-    pop r2
-    pop r1
-    movmr eax r6
-    printi r6
-    outs endl
-Ubees: .allocate #4
-x86init: movar programend r1
+bitwiseand: movir #0 r5
+anditer: movxr r1 r6
+    movxr r2 r7
+    cmpir #1 r6
+    jmpne andset0
+    cmprr r6 r7
+    jmpz andset1
+    jmpne andset0
+andset1: movir #1 r8
+    jmp andnoset
+andset0: movir #0 r8
+andnoset: movrx r8 r3
+    addir #1 r1
+    addir #1 r2
+    addir #1 r3
+    addir #1 r5
+    cmpir #32 r5
+    jmpne anditer
+    ret
+Ufinal: .allocate #4
+x86init: movar LUAstr r1
+    movrm r1 Uhmm
+    movar programend r1
     addir #100 r1
     movrm r1 esp
     movar end r2
@@ -246,19 +270,49 @@ x86init: movar programend r1
     jsr x86push
     pop r1
 end: jmp Umain
-    movmr Ubees r1 
-    printi r1 
     halt 
+Uprint: movmr ebp r1
+    push r1 ; call x86push r1
+    movrr r1 r1
+    jsr x86push
+    pop r1
+    movmr esp r1
+    movar ebp r2
+    movrx r1 r2
+    movar ebp r1
+    jsr x86pop ; call x86pop
+    movrx r0 r1
+    jsr x86ret ; call x86ret
+Uprinti: movmr ebp r1
+    push r1 ; call x86push r1
+    movrr r1 r1
+    jsr x86push
+    pop r1
+    movmr esp r1
+    movar ebp r2
+    movrx r1 r2
+    movar ebp r1
+    jsr x86pop ; call x86pop
+    movrx r0 r1
+    jsr x86ret ; call x86ret
 Umain: movmr ebp r1
     push r1 ; call x86push r1
     movrr r1 r1
     jsr x86push
     pop r1
-    brk
     movmr esp r1
     movar ebp r2
     movrx r1 r2
-    brk
+    movmr edi r1
+    push r1 ; call x86push r1
+    movrr r1 r1
+    jsr x86push
+    pop r1
+    movmr esi r1
+    push r1 ; call x86push r1
+    movrr r1 r1
+    jsr x86push
+    pop r1
     push r2
     movar checkpoint0 r2
     addir #2 r2
@@ -267,35 +321,298 @@ Umain: movmr ebp r1
     jsr x86push
     pop r1
     pop r2
-    brk
-checkpoint0: jmp L0Dpb
-L0Dpb: movar eax r1
+checkpoint0: jmp L2Dpb
+L2Dpb: movar ecx r1
     jsr x86pop ; call x86pop
     movrx r0 r1
-    brk
-    movmr eax r3
-    movar LUbeesDnonUlazyUptr r4
+    movmr ecx r3
+    movar Un r4
     addrr r4 r1
-    movar L0Dpb r5
+    movar L2Dpb r5
     subrr r5 r1
     movrr r3 r1
     movxr r1 r1
+    movar esi r2
+    movrx r1 r2
+    movmr esi r1
+    movmr esi r2
+    push r1 ; call tobinary r1 &bin1
+    movrr r1 r1
+    push r2
+    movar bin1 r2
+    jsr tobinary
+    pop r2
+    pop r1
+    push r1 ; call tobinary r2 &bin2
+    movrr r2 r1
+    push r2
+    movar bin2 r2
+    jsr tobinary
+    pop r2
+    pop r1
+    push r1 ; call bitwiseand &bin1 &bin2 &bin3
+    movar bin1 r1
+    push r2
+    movar bin2 r2
+    push r3
+    movar bin3 r3
+    jsr bitwiseand
+    pop r3
+    pop r2
+    pop r1
+    push r1 ; call todecimal &bin3
+    movar bin3 r1
+    jsr todecimal
+    pop r1
+    clrm cf
+    clrm of
+push r1
+push r2
+movrr r0 r1
+movir #0 r2
+cmprr r1 r2
+pop r2
+pop r1
+jmpz bnIF1
+jmp bnELSE1
+bnIF1: push r1 ; zf = #1
+    movir #1 r1
+    movrm r1 zf
+    pop r1
+jmp bnEND1
+bnELSE1: push r1 ; zf = #0
+    movir #0 r1
+    movrm r1 zf
+    pop r1
+bnEND1: nop
+push r1
+push r2
+movar zf r1
+movxr r1 r1
+movir #1 r2
+cmprr r1 r2
+pop r2
+pop r1
+jmpz bnIF2
+jmp bnELSE2
+bnIF2: jmp LBB2U1
+jmp bnEND2
+bnELSE2: nop
+bnEND2: nop
+    movmr esi r1
+    movar edx r2
+    movrx r1 r2
+    movir #1 r1
+    movar edi r2
+    movrx r1 r2
+    jmp LBB2U6
+LBB2U1: jmp LBB2U9
+LBB2U4: movmr edx r1
     movar eax r2
     movrx r1 r2
-    brk
-    movir #69420 r1
-    movmr eax r3
+    movir #1 r1
+    movar edi r2
+    movrx r1 r2
+LBB2U5: movmr edi r1
+    movar esi r2
+    push r1 ; addrx r1 r2
+    movxr r2 r1
+    addrr r1 r1
+    movrx r1 r2
+    pop r1
+    movmr esi r1
+    movar edi r2
+    push r1 ; addrx r1 r2
+    movxr r2 r1
+    addrr r1 r1
+    movrx r1 r2
+    pop r1
+    movmr edi r1
+    movar esi r2
+    push r1 ; addrx r1 r2
+    movxr r2 r1
+    addrr r1 r1
+    movrx r1 r2
+    pop r1
+    movmr esi r1
+    movar edi r2
+    push r1 ; addrx r1 r2
+    movxr r2 r1
+    addrr r1 r1
+    movrx r1 r2
+    pop r1
+    movmr edi r1
+    movar esi r2
+    push r1 ; addrx r1 r2
+    movxr r2 r1
+    addrr r1 r1
+    movrx r1 r2
+    pop r1
+    movmr esi r1
+    movar edi r2
+    push r1 ; addrx r1 r2
+    movxr r2 r1
+    addrr r1 r1
+    movrx r1 r2
+    pop r1
+    movmr edi r1
+    movar esi r2
+    push r1 ; addrx r1 r2
+    movxr r2 r1
+    addrr r1 r1
+    movrx r1 r2
+    pop r1
+    movmr esi r1
+    movar edi r2
+    push r1 ; addrx r1 r2
+    movxr r2 r1
+    addrr r1 r1
+    movrx r1 r2
+    pop r1
+    movir #8 r1
+    movar eax r2
+    push r1 ; addrx r1 r2
+    movxr r2 r1
+    addrr r1 r1
+    movrx r1 r2
+    pop r1
+push r1
+push r2
+movar zf r1
+movxr r1 r1
+movir #0 r2
+cmprr r1 r2
+pop r2
+pop r1
+jmpz bnIF3
+jmp bnELSE3
+bnIF3: jmp LBB2U5
+jmp bnEND3
+bnELSE3: nop
+bnEND3: nop
+LBB2U6: movmr esi r1
+    movar eax r2
+    movrx r1 r2
+    movmr edx r1
+    movmr edx r2
+    push r1 ; call tobinary r1 &bin1
+    movrr r1 r1
+    push r2
+    movar bin1 r2
+    jsr tobinary
+    pop r2
+    pop r1
+    push r1 ; call tobinary r2 &bin2
+    movrr r2 r1
+    push r2
+    movar bin2 r2
+    jsr tobinary
+    pop r2
+    pop r1
+    push r1 ; call bitwiseand &bin1 &bin2 &bin3
+    movar bin1 r1
+    push r2
+    movar bin2 r2
+    push r3
+    movar bin3 r3
+    jsr bitwiseand
+    pop r3
+    pop r2
+    pop r1
+    push r1 ; call todecimal &bin3
+    movar bin3 r1
+    jsr todecimal
+    pop r1
+    clrm cf
+    clrm of
+push r1
+push r2
+movrr r0 r1
+movir #0 r2
+cmprr r1 r2
+pop r2
+pop r1
+jmpz bnIF4
+jmp bnELSE4
+bnIF4: push r1 ; zf = #1
+    movir #1 r1
+    movrm r1 zf
+    pop r1
+jmp bnEND4
+bnELSE4: push r1 ; zf = #0
+    movir #0 r1
+    movrm r1 zf
+    pop r1
+bnEND4: nop
+push r1
+push r2
+movar zf r1
+movxr r1 r1
+movir #1 r2
+cmprr r1 r2
+pop r2
+pop r1
+jmpz bnIF5
+jmp bnELSE5
+bnIF5: jmp LBB2U9
+jmp bnEND5
+bnELSE5: nop
+bnEND5: nop
+LBB2U8: movmr edi r1
+    movar eax r2
+    movrx r1 r2
+    movmr edi r1
+    movar esi r2
+    push r1 ; addrx r1 r2
+    movxr r2 r1
+    addrr r1 r1
+    movrx r1 r2
+    pop r1
+    movmr esi r1
+    movar edi r2
+    movrx r1 r2
+    movmr eax r1
+    movar esi r2
+    movrx r1 r2
+push r1
+push r2
+movar zf r1
+movxr r1 r1
+movir #0 r2
+cmprr r1 r2
+pop r2
+pop r1
+jmpz bnIF6
+jmp bnELSE6
+bnIF6: jmp LBB2U8
+jmp bnEND6
+bnELSE6: nop
+bnEND6: nop
+LBB2U9: movmr ecx r3
+    movar LUfinalDnonUlazyUptr r4
+    addrr r4 r1
+    movar L2Dpb r5
+    subrr r5 r1
+    movrr r3 r1
+    movxr r1 r1
+    movar ecx r2
+    movrx r1 r2
+    movmr eax r1
+    movmr ecx r3
     movrr r3 r2
     movrx r1 r2
-    brk
-    movir #69420 r1
-    movar eax r2
-    movrx r1 r2
-    brk
+    movar esi r1
+    jsr x86pop ; call x86pop
+    movrx r0 r1
+    movar edi r1
+    jsr x86pop ; call x86pop
+    movrx r0 r1
     movar ebp r1
     jsr x86pop ; call x86pop
     movrx r0 r1
-    brk
     jsr x86ret ; call x86ret
-LUbeesDnonUlazyUptr: .integer #0
+Un: .integer #5
+LUAstr: .string "hmmm"
+Uhmm: .integer #0
+LUfinalDnonUlazyUptr: .integer #0
 programend: nop

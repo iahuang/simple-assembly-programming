@@ -14,6 +14,9 @@ ebp: .integer #0
 
 ; x86 flags
 zf: .integer #0
+sf: .integer #0
+cf: .integer #0
+of: .integer #0
 
 ; emulator binary registers (for bitwise operations)
 bin1: .allocate #32
@@ -30,6 +33,14 @@ tobinary:
     ; r6 is the remainder
     ; r7 is the number of bits computed
     ; r8 is r1 / 2
+
+    if r1 < #0
+        mulir #-1 r1
+    endif
+
+    push r1
+    push r2
+    
     clrr r7
     movir #32 r9
     clrb r2 r9
@@ -66,7 +77,14 @@ ebiniter:
     subir #1 r7
     cmpir #0 r7
     jmpne ebiniter
-tobinret:
+
+    pop r2 ; set r2 to its original pointer value
+    pop r1 ; set r1 to its original value
+
+    if r1 < #0
+        movim #1 r2
+    endif
+
     ret
 
 power:
@@ -89,6 +107,11 @@ todecimal:
     ; r1 pointer to the bytedump
     ; r5 the exponent
     ; r6 digit term (n*2^x)
+    ; r7 sign bit
+
+    movxr r1 r7 ; save and clear the sign bit
+    clrr r8
+    movrx r8 r1
 
     addir #31 r1
     clrr r0
@@ -115,6 +138,10 @@ todeciter:
 
     cmpir #32 r5
     jmpne todeciter
+
+    if r7 == #1
+        mulir #-1 r0
+    endif
 
     ret
 
@@ -277,14 +304,4 @@ andnoset:
     jmpne anditer
 
     ret
-    
-x86init:
-    call tobinary #13 &bin1
-    call tobinary #7 &bin2
-
-    call bitwiseand &bin1 &bin2 &bin3
-
-    call todecimal &bin3
-
-    printi r0
     
