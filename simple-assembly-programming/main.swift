@@ -8,8 +8,10 @@
 
 import Foundation
 
+let yote = " _  movmr steps r1"
+print(tokenize(yote))
 let arr = [14, 32, 102, 97, 99, 116, 111, 114, 105, 97, 108, 32, 105, 115, 32, 49, 5, 55, 32]
 
 var vm = VM()
 
-vm.run()
+vm.runAss()

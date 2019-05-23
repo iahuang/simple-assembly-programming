@@ -1,0 +1,4 @@
+
+initialString: .string "hi my name is bob"
+.Tuple \ 0 _ 0 _ r \
+initialString: .string "XX.YYY+"
