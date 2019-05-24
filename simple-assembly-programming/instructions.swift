@@ -171,4 +171,21 @@ extension CPU {
     func nop(){
         return
     }
+
+    func brk() {
+        while (true) {
+            print("Sdb (\(rpc), \(get(rpc))> ", terminator: "")
+            let _input = readLine()
+            if let input = _input {
+                let shouldReturn = handleDebuggerInput(input)
+                if shouldReturn {
+                    break
+                }
+            } else {
+                // EOF
+                break
+            }
+        }
+    }
+
 }
