@@ -98,18 +98,17 @@ func buildArgTable() -> [String:[String]] {
 
 func getLength(_ token: [String], _ assmCase: assmCase)-> Int{
     if findAssmCase(token) == .regular{
-        print(token[0])
         return(argTable[token[0]]!.count + 1)
     }
     if findAssmCase(token) == .string{
-        print(token)
-        return(token[1].count + 1)
+        print()
+        return(token[1].count - 1)
     }
     if findAssmCase(token) == .tuple{
         return(5)
     }
     if(findAssmCase(token) == .start){
-        return(1)
+        return(0)
     }
     if(findAssmCase(token) == .int){
         return(1)

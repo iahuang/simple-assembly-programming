@@ -47,6 +47,7 @@
     func arrStrToInt(_ arr: [String])-> [Int]{
         var newArr = [Int](repeating: 0, count: arr.count)
         for n in 0..<arr.count{
+            print(arr[n])
             newArr[n] = Int(arr[n])!
         }
         return(newArr)
