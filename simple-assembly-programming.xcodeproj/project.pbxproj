@@ -13,6 +13,7 @@
 		87937A94224DA43E00137B95 /* Referance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87937A93224DA43E00137B95 /* Referance.swift */; };
 		8D03AD792245785D00D956C7 /* util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D03AD782245785D00D956C7 /* util.swift */; };
 		8D03AD7B2245E71400D956C7 /* sapCPU.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D03AD7A2245E71400D956C7 /* sapCPU.swift */; };
+		8D13B7622297B41700B6F092 /* Debugger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D13B7612297B41700B6F092 /* Debugger.swift */; };
 		8D29FD03224AC03400A99116 /* instructions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D29FD02224AC03400A99116 /* instructions.swift */; };
 		8D4AD3B52249C4830021D7B3 /* Disassembler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4AD3B42249C4830021D7B3 /* Disassembler.swift */; };
 		8DC5CDDB22530160002288E2 /* Assembler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DC5CDDA22530160002288E2 /* Assembler.swift */; };
@@ -40,6 +41,7 @@
 		87937A93224DA43E00137B95 /* Referance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Referance.swift; sourceTree = "<group>"; };
 		8D03AD782245785D00D956C7 /* util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = util.swift; sourceTree = "<group>"; };
 		8D03AD7A2245E71400D956C7 /* sapCPU.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sapCPU.swift; sourceTree = "<group>"; };
+		8D13B7612297B41700B6F092 /* Debugger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Debugger.swift; sourceTree = "<group>"; };
 		8D29FD02224AC03400A99116 /* instructions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = instructions.swift; sourceTree = "<group>"; };
 		8D4AD3B42249C4830021D7B3 /* Disassembler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Disassembler.swift; sourceTree = "<group>"; };
 		8DC5CDD9225300EE002288E2 /* Doubles.binary */ = {isa = PBXFileReference; lastKnownFileType = text; path = Doubles.binary; sourceTree = "<group>"; };
@@ -80,6 +82,7 @@
 		8DD3E2172245725B002083B5 /* simple-assembly-programming */ = {
 			isa = PBXGroup;
 			children = (
+				8D13B7612297B41700B6F092 /* Debugger.swift */,
 				8D03AD782245785D00D956C7 /* util.swift */,
 				8D03AD7A2245E71400D956C7 /* sapCPU.swift */,
 				8D29FD02224AC03400A99116 /* instructions.swift */,
@@ -172,6 +175,7 @@
 				8DD3E2192245725B002083B5 /* main.swift in Sources */,
 				8DC5CDDB22530160002288E2 /* Assembler.swift in Sources */,
 				8D03AD792245785D00D956C7 /* util.swift in Sources */,
+				8D13B7622297B41700B6F092 /* Debugger.swift in Sources */,
 				8D4AD3B52249C4830021D7B3 /* Disassembler.swift in Sources */,
 				8D03AD7B2245E71400D956C7 /* sapCPU.swift in Sources */,
 				87937A922248723B00137B95 /* Commands.swift in Sources */,
