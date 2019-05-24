@@ -1,5 +1,0 @@
-{
-    "xcode-proj-name": "simple-assembly-programming",
-    "assembler-binary": "lib/Assembler_OSX",
-    "instruction-set-extensions": "sap_extended.json"
-}
