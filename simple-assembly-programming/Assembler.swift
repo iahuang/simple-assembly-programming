@@ -20,11 +20,11 @@ var shorthandInstructionSet = [
     "sub ir rr mr xr",
     "mul ir rr mr xr",
     "div ir rr mr xr",
-    "jmp",
     "soj z nz",
     "aoj z nz",
     "cmp ir rr mr",
     "jmp n z p",
+    "jmp",
     "jsr",
     "ret",
     "push",
@@ -95,11 +95,12 @@ func buildArgTable() -> [String:[String]] {
 
 func getLength(_ token: [String], _ assmCase: assmCase)-> Int{
     if findAssmCase(token) == .regular{
-        return(argTable[token[0]]!.count)
+        print(token[0])
+        return(argTable[token[0]]!.count + 1)
     }
     if findAssmCase(token) == .string{
         print(token)
-        return(token[1].count)
+        return(token[1].count + 1)
     }
     if findAssmCase(token) == .tuple{
         return(5)
@@ -156,6 +157,7 @@ func assemble(_ prgm: String)-> [Int]{
     for token in tokens{
         let info = tokenInfo(token)
         if(info.0 == .label){
+            print(info)
             symbolTable[info.2!] = index
         }
         index += info.1
