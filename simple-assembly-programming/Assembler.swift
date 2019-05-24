@@ -79,12 +79,14 @@ func buildArgTable() -> [String:[String]] {
         
         for i in 1...parts.count-1 {
             let suffix = parts[i]
+            let mne = base+String(suffix)
             var argtypes = suffix.map { String($0) }
-            
-            if ["aoj", "soj", "mp"].contains(base) {
+            if mne == "movb" {
+                argtypes = ["r", "r", "r"]
+            } else if ["aoj", "soj", "mp"].contains(base) {
                 argtypes = ["m"]
             } else if suffix == "b" {
-                argtypes = ["r", "r", "r"]
+                argtypes = ["r", "r"]
             }
             
             argtable[base+String(suffix)] = argtypes
