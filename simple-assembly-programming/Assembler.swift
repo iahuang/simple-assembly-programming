@@ -151,6 +151,7 @@ func tokenizer(_ prgm: String) -> [[String]] {
 
 func assemble(prgm: String)-> [Int]{
     var symbolTable = [String : Int]()
+    let tokens = tokenizer(prgm)
     
     return([0])
 }
