@@ -54,13 +54,48 @@
     
     func assmebleSAP(_ chunks: [String]){
         var tokens = [[String]](repeating: [""], count: chunks.count)
+        
         for string in 0..<chunks.count{
-            tokens[string] = tokenize(chunks[string])
+            var check = tokenize(chunks[string])
+            if let hold = check.last{
+                var str = hold
+                if str.first! == "\""{
+                    str.removeFirst()
+                    str.removeLast()
+                    check[check.count - 1] = str
+                }
+            }
+            tokens[string] = check
         }
-        print(tokens)
+        
+        
     }
     
-    
+    func tokenize(_ str: String)-> [String]{
+        var ret = str.split{$0 == " "}.map{ String($0) }
+        var pointer = 0
+        let origSize = ret.count - 1
+        for n in ret{
+            var strArr = [String]()
+            if(n.first == ";"){
+                ret.removeSubrange(pointer..<ret.count)
+            }
+            if(n.first == "\"" || n.first == "\\"){
+                if(pointer != origSize){
+                    for rem in pointer..<ret.count{
+                        strArr.append(ret[rem])
+                    }
+                    ret.removeSubrange(pointer..<ret.count)
+                    var append = strArr.joined(separator: " ")
+                    append.removeFirst()
+                    append.removeLast()
+                    ret.append(getRidOfThePoop(append))
+                }
+            }
+            pointer += 1
+        }
+        return(ret)
+    }
     
     func runAss(){
         while(!quit){
