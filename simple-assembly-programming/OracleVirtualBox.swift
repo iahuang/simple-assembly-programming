@@ -52,11 +52,6 @@
         return(newArr)
     }
     
-    func assmebleSAP(_ crashingAndBurning: String){
-        let tokens = tokenizer(crashingAndBurning)
-        print(tokens)
-    }
-    
     func runAss(){
         while(!quit){
             print("Enter path")
@@ -67,7 +62,7 @@
                 }
                 let nice = readTextFile(out)
                 if(nice.message == nil){
-                    assmebleSAP(nice.fileText!)
+                    assemble(nice.fileText!)
                     print("Assembly program ended with no errors")
                 } else {
                     print(nice.message!)
