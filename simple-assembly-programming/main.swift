@@ -12,4 +12,4 @@ let arr = [14, 32, 102, 97, 99, 116, 111, 114, 105, 97, 108, 32, 105, 115, 32, 4
 print(argTable)
 var vm = VM()
 
-vm.runAss()
+vm.run()
