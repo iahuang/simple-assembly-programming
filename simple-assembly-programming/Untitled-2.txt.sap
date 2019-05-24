@@ -1,0 +1,21 @@
+.start test
+begin: .integer #0
+end: .integer #20
+newline: .integer #10
+intromess: .string "A program to print doubles"
+doublemess: .string " doubled is "
+; comments
+test: movmr begin r8
+    movmr end r9
+    movmr newline r0
+    outcr r0
+do01: movrr r8 r1
+    addrr r8 r1
+    printi r8
+    outs doublemess
+    printi r1
+    outcr r0
+    cmprr r8 r9
+    addir #1 r8
+    jmpne do01
+wh01: halt
