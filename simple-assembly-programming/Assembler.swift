@@ -84,7 +84,7 @@ func buildArgTable() -> [String:[String]] {
                 argtypes = ["r", "r", "r"]
             } else if ["aoj", "soj", "jmp", "jsr", "outs", "jmpne"].contains(base) {
                 argtypes = ["m"]
-            } else if ["push", "pop", "printi"].contains(mne) {
+            } else if ["push", "pop", "printi", "outcr"].contains(mne) {
                 argtypes = ["r"]
             } else if suffix == "b" {
                 argtypes = ["r", "r"]
