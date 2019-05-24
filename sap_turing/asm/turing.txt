@@ -128,7 +128,7 @@ searchTuples: nop
    subrr r4 r5
    movar tape r1 ; tape pointer
    clrr r4 ; tape index, starting from 0
-  
+
 headedTapeDisplayIter: nop
    movxr r1 r3 ; r3 is the tape character
    cmprr r5 r4
