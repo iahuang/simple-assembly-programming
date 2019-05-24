@@ -8,37 +8,8 @@
 
 import Foundation
 
-var doubles = """
-.start test
-begin: .integer #0
-end: .integer #20
-newline: .integer #10
-intromess: .string "A program to print doubles"
-doublemess: .string " doubled is "
-; comments
-test: movmr begin r8
-    movmr end r9
-    movmr newline r0
-    outcr r0
-do01: movrr r8 r1
-    addrr r8 r1
-    printi r8
-    outs doublemess
-    printi r1
-    outcr r0
-    cmprr r8 r9
-    addir #1 r8
-    jmpne do01
-wh01: halt
-""" 
-
-func groupQuotes(quote: Character="\"") -> [String] {
-    var chunks = [String]()
-    for char in qu
-}
-
-func tokenize(prgm: String) -> [[String]] {
-
+enum assmCase{
+    case label, string, tuple, start, regular
 }
 
 var shorthandInstructionSet = [
@@ -70,11 +41,13 @@ var shorthandInstructionSet = [
     "jmpne"
 ]
 
+var argTable = buildArgTable()
+
 func buildMnemonicTable () -> [Int:String] {
     var mnemonics = [Int:String]()
     var names = [String]()
     var instructionCode = 0
-        
+    
     for inst in shorthandInstructionSet {
         var parts = inst.split(separator: " ")
         if parts.count == 1 {
@@ -104,21 +77,111 @@ func buildArgTable() -> [String:[String]] {
         for i in 1...parts.count-1 {
             let suffix = parts[i]
             var argtypes = suffix.map { String($0) }
-
-            if ["aoj", "soj", "jmp"].contains(base)
-            if suffix == "b" {
+            
+            if ["aoj", "soj", "mp"].contains(base) {
+                argtypes = ["m"]
+            } else if suffix == "b" {
                 argtypes = ["r", "r", "r"]
             }
-
+            
             argtable[base+String(suffix)] = argtypes
         }
     }
     return argtable
 }
 
-var mtable = buildMnemonicTable()
+func groupQuotes(_ s: String, _ grouping:[String]) -> [String] {
+    var stack = [String]()
+    var block = ""
+    var string = [String]()
+    for c in s {
+        var c = String(c)
+        if grouping.contains(c) { // Open group
+            if stack.count == 0 { // Lowest level
+                stack.append(c)
+            } else if stack[stack.count-1] == c { // Close group
+                string.append(block)
+                stack.popLast()
+                block = ""
+            } else {
+                stack.append(c)
+            }
+        } else if stack.count == 0 { // Is on root nesting, and delimiter is reached
+            string.append(c)
+        } else {
+            block += c
+        }
+    }
+    
+    if block.count != 0 {
+        string.append(block)
+    }
+    
+    return string
+}
 
-func assemble(prgm: String) {
+func splitChunks(_ chunks: [String], _ delimiter: Character) -> [String] {
+    var chunks = chunks // Set argument to writeable
+    chunks.append(String(delimiter)) // Ensure last block gets added
+    
+    var newChunks = [String]()
+    var block = ""
+    
+    for chunk in chunks {
+        if chunk == String(delimiter) {
+            newChunks.append(block)
+            block = ""
+        } else {
+            block+=chunk
+        }
+    }
+    return newChunks
+}
+
+func tokenizer(_ prgm: String) -> [[String]] {
+    var lines = [[String]]()
+    for line in prgm.split(separator: "\n") {
+        var line = NSString(string: String(line)).trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        var chunks = splitChunks(groupQuotes(line, ["\"","\\"]), " ")
+        
+        lines.append(chunks.filter{$0.count != 0})
+    }
+    return lines
+}
+
+func assemble(prgm: String)-> [Int]{
     var symbolTable = [String : Int]()
     
+    return([0])
+}
+
+func writeString(_ str: [String])-> [Int]{
+    if(str[0] != ".string" || str.count != 2){
+        print("Did not pass a valid String Arg")
+        return([0])
+    }
+    var arrStr = Array(str[1])
+    var result = [Int](repeating: -1, count: str[1].count)
+    for n in 0..<arrStr.count{
+        result[n] = characterToUnicode(arrStr[n])
+    }
+    return(result)
+}
+
+func writeTuple(_ str: [String])-> [Int]{
+    return([0])
+}
+
+func writeRegInst(_ str: [String])-> [Int]{
+    return([0])
+}
+
+func findAssmCase(_ line: [String])-> assmCase{
+    if(line[0] == ".start"){return(assmCase.start)}
+    if(line[0] == ".string"){return(assmCase.string)}
+    if(line[0] == ".tuple"){return(assmCase.tuple)}
+    if let check = line[0].last{
+        if(check == ":"){return(assmCase.label)}
+    }
+    return(assmCase.regular)
 }
