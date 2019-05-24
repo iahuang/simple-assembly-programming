@@ -10,6 +10,11 @@
 
 import Foundation
 
+extension BinaryInteger {
+    var intvalue: Int {
+        return self as! Int
+    }
+}
 
 extension Character {
     var isAscii: Bool {
@@ -19,6 +24,25 @@ extension Character {
         return isAscii ? unicodeScalars.first?.value : nil
     }
 }
+
+extension String {
+    subscript (bounds: CountableClosedRange<Int>) -> String {
+        let start = index(startIndex, offsetBy: bounds.lowerBound)
+        let end = index(startIndex, offsetBy: bounds.upperBound)
+        return String(self[start...end])
+    }
+    
+    subscript (bounds: CountableRange<Int>) -> String {
+        let start = index(startIndex, offsetBy: bounds.lowerBound)
+        let end = index(startIndex, offsetBy: bounds.upperBound)
+        return String(self[start..<end])
+    }
+    
+    subscript(bounds: Int) -> String {
+        return String(self[bounds])
+    }
+}
+
 
 extension StringProtocol {
     var ascii: [UInt32] {
@@ -38,6 +62,11 @@ extension Int {
 
 func unicodeValueToCharacter(_ n: Int)-> Character{
     return(Character(UnicodeScalar(n)!))
+}
+
+func characterToUnicode(_ c: Character) -> Int {
+    let s = String(c)
+    return Int(s.unicodeScalars[s.unicodeScalars.startIndex].value)
 }
 
 func charactorToValue(_ n: String){

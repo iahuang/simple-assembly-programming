@@ -54,7 +54,6 @@
     
     func assmebleSAP(_ chunks: [String]){
         var tokens = [[String]](repeating: [""], count: chunks.count)
-        
         for string in 0..<chunks.count{
             var check = tokenize(chunks[string])
             if let hold = check.last{
@@ -67,8 +66,6 @@
             }
             tokens[string] = check
         }
-        
-        
     }
     
     func tokenize(_ str: String)-> [String]{
