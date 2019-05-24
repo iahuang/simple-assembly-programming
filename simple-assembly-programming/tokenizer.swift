@@ -17,8 +17,9 @@ func groupQuotes(_ s: String, _ grouping:[String]) -> [String] {
         if grouping.contains(c) { // Open group
             if stack.count == 0 { // Lowest level
                 stack.append(c)
+                block = c
             } else if stack[stack.count-1] == c { // Close group
-                string.append(block)
+                string.append(block+c)
                 stack.popLast()
                 block = ""
             } else {
