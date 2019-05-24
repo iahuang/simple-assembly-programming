@@ -9,7 +9,7 @@
 import Foundation
 
 enum assmCase{
-    case label, string, tuple, start, regular
+    case label, string, tuple, start, regular, int, allocate, error
 }
 
 var shorthandInstructionSet = [
@@ -41,7 +41,10 @@ var shorthandInstructionSet = [
     "jmpne"
 ]
 
-var argTable = buildArgTable()
+let argTable = buildArgTable()
+let mneTable = buildMnemonicTable()
+
+
 
 func buildMnemonicTable () -> [Int:String] {
     var mnemonics = [Int:String]()
@@ -90,70 +93,75 @@ func buildArgTable() -> [String:[String]] {
     return argtable
 }
 
-func groupQuotes(_ s: String, _ grouping:[String]) -> [String] {
-    var stack = [String]()
-    var block = ""
-    var string = [String]()
-    for c in s {
-        var c = String(c)
-        if grouping.contains(c) { // Open group
-            if stack.count == 0 { // Lowest level
-                stack.append(c)
-                block = c
-            } else if stack[stack.count-1] == c { // Close group
-                string.append(block+c)
-                stack.popLast()
-                block = ""
-            } else {
-                stack.append(c)
-            }
-        } else if stack.count == 0 { // Is on root nesting, and delimiter is reached
-            string.append(c)
-        } else {
-            block += c
-        }
+func getLength(_ token: [String], _ assmCase: assmCase)-> Int{
+    if findAssmCase(token) == .regular{
+        return(argTable[token[0]]!.count)
     }
-    
-    if block.count != 0 {
-        string.append(block)
+    if findAssmCase(token) == .string{
+        print(token)
+        return(token[1].count)
     }
-    
-    return string
+    if findAssmCase(token) == .tuple{
+        return(5)
+    }
+    if(findAssmCase(token) == .start){
+        return(1)
+    }
+    if(findAssmCase(token) == .int){
+        return(1)
+    }
+    if(findAssmCase(token) == .allocate){
+        var temp = token[1]
+        temp.removeFirst()
+        return(Int(temp)!)
+    }
+    return(-100)
 }
 
-func splitChunks(_ chunks: [String], _ delimiter: Character) -> [String] {
-    var chunks = chunks // Set argument to writeable
-    chunks.append(String(delimiter)) // Ensure last block gets added
-    
-    var newChunks = [String]()
-    var block = ""
-    
-    for chunk in chunks {
-        if chunk == String(delimiter) {
-            newChunks.append(block)
-            block = ""
-        } else {
-            block+=chunk
-        }
+func tokenInfo(_ token: [String])-> (assmCase, Int, String?){
+    if findAssmCase(token) == .label{
+        let newToken = arrayTake(m: 1, n: token.count - 1, arrayIn: token) as! [String]
+        var temp = token[0]
+        temp.removeLast()
+        let labelName = temp
+        return(findAssmCase(token), getLength(newToken, findAssmCase(newToken)), labelName)
     }
-    return newChunks
+    if findAssmCase(token) == .regular{
+        return(assmCase.regular, getLength(token, assmCase.regular), nil)
+    }
+    if findAssmCase(token) == .string{
+        return(assmCase.string, getLength(token, assmCase.string), nil)
+    }
+    if findAssmCase(token) == .tuple{
+        return(assmCase.tuple, getLength(token, assmCase.tuple), nil)
+    }
+    if(findAssmCase(token) == .start){
+        return(assmCase.start, getLength(token, assmCase.start), nil)
+    }
+    if(findAssmCase(token) == .int){
+        return(assmCase.int, getLength(token, assmCase.int), nil)
+    }
+    if(findAssmCase(token) == .allocate){
+        return(assmCase.allocate, getLength(token, assmCase.allocate), nil)
+    }
+    return(assmCase.error, -69420, nil)
 }
 
-func tokenizer(_ prgm: String) -> [[String]] {
-    var lines = [[String]]()
-    for line in prgm.split(separator: "\n") {
-        var line = NSString(string: String(line)).trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        var chunks = splitChunks(groupQuotes(line, ["\"","\\"]), " ")
-        
-        lines.append(chunks.filter{$0.count != 0})
-    }
-    return lines
-}
-
-func assemble(prgm: String)-> [Int]{
+func assemble(_ prgm: String)-> [Int]{
     var symbolTable = [String : Int]()
+    let tokens = tokenizer(prgm)
+    var result = [Int](repeating: -69, count: 1000)
+    var index = 0
     
-    return([0])
+    for token in tokens{
+        let info = tokenInfo(token)
+        if(info.0 == .label){
+            symbolTable[info.2!] = index
+        }
+        index += info.1
+    }
+    print(symbolTable)
+    return(result)
 }
 
 func writeString(_ str: [String])-> [Int]{
@@ -181,6 +189,8 @@ func findAssmCase(_ line: [String])-> assmCase{
     if(line[0] == ".start"){return(assmCase.start)}
     if(line[0] == ".string"){return(assmCase.string)}
     if(line[0] == ".tuple"){return(assmCase.tuple)}
+    if(line[0] == ".integer"){return(assmCase.int)}
+    if(line[0] == ".allocate"){return(assmCase.allocate)}
     if let check = line[0].last{
         if(check == ":"){return(assmCase.label)}
     }

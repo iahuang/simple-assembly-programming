@@ -10,7 +10,6 @@ import Foundation
 
 let arr = [14, 32, 102, 97, 99, 116, 111, 114, 105, 97, 108, 32, 105, 115, 32, 49, 5, 55, 32]
 
-print(writeString([".string", "hiowoafowenfnaoif"]))
 var vm = VM()
 
 vm.runAss()

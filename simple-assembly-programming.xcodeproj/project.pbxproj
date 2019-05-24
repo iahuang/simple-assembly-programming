@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		876DB47922979D3E00B94182 /* tokenizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 876DB47822979D3E00B94182 /* tokenizer.swift */; };
 		87937A90224871A900137B95 /* OracleVirtualBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87937A8F224871A900137B95 /* OracleVirtualBox.swift */; };
 		87937A922248723B00137B95 /* Commands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87937A912248723B00137B95 /* Commands.swift */; };
 		87937A94224DA43E00137B95 /* Referance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87937A93224DA43E00137B95 /* Referance.swift */; };
@@ -33,6 +34,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		876DB47822979D3E00B94182 /* tokenizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = tokenizer.swift; sourceTree = "<group>"; };
 		87937A8F224871A900137B95 /* OracleVirtualBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OracleVirtualBox.swift; sourceTree = "<group>"; };
 		87937A912248723B00137B95 /* Commands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Commands.swift; sourceTree = "<group>"; };
 		87937A93224DA43E00137B95 /* Referance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Referance.swift; sourceTree = "<group>"; };
@@ -85,6 +87,7 @@
 				87937A8F224871A900137B95 /* OracleVirtualBox.swift */,
 				8DC5CDE222530373002288E2 /* Doubles.sasm */,
 				8DC5CDDA22530160002288E2 /* Assembler.swift */,
+				876DB47822979D3E00B94182 /* tokenizer.swift */,
 				87937A93224DA43E00137B95 /* Referance.swift */,
 				87937A912248723B00137B95 /* Commands.swift */,
 				8D4AD3B42249C4830021D7B3 /* Disassembler.swift */,
@@ -173,6 +176,7 @@
 				8D03AD7B2245E71400D956C7 /* sapCPU.swift in Sources */,
 				87937A922248723B00137B95 /* Commands.swift in Sources */,
 				87937A90224871A900137B95 /* OracleVirtualBox.swift in Sources */,
+				876DB47922979D3E00B94182 /* tokenizer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

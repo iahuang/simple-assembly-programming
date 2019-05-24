@@ -103,3 +103,7 @@ func readTextFile(_ path: String) -> (message: String?, fileText: String?){
     }
     return (nil, text)
 }
+
+func arrayTake(m: Int, n: Int, arrayIn: Array<Any>) -> Array<Any> {
+    return Array(arrayIn[m...n])
+}
