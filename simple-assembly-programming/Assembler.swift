@@ -83,7 +83,7 @@ func buildArgTable() -> [String:[String]] {
             var argtypes = suffix.map { String($0) }
             if mne == "movb" {
                 argtypes = ["r", "r", "r"]
-            } else if ["aoj", "soj", "mp"].contains(base) {
+            } else if ["aoj", "soj", "jmp"].contains(base) {
                 argtypes = ["m"]
             } else if suffix == "b" {
                 argtypes = ["r", "r"]
