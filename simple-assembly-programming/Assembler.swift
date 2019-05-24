@@ -45,7 +45,6 @@ let argTable = buildArgTable()
 let mneTable = buildMnemonicTable()
 
 
-
 func buildMnemonicTable () -> [Int:String] {
     var mnemonics = [Int:String]()
     var names = [String]()
@@ -83,8 +82,10 @@ func buildArgTable() -> [String:[String]] {
             var argtypes = suffix.map { String($0) }
             if mne == "movb" {
                 argtypes = ["r", "r", "r"]
-            } else if ["aoj", "soj", "jmp"].contains(base) {
+            } else if ["aoj", "soj", "jmp", "jsr", "outs", "jmpne"].contains(base) {
                 argtypes = ["m"]
+            } else if ["push", "pop", "printi"].contains(mne) {
+                argtypes = ["r"]
             } else if suffix == "b" {
                 argtypes = ["r", "r"]
             }
