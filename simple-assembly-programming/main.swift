@@ -7,7 +7,8 @@
 //
 
 import Foundation
-
+print(mneTable)
+print(Commands.jmp.rawValue)
 var vm = VM()
 
 vm.runAss()
