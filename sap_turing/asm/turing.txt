@@ -38,7 +38,7 @@ leftbracket: .string "["
 rightbracket: .string "]"
 
 copyInitial: nop
-   movar initialString r5 ;
+   movar initialString r5
    movmr initialString r6
    addir #1 r5
    movar tape r7

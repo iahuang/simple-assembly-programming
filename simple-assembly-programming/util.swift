@@ -66,7 +66,7 @@ func unicodeValueToCharacter(_ n: Int)-> Character{
 
 func characterToUnicode(_ c: Character) -> Int {
     let s = String(c)
-    return Int(s.unicodeScalars[s.unicodeScalars.startIndex].value)
+    return Int(s.unicodeScalars[s.unicodeScalars.startIndex].value) - 32
 }
 
 func charactorToValue(_ n: String){
