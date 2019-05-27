@@ -124,6 +124,14 @@ class Assmbler{
         return(-100)
     }
     
+    func getLst()->String{
+        return(listPrintOut)
+    }
+    
+    func clearListPrint(){
+        listPrintOut = ""
+    }
+    
     func tokenInfo(_ token: [String])-> (assmCase, Int, String?){
         if findAssmCase(token) == .label{
             let newToken = arrayTake(m: 1, n: token.count - 1, arrayIn: token) as! [String]
@@ -168,8 +176,31 @@ class Assmbler{
         var result = [Int](repeating: -69, count: index + 2)
         var counter = 0
         
+        var assmLst = ""
         for token in tokens{
+            var addToAssmLst = ""
+            addToAssmLst += "\(counter): "
             let assmTok = assembleToken(token, type: findAssmCase(token))
+            if assmTok.count > 4{
+                for index in 0...3{
+                    addToAssmLst += "\(assmTok[index]) "
+                }
+            } else {
+                for index in assmTok{
+                    addToAssmLst += "\(index) "
+                }
+            }
+            for _ in 0...21-addToAssmLst.count{
+                addToAssmLst += " "
+            }
+            if(findAssmCase(token) == .regular){
+                addToAssmLst += "\t"
+            }
+            for str in token{
+                addToAssmLst += "\(str) "
+            }
+            addToAssmLst += "\n"
+            assmLst += addToAssmLst
             for n in assmTok{
                 if counter > index + 1{
                     break
@@ -178,6 +209,7 @@ class Assmbler{
                 counter += 1
             }
         }
+        listPrintOut = assmLst
         return(result)
     }
     
