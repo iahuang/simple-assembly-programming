@@ -98,6 +98,7 @@ func buildArgTable() -> [String:[String]] {
 class Assmbler{
     var symbolTable = [String : Int]()
     var prgmLength = -420
+    var listPrintOut = ""
     
     func getLength(_ token: [String], _ assmCase: assmCase)-> Int{
         if findAssmCase(token) == .regular{
@@ -353,5 +354,13 @@ class Assmbler{
             return(Int(token)!)
         }
         return(checkDict(token)!)
+    }
+    
+    func getSymTable()->String{
+        var result = ""
+        for (key, value) in symbolTable{
+            result += "\(key): \(value)\n"
+        }
+        return(result)
     }
 }
