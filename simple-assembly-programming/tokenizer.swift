@@ -60,7 +60,7 @@ func splitChunks(_ chunks: [String], _ delimiter: Character) -> [String] {
 func tokenizer(_ prgm: String) -> [[String]] {
     var lines = [[String]]()
     for line in prgm.split(separator: "\n") {
-        var line = NSString(string: String(line)).trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        var line = NSString(string: String(line)).trimmingCharacters(in: .whitespacesAndNewlines)
         var chunks = splitChunks(groupQuotes(line, ["\"","\\"]), " ")
         
         lines.append(chunks.filter{$0.count != 0})

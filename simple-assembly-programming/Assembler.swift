@@ -100,6 +100,13 @@ class Assmbler{
     var prgmLength = -420
     var listPrintOut = ""
     
+    func checkLabel(_ strArr: [String])-> Bool{
+        if strArr[0].last == ":"{
+            return(true)
+        }
+        return(false)
+    }
+    
     func getLength(_ token: [String], _ assmCase: assmCase)-> Int{
         if findAssmCase(token) == .regular{
             return(argTable[token[0]]!.count + 1)
@@ -163,9 +170,28 @@ class Assmbler{
     
     func assemble(_ prgm: String)-> [Int]{
         let tokens = tokenizer(prgm)
+        var resultTokens = [[String]](repeating: ["IANBAD"], count: tokens.count)
         var index = 0
         
-        for token in tokens{
+        for token in 0..<tokens.count{
+            var resultTok = [String](repeating: "ianBad", count: tokens[token].count)
+            if checkLabel(tokens[token]){
+                
+                resultTok[0] = tokens[token][0]
+                resultTok[1] = tokens[token][1].lowercased()
+                for index in 2..<tokens[token].count{
+                    resultTok[index] = tokens[token][index]
+                }
+            } else {
+                resultTok[0] = tokens[token][0].lowercased()
+                for index in 1..<tokens[token].count{
+                    resultTok[index] = tokens[token][index]
+                }
+            }
+            resultTokens[token] = resultTok
+        }
+        
+        for token in resultTokens{
             let info = tokenInfo(token)
             if(info.0 == .label){
                 symbolTable[info.2!] = index
@@ -177,7 +203,7 @@ class Assmbler{
         var counter = 0
         
         var assmLst = ""
-        for token in tokens{
+        for token in resultTokens{
             var addToAssmLst = ""
             addToAssmLst += "\(counter): "
             let assmTok = assembleToken(token, type: findAssmCase(token))

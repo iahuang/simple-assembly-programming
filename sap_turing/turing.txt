@@ -1,4 +1,4 @@
-.start begin
+.Start begin
 
 startTuples: nop
 .Tuple \ 0 _ 0 _ r \
