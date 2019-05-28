@@ -27,9 +27,11 @@ extension CPU {
             }
         case "pst":
             print("Symbol Table:")
-            for (lable, addr) in labelAddresses {
-                print("  \(addr):  \(get(addr))")
+            for (label, addr) in labelAddresses {
+                print("  \(label):  \(addr)")
             }
+        case "wreg":
+            reg[Int(args[0])!] = Int(args[1])!
         default:
             print("Unknown command")
         }
