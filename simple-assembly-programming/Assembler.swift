@@ -118,330 +118,255 @@ func buildArgTable() -> [String:[String]] {
     return argtable
 }
 
-class Assmbler{
+typealias LineLST = (text: String, bin: [Int], error: String?)
+
+func parseInt (_ lineLst: inout LineLST,  _ intLiteral: String) -> Int {
+    if intLiteral.hasPrefix("#") {
+        if let intValue = Int(String(intLiteral[1..<intLiteral.count])) {
+            return intValue
+        } else {
+            lineLst.error = "Invalid integer literal"
+            return 0
+        }
+    } else {
+        lineLst.error = "Invalid integer literal"
+        return 0
+        
+    }
+}
+
+func parseRegister(_ lineLst: inout LineLST, _ regLiteral: String) -> Int {
+    if regLiteral.hasPrefix("r") {
+        if let regValue = Int(String(regLiteral[1..<regLiteral.count])) {
+            if regValue < 0 || regValue > 9 {
+                lineLst.error = "Register r\(regValue) does not exist"
+                return 0 
+            }
+            return regValue
+        } else {
+            lineLst.error = "Invalid register"
+            return 0
+        }
+    } else {
+        lineLst.error = "Invalid register"
+        return 0
+        
+    }
+}
+
+class Assmbler {
     var symbolTable = [String : Int]()
+    var labelPlaceholders = [Int: String]()
     var prgmLength = -420
     var listPrintOut = ""
-    
-    func checkLabel(_ strArr: [String])-> Bool{
-        if strArr[0].last == ":"{
-            return(true)
-        }
-        return(false)
-    }
-    
-    func getLength(_ token: [String], _ assmCase: assmCase)-> Int{
-        if findAssmCase(token) == .regular{
-            return(argTable[token[0]]!.count + 1)
-        }
-        if findAssmCase(token) == .string{
-            return(token[1].count - 1)
-        }
-        if findAssmCase(token) == .tuple{
-            return(5)
-        }
-        if(findAssmCase(token) == .start){
-            return(0)
-        }
-        if(findAssmCase(token) == .int){
-            return(1)
-        }
-        if(findAssmCase(token) == .allocate){
-            var temp = token[1]
-            temp.removeFirst()
-            return(Int(temp)!)
-        }
-        return(-100)
-    }
-    
-    func getLst()->String{
-        return(listPrintOut)
-    }
-    
-    func clearListPrint(){
-        listPrintOut = ""
-    }
-    
-    func tokenInfo(_ token: [String])-> (assmCase, Int, String?){
-        if findAssmCase(token) == .label{
-            let newToken = arrayTake(m: 1, n: token.count - 1, arrayIn: token) as! [String]
-            var temp = token[0]
-            temp.removeLast()
-            let labelName = temp
-            return(findAssmCase(token), getLength(newToken, findAssmCase(newToken)), labelName)
-        }
-        if findAssmCase(token) == .regular{
-            return(assmCase.regular, getLength(token, assmCase.regular), nil)
-        }
-        if findAssmCase(token) == .string{
-            return(assmCase.string, getLength(token, assmCase.string), nil)
-        }
-        if findAssmCase(token) == .tuple{
-            return(assmCase.tuple, getLength(token, assmCase.tuple), nil)
-        }
-        if(findAssmCase(token) == .start){
-            return(assmCase.start, getLength(token, assmCase.start), nil)
-        }
-        if(findAssmCase(token) == .int){
-            return(assmCase.int, getLength(token, assmCase.int), nil)
-        }
-        if(findAssmCase(token) == .allocate){
-            return(assmCase.allocate, getLength(token, assmCase.allocate), nil)
-        }
-        return(assmCase.error, -69420, nil)
-    }
-    
-    func assemble(_ prgm: String)-> [Int]{
-        let tokens = tokenizer(prgm)
-        var resultTokens = [[String]](repeating: ["IANBAD"], count: tokens.count)
-        var index = 0
+    var err = ""
+    var lst = [LineLST]()
+    var pos = 0
+    var entry = 0
+    var entryLabel: String? = nil
+    init (){
         
-        for token in 0..<tokens.count{
-            var resultTok = [String](repeating: "ianBad", count: tokens[token].count)
-            if checkLabel(tokens[token]){
-                
-                resultTok[0] = tokens[token][0]
-                resultTok[1] = tokens[token][1].lowercased()
-                for index in 2..<tokens[token].count{
-                    resultTok[index] = tokens[token][index]
-                }
-            } else {
-                resultTok[0] = tokens[token][0].lowercased()
-                for index in 1..<tokens[token].count{
-                    resultTok[index] = tokens[token][index]
-                }
-            }
-            resultTokens[token] = resultTok
+    }
+    
+    func assembleLine(_ line: String) {
+        var tokens = tokenize(line)
+        var err:String? = nil
+        var lineLst:LineLST = ("", [], nil)
+        tokens = tokens.map{$0.trim()}
+       
+        func writeToBin(_ v: Int) {
+            lineLst.bin.append(v)
+            pos+=1
         }
         
-        for token in resultTokens{
-            let info = tokenInfo(token)
-            if(info.0 == .label){
-                symbolTable[info.2!] = index
-            }
-            index += info.1
+        if tokens.count == 0 {
+            return
         }
-        prgmLength = index
-        var result = [Int](repeating: -69, count: index + 2)
-        var counter = 0
         
-        var assmLst = ""
-        for token in resultTokens{
-            var addToAssmLst = ""
-            addToAssmLst += "\(counter): "
-            let assmTok = assembleToken(token, type: findAssmCase(token))
-            if assmTok.count > 4{
-                for index in 0...3{
-                    addToAssmLst += "\(assmTok[index]) "
-                }
-            } else {
-                for index in assmTok{
-                    addToAssmLst += "\(index) "
-                }
-            }
-            for _ in 0...21-addToAssmLst.count{
-                addToAssmLst += " "
-            }
-            if(findAssmCase(token) == .regular){
-                addToAssmLst += "\t"
-            }
-            for str in token{
-                addToAssmLst += "\(str) "
-            }
-            addToAssmLst += "\n"
-            assmLst += addToAssmLst
-            for n in assmTok{
-                if counter > index + 1{
+        if tokens[0].hasSuffix(":") {
+            symbolTable[(String(tokens[0][0..<tokens[0].count-1]))] = pos // Strip colon and add to symtable
+            tokens = Array(tokens[1..<tokens.count]) // Remove label token
+        }
+        if tokens == [] {
+            return
+        }
+        if tokens[0].hasPrefix(".") {
+            switch tokens[0] {
+            case ".string":
+                if !tokens[1].hasPrefix("\"") {
+                    lineLst.error = "Invalid string literal"
+                    writeToBin(0)
                     break
                 }
-                result[counter] = n
-                counter += 1
+                if !tokens[1].hasSuffix("\"") {
+                    lineLst.error = "Invalid string literal"
+                    writeToBin(0)
+                    break
+                }
+                
+                var ascii = String(tokens[1][1..<tokens[1].count-1]).ascii
+                writeToBin(ascii.count)
+                for n in ascii {
+                    writeToBin(Int(n))
+                }
+                break
+            case ".integer":
+                var intLiteral = tokens[1]
+                lineLst.bin.append(parseInt(&lineLst, intLiteral))
+                pos+=1
+                break
+            case ".allocate":
+                var intLiteral = tokens[1]
+                var al = parseInt(&lineLst, intLiteral)
+                for i in 1...al {
+                    lineLst.bin.append(0)
+                }
+                pos+=al
+                
+                break
+            case ".start":
+                entryLabel = tokens[1]
+                break
+            case "end":
+                break
+            default:
+                lineLst.error = "Invalid directive \(tokens[0])"
+                break
+
             }
-        }
-        listPrintOut = assmLst
-        return(result)
-    }
-    
-    func assembleToken(_ token: [String], type: assmCase)->[Int]{
-        if type == .label{
-            var result = token
-            result.removeFirst()
-            return(assembleToken(result, type: findAssmCase(result)))
-        }
-        if type == .regular{
-            return(assembleReg(token))
-        }
-        if type == .string{
-            return(writeString(token))
-        }
-        if type == .tuple{
-            return(writeTuple(token))
-        }
-        if type == .start{
-            return(writeStart(token))
-        }
-        if type == .int{
-            return(writeInt(token))
-        }
-        if type == .allocate{
-            return(writeAllocate(token))
-        }
-        return([-420])
-    }
-    
-    func assembleReg(_ token: [String])-> [Int]{
-        var result = [Int](repeating: -420, count: argTable[token[0]]!.count + 1)
-        result[0] = mneTable[token[0]]!
-        let args = argTable[token[0]]!
-        var argTokens = token
-        argTokens.removeFirst()
-        for index in 0..<args.count{
-            if args[index] == "m"{
-                result[index + 1] = argMem(token: argTokens[index])
-            }
-            if args[index] == "r"{
-                result[index + 1] = argReg(token: argTokens[index])
-            }
-            if args[index] == "i"{
-                result[index + 1] = argInt(token: argTokens[index])
-            }
-            if args[index] == "x"{
-                result[index + 1] = argIndirect(token: argTokens[index])
-            }
-            if args[index] == "a"{
-                result[index + 1] = argAddress(token: argTokens[index])
-            }
-            if args[index] == "c"{
-                result[index + 1] = argChar(token: argTokens[index])
-            }
-        }
-        return(result)
-    }
-    
-    func writeString(_ token: [String])-> [Int]{
-        if(token[0] != ".string" || token.count != 2){
-            print("Did not pass a valid String Arg")
-            return([-420])
-        }
-        var str = token[1]
-        str.removeFirst()
-        str.removeLast()
-        var arrStr = Array(str)
-        var result = [Int](repeating: -1, count: str.count + 1)
-        result[0] = str.count
-        for n in 1..<result.count{
-            result[n] = characterToUnicode(arrStr[n - 1])
-        }
-        return(result)
-    }
-    
-    func writeTuple(_ token: [String])-> [Int]{
-        var result = [Int](repeating: -420, count: 5)
-        if(token[0] != ".tuple" || token.count != 2){
-            print("Did not pass a valid Tuple Arg")
-            return([-420])
-        }
-        var tuple = token[1]
-        tuple.removeFirst()
-        tuple.removeLast()
-        let tupleArr = tuple.split{$0 == " "}.map{ String($0) }
-        result[0] = Int(tupleArr[0])!
-        result[1] = characterToUnicode(Character(tupleArr[1]))
-        result[2] = Int(tupleArr[2])!
-        result[3] = characterToUnicode(Character(tupleArr[3]))
-        if tupleArr[4] == "r"{
-            result[4] = 1
         } else {
-            result[4] = -1
+            var mne = tokens[0]
+            if mneTable.keys.contains(mne) {
+                writeToBin(mneTable[mne]!)
+                var argTypes = argTable[mne]!
+                var i = 1
+                for atype in argTypes {
+                    if i > tokens.count {
+                        lineLst.error = "Too few arguments for instruction \(mne)"
+                        writeToBin(0)
+                    }
+                    var arg = tokens[i]
+                    switch atype {
+                    case "r":
+                        writeToBin(parseRegister(&lineLst, arg))
+                        break
+                    case "x":
+                        writeToBin(parseRegister(&lineLst, arg))
+                        break
+                    case "m":
+                        labelPlaceholders[pos] = arg
+                        writeToBin(0)
+                        break
+                    case "a":
+                        labelPlaceholders[pos] = arg
+                        writeToBin(0)
+                        break
+                    default:
+                        break
+                    }
+                    i+=1
+                }
+            } else {
+                lineLst.error = "Invalid instruction"
+            }
         }
-        return(result)
+        lineLst.text = line
+        lst.append(lineLst)
     }
-    
-    func writeRegInst(_ token: [String])-> [Int]{
-        return([0])
-    }
-    
-    func writeAllocate(_ token: [String])-> [Int]{
-        if(token[0] != ".allocate" || token.count != 2){
-            print("Did not pass a valid Allocate Arg")
-            return([-420])
+    func addressToLst(_ addr: Int) -> Int? {
+        var p = 0
+        var ln = 0
+        for lineLst in lst {
+            for b in lineLst.bin {
+                if p == addr {
+                    return ln
+                }
+                p+=1
+            }
+            ln+=1
         }
-        var count = token[1]
-        count.removeFirst()
-        return([Int](repeating: 0, count: Int(count)!))
+        return nil
     }
-    
-    func writeInt(_ token: [String])-> [Int]{
-        if(token[0] != ".integer" || token.count != 2){
-            print("Did not pass a valid integer Arg")
-            return([-420])
+    func setInBinary(_ addr: Int, _ to: Int) {
+        var p = 0
+        var ln = 0
+        for lineLst in lst {
+            var i = 0
+            for b in lineLst.bin {
+                if p == addr {
+                    lst[ln].bin[i] = to
+                }
+                i+=1
+                p+=1
+            }
+            ln+=1
         }
-        var result = token[1]
-        result.removeFirst()
-        return([Int(result)!])
     }
-    
-    func writeStart(_ token: [String])-> [Int]{
-        return([prgmLength, symbolTable[token[1]]!])
-    }
-    
-    func findAssmCase(_ line: [String])-> assmCase{
-        if(line[0] == ".start"){return(assmCase.start)}
-        if(line[0] == ".string"){return(assmCase.string)}
-        if(line[0] == ".tuple"){return(assmCase.tuple)}
-        if(line[0] == ".integer"){return(assmCase.int)}
-        if(line[0] == ".allocate"){return(assmCase.allocate)}
-        if let check = line[0].last{
-            if(check == ":"){return(assmCase.label)}
+    func assemble(_ prgm: String) -> [Int] {
+        var lines = splitStringIntoLines(expression: prgm)
+        for line in lines {
+            assembleLine(line)
         }
-        return(assmCase.regular)
-    }
-    
-    func checkDict(_ token: String)-> Int?{
-        return(symbolTable[token])
-    }
-    
-    func argInt(token: String)-> Int{
-        var result = token
-        result.removeFirst()
-        return(Int(result)!)
-    }
-    
-    func argMem(token: String)-> Int{
-        if(checkDict(token) == nil){
-            return(Int(token)!)
+        
+        for (addr, label) in labelPlaceholders {
+            if symbolTable.keys.contains(label) {
+                setInBinary(addr, symbolTable[label]!)
+            } else {
+                lst[addressToLst(addr)!].error = "Label \(label) was used but never defined"
+            }
         }
-        return(checkDict(token)!)
+        
+        return []
     }
     
-    func argReg(token: String)-> Int{
-        var result = token
-        result.removeFirst()
-        return(Int(result)!)
-    }
-    
-    func argIndirect(token: String)-> Int{
-        var result = token
-        result.removeFirst()
-        return(Int(result)!)
-    }
-    
-    func argChar(token: String)-> Int{
-        return(characterToUnicode(Character(token)))
-    }
-    
-    func argAddress(token: String)-> Int{
-        if(checkDict(token) == nil){
-            return(Int(token)!)
+    func getSymTable() -> String {
+        var out = ""
+        for (label, addr) in symbolTable {
+            out+="\(label) \(addr)\n"
         }
-        return(checkDict(token)!)
+        return out
     }
-    
-    func getSymTable()->String{
-        var result = ""
-        for (key, value) in symbolTable{
-            result += "\(key): \(value)\n"
+    func getBin() -> String {
+        var out = ""
+        for lineLst in lst {
+            for b in lineLst.bin {
+                out+=b.description+"\n"
+            }
         }
-        return(result)
+        return out
+    }
+    func getLst() -> String {
+        var out = ""
+        var binColumn = [String]()
+        var srcColumn = [String]()
+        var errColumn = [String]()
+        var pos = 0
+        for lineLst in lst {
+            var binText = "\(pos): "
+            var binItemsPrinted = 0
+            for b in lineLst.bin {
+                if binItemsPrinted < 5 {
+                    binText+=b.description+" "
+                }
+                pos+=1
+                binItemsPrinted+=1
+            }
+            if let err = lineLst.error {
+                errColumn.append("........\(err)")
+            } else {
+                errColumn.append("")
+            }
+            binColumn.append(binText)
+            srcColumn.append(lineLst.text)
+
+        }
+        var bwidth = binColumn.map {$0.count}.max()!+2
+        for i in 0..<binColumn.count {
+            out+=binColumn[i]+String(repeating: " ", count: bwidth-binColumn[i].count)+srcColumn[i]+"\n"
+            if errColumn[i] != "" {
+                out+=errColumn[i]+"\n"
+            }
+        }
+        return out+"\nSymbol Table:\n"+getSymTable()
     }
 }

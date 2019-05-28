@@ -97,7 +97,7 @@
             if let out = com{
                 let outArr = splitStringIntoParts(expression: out)
                 if outArr.count == 0{
-                    break
+                    continue
                 }
                 switch(outArr[0]){
                 case "quit":
@@ -109,7 +109,7 @@
                         print("Please set a path")
                         break
                     }
-                    if outArr.count < 2{
+                    if outArr.count < 2 {
                         print("Please provide a filename")
                         break
                     }
@@ -119,7 +119,7 @@
                         assmbler.assemble(nice.fileText!)
                         let lstPrintOut = assmbler.getLst()
                         print(lstPrintOut)
-                        assmbler.clearListPrint()
+                        //assmbler.clearListPrint()
                         print("Printing List ended with no errors")
                     } else {
                         print(nice.message!)
@@ -184,19 +184,16 @@
                     print("Assembling File: \(path + outArr[1] + ".txt")")
                     if(nice.message == nil){
                         print("Assembly Succ")
-                        let binFile = path + "\(outArr[1])bin.txt"
-                        let symFile = path + "\(outArr[1])sym.txt"
-                        let lstFile = path + "\(outArr[1])lst.txt"
+                        let binFile = path + "\(outArr[1]).bin"
+                        let symFile = path + "\(outArr[1]).sym"
+                        let lstFile = path + "\(outArr[1]).lst"
                         let binFileURL = URL(fileURLWithPath: binFile, isDirectory: false)
                         let symFileURL = URL(fileURLWithPath: symFile, isDirectory: false)
                         let lstFileURL = URL(fileURLWithPath: lstFile, isDirectory: false)
-                        var binPrintOut = ""
                         let bin = assmbler.assemble(nice.fileText!)
+                        var binPrintOut = assmbler.getBin()
                         let symPrintOut = assmbler.getSymTable()
                         let lstPrintOut = assmbler.getLst()
-                        for n in bin{
-                            binPrintOut += "\(n)\n"
-                        }
                         binStr = binPrintOut
                         symTabStr = symPrintOut
                         do {
@@ -205,7 +202,7 @@
                             try lstPrintOut.write(to: lstFileURL, atomically: false, encoding: .utf8)
                         }
                         catch {print("\(error)")}
-                        assmbler.clearListPrint()
+                        //assmbler.clearListPrint()
                     print("Assembly program ended with no errors")
                 } else {
                     print(nice.message!)
@@ -236,7 +233,7 @@
                         print("Please provide a path")
                         break
                     }
-                    path = outArr[1]
+                    path = outArr[1]+"/"
                     print("Path set to \(outArr[1])")
                     break
                 default:
