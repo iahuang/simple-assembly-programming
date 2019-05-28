@@ -38,9 +38,7 @@ extension String {
         return String(self[start..<end])
     }
     
-    subscript(bounds: Int) -> String {
-        return String(self[bounds])
-    }
+    
 }
 
 
@@ -87,7 +85,6 @@ func getRidOfThePoop(_ yote: String)-> String{
         return(result)
     }
     if(yote.first == " " || yote.first == "\"" || yote.first == "\\"){
-        print(yote)
         result.removeFirst()
         result.removeLast()
     }

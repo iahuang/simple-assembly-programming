@@ -18,18 +18,27 @@
     func run(){
         while(!quit){
             print("Enter path")
-            let com = readLine()
+            let com:String? = "/Users/ianhuang/Desktop/Doubles.bin"//readLine()
             if let out = com{
                 if out == "quit" {
                     break
                 }
-                let nice = readTextFile(out)
+                var pathsegs = out.split(separator: ".")
+                var sympath = String(out)[0..<(out.count-pathsegs[pathsegs.count-1].count)]+"sym"
+                var nice = readTextFile(sympath)
+                if(nice.message == nil){
+                    inteli7.loadSym(nice.fileText!)
+                } else {
+                    print(nice.message!)
+                }
+                nice = readTextFile(out)
                 if(nice.message == nil){
                     exeBinary(arrStrToInt(splitStringIntoLines(expression: nice.fileText!)))
                     print("Assembly program ended with no errors")
                 } else {
                     print(nice.message!)
                 }
+                
 
             }
         }
@@ -47,7 +56,6 @@
     func arrStrToInt(_ arr: [String])-> [Int]{
         var newArr = [Int](repeating: 0, count: arr.count)
         for n in 0..<arr.count{
-            print(arr[n])
             newArr[n] = Int(arr[n])!
         }
         return(newArr)

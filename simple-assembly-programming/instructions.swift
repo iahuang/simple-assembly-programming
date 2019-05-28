@@ -174,7 +174,7 @@ extension CPU {
 
     func brk() {
         while (true) {
-            print("Sdb (\(rpc), \(get(rpc))> ", terminator: "")
+            print("Sdb (\(rpc), \(get(rpc)))> ", terminator: "")
             let _input = readLine()
             if let input = _input {
                 let shouldReturn = handleDebuggerInput(input)

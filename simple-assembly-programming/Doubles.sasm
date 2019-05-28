@@ -8,7 +8,7 @@ DoubleMess: .String " Doubled is "
 Test: movmr Begin r8
     movmr End r9
     movmr NewLine r0
-
+    
     outs IntroMess
     outcr 0
 

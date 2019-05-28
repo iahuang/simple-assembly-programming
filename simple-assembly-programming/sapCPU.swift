@@ -25,6 +25,8 @@ class CPU { // Int specifies the memory type. (e.g. Int64, Double)
     var stack = [Int]()
 
     var debugDisassembler = Disassembler()
+    
+    var labelAddresses = [String:Int]()
 
     init (memSize:Int, numRegisters:Int = 10) {
         self.memSize = memSize
@@ -215,5 +217,15 @@ class CPU { // Int specifies the memory type. (e.g. Int64, Double)
 
     func restorebs(filePath: Bool) {
         print("the bs hath been restored")
+    }
+    
+    func loadSym(_ lst: String) {
+        for line in splitStringIntoLines(expression: lst) {
+            if line == "" {
+                return
+            }
+            var parts = line.split(separator: " ")
+            labelAddresses[String(parts[0])] = Int(parts[1])!
+        }
     }
 }
