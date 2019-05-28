@@ -77,6 +77,7 @@
         result += "printsym <program name> - print symbol table for the specified program \n"
         result += "quit  - terminate SAP program \n"
         result += "help  - print help table \n"
+        result += "crashandburn  - Summerizes ian and ethan's time spent on this project\n"
         return(result)
     }
     
@@ -100,6 +101,9 @@
                     continue
                 }
                 switch(outArr[0]){
+                case "crashandburn":
+                    crashAndBurn()
+                    break
                 case "quit":
                     quit = true
                     print("Shutting down SAP")
