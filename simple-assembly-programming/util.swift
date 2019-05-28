@@ -10,6 +10,10 @@
 
 import Foundation
 
+func crashAndBurn()-> Never{
+    fatalError("MAYDAY MAYDAY THIS PROJECT IS CRASHING AND BURNING")
+}
+
 extension BinaryInteger {
     var intvalue: Int {
         return self as! Int

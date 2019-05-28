@@ -10,4 +10,4 @@ import Foundation
 
 var vm = VM()
 
-vm.run()
+vm.runAss()

@@ -176,7 +176,6 @@ class Assmbler{
         for token in 0..<tokens.count{
             var resultTok = [String](repeating: "ianBad", count: tokens[token].count)
             if checkLabel(tokens[token]){
-                
                 resultTok[0] = tokens[token][0]
                 resultTok[1] = tokens[token][1].lowercased()
                 for index in 2..<tokens[token].count{
