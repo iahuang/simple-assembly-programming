@@ -99,7 +99,7 @@
                 let outArr = splitStringIntoParts(expression: out)
                 if outArr.count == 0{
                     break
-                }
+                } else {
                 switch(outArr[0]){
                 case "crashandburn":
                     crashAndBurn()
@@ -245,6 +245,7 @@
                     break
                 default:
                     print("Command \(outArr[0]) not recognized")
+                }
                 }
             }
         }
