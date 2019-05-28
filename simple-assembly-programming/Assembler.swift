@@ -43,6 +43,7 @@ var shorthandInstructionSet = [
 
 let argTable = buildArgTable()
 let mneTable = buildMnemonicTable()
+var opcodeTable = buildOpcodeTable()
 
 func buildMnemonicTable () -> [String:Int] {
     var mnemonics = [String:Int]()
@@ -59,6 +60,28 @@ func buildMnemonicTable () -> [String:Int] {
         for i in 1...parts.count-1 {
             let suffix = parts[i]
             mnemonics[base+String(suffix)] = instructionCode
+            names.append(base+String(suffix))
+            instructionCode+=1
+        }
+    }
+    return mnemonics
+}
+
+func buildOpcodeTable () -> [Int:String] {
+    var mnemonics = [Int:String]()
+    var names = [String]()
+    var instructionCode = 0
+    
+    for inst in shorthandInstructionSet {
+        var parts = inst.split(separator: " ")
+        if parts.count == 1 {
+            parts.append("") // Ensure that the base mnemonic gets added if there are no variations of it
+        }
+        let base = parts[0]
+        
+        for i in 1...parts.count-1 {
+            let suffix = parts[i]
+            mnemonics[instructionCode] = base+String(suffix)
             names.append(base+String(suffix))
             instructionCode+=1
         }

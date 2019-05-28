@@ -23,10 +23,13 @@ class CPU { // Int specifies the memory type. (e.g. Int64, Double)
     let numRegisters: Int
 
     var stack = [Int]()
-
-    var debugDisassembler = Disassembler()
     
     var labelAddresses = [String:Int]()
+    var addressLabels = [Int:String]()
+    var breakpoints = Set<Int>()
+    var bpEnabled = true
+    
+    var stepMode = false
 
     init (memSize:Int, numRegisters:Int = 10) {
         self.memSize = memSize
@@ -106,7 +109,7 @@ class CPU { // Int specifies the memory type. (e.g. Int64, Double)
     }
 
     func loadProgram(prg: Program, _ offset:Int = 0) {
-        rpc = prg.entry+offset-1
+        rpc = prg.entry+offset
         let data = prg.getData()
         var addr = offset
         for word in data {
@@ -138,78 +141,90 @@ class CPU { // Int specifies the memory type. (e.g. Int64, Double)
         return ConstantReference(self, digest())
     }
 
-
-    func execProg()-> String{
+    func runStep()->Int {
         var result = ""
-        var opcode = digest()
-        while(opcode != 0){
-//            print(reg)
-//            print("\(debugDisassembler.mnemonics[opcode])")
-            
-            switch mem[rpc]{
-            case 1: clr(target: digestReg())
-            case 2: clr(target: digestAddr())
-            case 3: clr(target: digestAddr())
-            case 4: clrb(start: digestReg(), count: digestReg())
-            case 5: mov(src: digestConst(), dest: digestReg())
-            case 6: mov(src: digestReg(), dest: digestReg())
-            case 7: mov(src: digestReg(), dest: digestAddr())
-            case 8: mov(src: digestAddr(), dest: digestReg())
-            case 9: mov(src: IndirectReference(self, digest()), dest: digestReg())
-            case 10: mov(src: digestConst(), dest: digestReg())
-            case 11:
-                movb(src: digestReg(), dest: digestReg(), count: digestReg())
-            case 12: add(src: digestConst(), dest: digestReg())
-            case 13: add(src: digestReg(), dest: digestReg())
-            case 14: add(src: digestAddr(), dest: digestReg())
-            case 15: add(src: IndirectReference(self, digest()), dest: digestReg())
-            case 16: sub(src: digestConst(), dest: digestReg())
-            case 17: sub(src: digestReg(), dest: digestReg())
-            case 18: sub(src: digestAddr(), dest: digestReg())
-            case 19: sub(src: IndirectReference(self, digest()), dest: digestReg())
-            case 20: mul(src: digestConst(), dest: digestReg())
-            case 21: mul(src: digestReg(), dest: digestReg())
-            case 22: mul(src: digestAddr(), dest: digestReg())
-            case 23: mul(src: IndirectReference(self, digest()), dest: digestReg())
-            case 24: div(src: digestConst(), dest: digestReg())
-            case 25: div(src: digestReg(), dest: digestReg())
-            case 26: div(src: digestAddr(), dest: digestReg())
-            case 27: div(src: IndirectReference(self, digest()), dest: digestReg())
-            case 28: jmp(to: digest())
-            case 29: sojz(target: digestReg(), jump: digest())
-            case 30: sojnz(target: digestReg(), jump: digest())
-            case 31: aojz(target: digestReg(), jump: digest())
-            case 32: aojnz(target: digestReg(), jump: digest())
-            case 33: cmp(a: digestConst(), b: digestReg())
-            case 34: cmp(a: digestReg(), b: digestReg())
-            case 35: cmp(a: digestAddr(), b: digestReg())
-            case 36: jmpn(to: digest())
-            case 37: jmpz(to: digest())
-            case 38: jmpp(to: digest())
-            case 39: jsr(to: digest())
-            case 40: ret()
-            case 41: push(n: digestReg())
-            case 42: pop(into: digestReg())
-            case 43: stackc(into: digestReg())
-            case 44: result += outc(char: digestConst()) //is this 123 or char(123)??
-            case 45: result += outc(char: digestReg())
-            case 46: result += outc(char: IndirectReference(self, digest()))
+        // print("\(rpc) \(debugDisassembler.mnemonics[mem[rpc]])")
+        if breakpoints.contains(rpc) && bpEnabled {
+            brk()
+        }
+        var opcode = mem[rpc]
+        switch opcode{
+        case 0: exit(0)
+        case 1: clr(target: digestReg())
+        case 2: clr(target: digestAddr())
+        case 3: clr(target: digestAddr())
+        case 4: clrb(start: digestReg(), count: digestReg())
+        case 5: mov(src: digestConst(), dest: digestReg())
+        case 6: mov(src: digestReg(), dest: digestReg())
+        case 7: mov(src: digestReg(), dest: digestAddr())
+        case 8: mov(src: digestAddr(), dest: digestReg())
+        case 9: mov(src: IndirectReference(self, digest()), dest: digestReg())
+        case 10: mov(src: digestConst(), dest: digestReg())
+        case 11:
+            movb(src: digestReg(), dest: digestReg(), count: digestReg())
+        case 12: add(src: digestConst(), dest: digestReg())
+        case 13: add(src: digestReg(), dest: digestReg())
+        case 14: add(src: digestAddr(), dest: digestReg())
+        case 15: add(src: IndirectReference(self, digest()), dest: digestReg())
+        case 16: sub(src: digestConst(), dest: digestReg())
+        case 17: sub(src: digestReg(), dest: digestReg())
+        case 18: sub(src: digestAddr(), dest: digestReg())
+        case 19: sub(src: IndirectReference(self, digest()), dest: digestReg())
+        case 20: mul(src: digestConst(), dest: digestReg())
+        case 21: mul(src: digestReg(), dest: digestReg())
+        case 22: mul(src: digestAddr(), dest: digestReg())
+        case 23: mul(src: IndirectReference(self, digest()), dest: digestReg())
+        case 24: div(src: digestConst(), dest: digestReg())
+        case 25: div(src: digestReg(), dest: digestReg())
+        case 26: div(src: digestAddr(), dest: digestReg())
+        case 27: div(src: IndirectReference(self, digest()), dest: digestReg())
+        case 28: jmp(to: digest())
+        case 29: sojz(target: digestReg(), jump: digest())
+        case 30: sojnz(target: digestReg(), jump: digest())
+        case 31: aojz(target: digestReg(), jump: digest())
+        case 32: aojnz(target: digestReg(), jump: digest())
+        case 33: cmp(a: digestConst(), b: digestReg())
+        case 34: cmp(a: digestReg(), b: digestReg())
+        case 35: cmp(a: digestAddr(), b: digestReg())
+        case 36: jmpn(to: digest())
+        case 37: jmpz(to: digest())
+        case 38: jmpp(to: digest())
+        case 39: jsr(to: digest())
+        case 40: ret()
+        case 41: push(n: digestReg())
+        case 42: pop(into: digestReg())
+        case 43: stackc(into: digestReg())
+        case 44: result += outc(char: digestConst()) //is this 123 or char(123)??
+        case 45: result += outc(char: digestReg())
+        case 46: result += outc(char: IndirectReference(self, digest()))
             //case 47: result += outcb()
-            //case 48: readi()
-            case 49: result += printi(int: digestReg())
+        //case 48: readi()
+        case 49: result += printi(int: digestReg())
             //case 50: readc()
-            //case 51: readln()
-            case 52: brk()
-            case 53: mov(src: digestReg(), dest: IndirectReference(self, digest()))
-            case 54: mov(src: IndirectReference(self, digest()), dest: IndirectReference(self, digest()))
-            case 55: result += outs(label: digestAddr())
-            case 56: nop()
-            case 57: jmpne(to: digest())
-            default:
-                print("Illegal Instruction \(opcode)")
-                abort()
-            }
-            opcode = digest()
+        //case 51: readln()
+        case 52: brk()
+        case 53: mov(src: digestReg(), dest: IndirectReference(self, digest()))
+        case 54: mov(src: IndirectReference(self, digest()), dest: IndirectReference(self, digest()))
+        case 55: result += outs(label: digestAddr())
+        case 56: nop()
+        case 57: jmpne(to: digest())
+        default:
+            print("Illegal Instruction \(opcode)")
+            abort()
+        }
+        digest()
+        if stepMode {
+            stepMode = false
+            brk()
+        }
+        print(result, terminator:"")
+        return opcode
+    }
+    func execProg()-> String{
+        let result = ""
+        
+        while(runStep() != 0){
+            
         }
         
         return(result)
@@ -226,6 +241,7 @@ class CPU { // Int specifies the memory type. (e.g. Int64, Double)
             }
             var parts = line.split(separator: " ")
             labelAddresses[String(parts[0])] = Int(parts[1])!
+            addressLabels[Int(parts[1])!] = String(parts[0])
         }
     }
 }

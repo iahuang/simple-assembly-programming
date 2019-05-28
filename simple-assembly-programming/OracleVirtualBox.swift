@@ -22,7 +22,7 @@
     func run(){
         while(!quit){
             print("Enter path")
-            let com:String? = "/Users/ianhuang/Desktop/Doubles.bin"//readLine()
+            let com = readLine() // :String? = "/Users/ianhuang/Desktop/Doubles.bin"
             if let out = com{
                 if out == "quit" {
                     break
@@ -54,7 +54,7 @@
         data.removeFirst(2)
         let loadProg = Program(entry: arrData[1], data: data)
         inteli7.loadProgram(prg: loadProg)
-        print(inteli7.execProg())
+        inteli7.execProg()
     }
 
     func arrStrToInt(_ arr: [String])-> [Int]{

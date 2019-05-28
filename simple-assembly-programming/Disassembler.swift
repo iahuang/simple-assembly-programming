@@ -8,59 +8,40 @@
 
 import Foundation
 
-class Disassembler {
-    // "clr r x m b" is shorthand for
-    // clrr (code 1)
-    // clrx (code 2)
-    // clrm (code 3)
-    // clrb (code 4)
-    var shorthandInstructionSet = [
-        "halt",
-        "clr r x m b",
-        "mov ir rr rm mr xr ar b",
-        "add ir rr mr xr",
-        "sub ir rr mr xr",
-        "mul ir rr mr xr",
-        "div ir rr mr xr",
-        "jmp",
-        "soj z nz",
-        "aoj z nz",
-        "cmp ir rr mr",
-        "jmp n z p",
-        "jsr",
-        "ret",
-        "push",
-        "pop",
-        "stackc",
-        "out ci cr cx cb",
-        "readi",
-        "printi",
-        "read c ln",
-        "brk",
-        "mov rx xx",
-        "outs",
-        "nop",
-        "jmpne"
-    ]
-    
-    var mnemonics = Dictionary<Int, String>()
-    var names = [String]()
-    init() {
-        var instructionCode = 0
-        
-        for inst in shorthandInstructionSet {
-            var parts = inst.split(separator: " ")
-            if parts.count == 1 {
-                parts.append("") // Ensure that the base mnemonic gets added if there are no variations of it
+extension CPU {
+    func disassembleArgument(_ arg: Int, _ type: String) -> String {
+        switch type {
+        case "m":
+            return addressLabels[arg]!
+        case "r":
+            return "r\(arg)"
+        case "i":
+            return "#\(arg)"
+        default:
+            return "Unknown"
+        }
+    }
+    func disassemble(_ start: Int, _ end:Int) {
+        var addr = start
+        while addr < end {
+            var line = ""
+
+            if addressLabels.keys.contains(addr) {
+                line += addressLabels[addr]!+": "
+            } else {
+                line += "    "
             }
-            let base = parts[0]
+            let mne = opcodeTable[get(addr)]!
+            line+=mne
+            let argTypes = argTable[mne]!
             
-            for i in 1...parts.count-1 {
-                let suffix = parts[i]
-                mnemonics[instructionCode] = base+String(suffix)
-                names.append(base+String(suffix))
-                instructionCode+=1
+            for atype in argTypes {
+                addr+=1
+                line+=" "+disassembleArgument(get(addr), atype)
             }
+            print(line)
+            addr+=1
         }
     }
 }
+
