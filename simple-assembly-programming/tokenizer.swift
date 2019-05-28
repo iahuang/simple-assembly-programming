@@ -57,12 +57,19 @@ func splitChunks(_ chunks: [String], _ delimiter: Character) -> [String] {
     return newChunks
 }
 
+func tokenize(_ line: String) -> [String] {
+    let line = NSString(string: String(line)).trimmingCharacters(in: .whitespacesAndNewlines)
+    var chunks = splitChunks(groupQuotes(line, ["\"","\\"]), " ")
+    chunks = chunks.map{ $0.hasPrefix("\"") && $0.hasSuffix("\"") ? $0 : $0.lowercased()}
+    return chunks.filter{$0.count != 0}
+}
+
 func tokenizer(_ prgm: String) -> [[String]] {
     var lines = [[String]]()
     for line in prgm.split(separator: "\n") {
         var line = NSString(string: String(line)).trimmingCharacters(in: .whitespacesAndNewlines)
         var chunks = splitChunks(groupQuotes(line, ["\"","\\"]), " ")
-        
+        chunks = chunks.map{ $0.hasPrefix("\"") && $0.hasSuffix("\"") ? $0 : $0.lowercased()}
         lines.append(chunks.filter{$0.count != 0})
     }
     return lines

@@ -41,8 +41,10 @@ extension String {
         let end = index(startIndex, offsetBy: bounds.upperBound)
         return String(self[start..<end])
     }
-    
-    
+    func trim() -> String
+    {
+        return NSString(string: self).trimmingCharacters(in: .whitespacesAndNewlines)
+    }
 }
 
 
