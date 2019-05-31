@@ -97,7 +97,7 @@
         print(printHelp())
         while(quit != true){
             print("Enter option...")
-            let com = predef.count > 0 ? predef.removeFirst() : nil
+            let com = readLine()//predef.count > 0 ? predef.removeFirst() : nil
             if let out = com {
                 let outArr = splitStringIntoParts(expression: out)
                 if outArr.count == 0{
