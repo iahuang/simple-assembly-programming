@@ -147,6 +147,16 @@ class Assmbler {
 
         }
     }
+    
+    func parseRawInt (_ intLiteral: String) -> Int {
+        if let intValue = Int(intLiteral) {
+            return intValue
+        } else {
+            lineLst.error = "Invalid integer literal"
+            return 0
+        }
+    }
+
 
     func parseRegister(_ regLiteral: String) -> Int {
         if regLiteral.hasPrefix("r") {
@@ -350,6 +360,17 @@ class Assmbler {
             out+="\(label) \(addr)\n"
         }
         return out
+    }
+    func compileBin() -> [Int] {
+        var out = [Int]()
+        var prgmSize = 0
+        for lineLst in lst {
+            for b in lineLst.bin {
+                out.append(b)
+                prgmSize+=1
+            }
+        }
+        return [prgmSize, symbolTable[entryLabel!]!]+out
     }
     func getBin() -> String {
         var out = ""

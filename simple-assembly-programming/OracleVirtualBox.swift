@@ -19,7 +19,7 @@
     var binStr = ""
     var lstStr = ""
 
-    //var predef = ["path /Users/ianhuang/Desktop/saptest", "asm Doubles"]
+    var predef = ["path /Users/ianhuang/Desktop/saptest", "asm Doubles"]
 
     func run(){
         while(!quit){
@@ -254,6 +254,8 @@
                 default:
                     print("Command \(outArr[0]) not recognized")
                 }
+            } else {
+                break
             }
         }
     }
