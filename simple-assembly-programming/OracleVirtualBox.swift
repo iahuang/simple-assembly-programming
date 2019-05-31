@@ -19,7 +19,7 @@
     var binStr = ""
     var lstStr = ""
     
-    //var predef = ["path /Users/ianhuang/Desktop/saptest", "asm Doubles"]
+    var predef = ["path /Users/ianhuang/Desktop/saptest", "asm Doubles"]
 
     func run(){
         while(!quit){
@@ -96,7 +96,7 @@
         print(printHelp())
         while(quit != true){
             print("Enter option...")
-            let com = readLine()//predef.count > 0 ? predef.removeFirst() : nil
+            let com = predef.count > 0 ? predef.removeFirst() : nil
             if let out = com {
                 let outArr = splitStringIntoParts(expression: out)
                 if outArr.count == 0{

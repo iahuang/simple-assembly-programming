@@ -134,6 +134,15 @@ class Assmbler {
         
     }
     
+    func parseRawInt (_ intLiteral: String) -> Int {
+        if let intValue = Int(intLiteral) {
+            return intValue
+        } else {
+            lineLst.error = "Invalid integer literal"
+            return 0
+        }
+    }
+    
     func parseInt (_ intLiteral: String) -> Int {
         if intLiteral.hasPrefix("#") {
             if let intValue = Int(String(intLiteral[1..<intLiteral.count])) {
@@ -212,6 +221,19 @@ class Assmbler {
             break
         case ".end":
             break
+        case ".tuple":
+            var tupleContent = String(tokens[1][1..<tokens[1].count-1]).trim() // Strip slashes from tuple string
+            var tuple = tupleContent.split(separator: " ").map(String.init)
+            if tuple.count != 5 {
+                lineLst.error = "Incorrect number of tuple arguments"
+                break
+            }
+            writeToBin(parseRawInt(tuple[0])) // State
+            writeToBin(Int(tuple[1].ascii[0])) // Head
+            writeToBin(parseRawInt(tuple[2])) // New State
+            writeToBin(Int(tuple[3].ascii[0])) // New Head
+            writeToBin(tuple[4].lowercased() == "r" ? 1 : -1) // Direction
+            break
         default:
             lineLst.error = "Invalid directive \(tokens[0])"
             break
@@ -225,7 +247,7 @@ class Assmbler {
             writeToBin(mneTable[mne]!)
             var argTypes = argTable[mne]!
             var i = 1
-            print(mne,argTypes)
+            //print(mne,argTypes)
             for atype in argTypes {
                 if i > tokens.count {
                     lineLst.error = "Too few arguments for instruction \(mne)"
