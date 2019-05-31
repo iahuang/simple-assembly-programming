@@ -218,9 +218,9 @@ class Assmbler {
                 lineLst.error = "Incorrect number of tuple arguments"
                 break
             }
-            writeToBin(parseRawInt(tuple[0])) // State
+            writeToBin(parseInt(tuple[0])) // State
             writeToBin(Int(tuple[1].ascii[0])) // Head
-            writeToBin(parseRawInt(tuple[2])) // New State
+            writeToBin(parseInt(tuple[2])) // New State
             writeToBin(Int(tuple[3].ascii[0])) // New Head
             writeToBin(tuple[4].lowercased() == "r" ? 1 : -1) // Direction
             break

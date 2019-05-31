@@ -91,6 +91,14 @@
     func runCalled(_ prgm: String)-> String{
         return("")
     }
+    
+    func whyIsIanBad(_ ianbad: [String])-> [Int]{
+        var result = [Int](repeating: -420, count: ianbad.count)
+        for index in 0..<result.count{
+            result[index] = Int(ianbad[index])!
+        }
+        return(result)
+    }
 
     func runAss(){
         print("Welcome to SAP!\n")
@@ -228,8 +236,8 @@
                     print("Running File: \(path + outArr[1] + ".txt")")
                     if(nice.message == nil){
                         print("Running Succ")
-                        let bin = assmbler.assemble(nice.fileText!)
-                        exeBinary(bin)
+                        assmbler.assemble(nice.fileText!)
+                        exeBinary(whyIsIanBad(splitStringIntoLines(expression: assmbler.getBin())))
                         print("Running program ended with no errors")
                     } else {
                         print(nice.message!)

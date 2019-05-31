@@ -41,218 +41,218 @@
 253: 56                  copyInitial: nop
 254: 10 104 5               movar initialString r5
 257: 8 104 6                movmr initialString r6
-260: 12 5                   addir #1 r5
-262: 10 4 7                 movar tape r7
-265: 11 5 7 6               movb r5 r7 r6
-269: 40                     ret
-270: 56                  begin: nop
-271: 10 1 1                 movar endTuples r1
-274: 10 0 2                 movar startTuples r2
-277: 12 2                   addir #1 r2
-279: 17 2 1                 subrr r2 r1
-282: 24 1                   divir #5 r1
-284: 7 1 2                  movrm r1 numTuples
-287: 39 253                 jsr copyInitial
-289: 55 116                 outs welcome
-291: 55 245                 outs newline
-293: 55 245                 outs newline
-295: 55 135                 outs tuplesTitle
-297: 55 245                 outs newline
-299: 1 1                    clrr r1
-301: 56                  printNextTuple: nop
-302: 39 529                 jsr printTuple
-304: 55 245                 outs newline
-306: 12 1                   addir #1 r1
-308: 8 2 2                  movmr numTuples r2
-311: 34 1 2                 cmprr r1 r2
-314: 37 318                 jmpz endPrint
-316: 28 301                 jmp printNextTuple
-318: 56                  endPrint: nop
-319: 55 143                 outs initialstate
-321: 41 1                   push r1
-323: 8 114 1                movmr state r1
-326: 49 1                   printi r1
-328: 42 1                   pop r1
-330: 55 245                 outs newline
-332: 55 159                 outs initialhead
-334: 41 1                   push r1
-336: 8 113 1                movmr head r1
-339: 49 1                   printi r1
-341: 42 1                   pop r1
-343: 55 245                 outs newline
-345: 55 179                 outs initialtape
-347: 55 104                 outs initialString
-349: 55 245                 outs newline
-351: 55 245                 outs newline
-353: 56                  startTuring: nop
-354: 56                     nop
-355: 56                  runIteration: nop
-356: 3 3                    clrm tupleSearchIndex
-358: 56                  searchTuples: nop
-359: 8 113 1                movmr head r1 ; move character at head to r2
-362: 10 4 3                 movar tape r3
-365: 13 3 1                 addrr r3 r1
-368: 9 1 2                  movxr r1 r2
-371: 8 3 3                  movmr tupleSearchIndex r3
-374: 20 3                   mulir #5 r3
-376: 10 0 4                 movar startTuples r4
-379: 12 3                   addir #1 r3
-381: 13 4 3                 addrr r4 r3
-384: 9 3 4                  movxr r3 r4 ; r4 stores said specific value
-387: 35 114 4               cmpmr state r4 ; check whether state matches
-390: 57 504                 jmpne skipTuple
-392: 12 3                   addir #1 r3
-394: 9 3 4                  movxr r3 r4
-397: 34 4 2                 cmprr r4 r2 ; checks whether tape character matches
-400: 57 504                 jmpne skipTuple
-402: 12 3                   addir #1 r3
-404: 9 3 4                  movxr r3 r4
-407: 7 4 114                movrm r4 state ; set new state
-410: 12 3                   addir #1 r3
+260: 12 1 5                 addir #1 r5
+263: 10 4 7                 movar tape r7
+266: 11 5 7 6               movb r5 r7 r6
+270: 40                     ret
+271: 56                  begin: nop
+272: 10 1 1                 movar endTuples r1
+275: 10 0 2                 movar startTuples r2
+278: 12 1 2                 addir #1 r2
+281: 17 2 1                 subrr r2 r1
+284: 24 5 1                 divir #5 r1
+287: 7 1 2                  movrm r1 numTuples
+290: 39 253                 jsr copyInitial
+292: 55 116                 outs welcome
+294: 55 245                 outs newline
+296: 55 245                 outs newline
+298: 55 135                 outs tuplesTitle
+300: 55 245                 outs newline
+302: 1 1                    clrr r1
+304: 56                  printNextTuple: nop
+305: 39 544                 jsr printTuple
+307: 55 245                 outs newline
+309: 12 1 1                 addir #1 r1
+312: 8 2 2                  movmr numTuples r2
+315: 34 1 2                 cmprr r1 r2
+318: 37 322                 jmpz endPrint
+320: 28 304                 jmp printNextTuple
+322: 56                  endPrint: nop
+323: 55 143                 outs initialstate
+325: 41 1                   push r1
+327: 8 114 1                movmr state r1
+330: 49 1                   printi r1
+332: 42 1                   pop r1
+334: 55 245                 outs newline
+336: 55 159                 outs initialhead
+338: 41 1                   push r1
+340: 8 113 1                movmr head r1
+343: 49 1                   printi r1
+345: 42 1                   pop r1
+347: 55 245                 outs newline
+349: 55 179                 outs initialtape
+351: 55 104                 outs initialString
+353: 55 245                 outs newline
+355: 55 245                 outs newline
+357: 56                  startTuring: nop
+358: 56                     nop
+359: 56                  runIteration: nop
+360: 3 3                    clrm tupleSearchIndex
+362: 56                  searchTuples: nop
+363: 8 113 1                movmr head r1 ; move character at head to r2
+366: 10 4 3                 movar tape r3
+369: 13 3 1                 addrr r3 r1
+372: 9 1 2                  movxr r1 r2
+375: 8 3 3                  movmr tupleSearchIndex r3
+378: 20 5 3                 mulir #5 r3
+381: 10 0 4                 movar startTuples r4
+384: 12 1 3                 addir #1 r3
+387: 13 4 3                 addrr r4 r3
+390: 9 3 4                  movxr r3 r4 ; r4 stores said specific value
+393: 35 114 4               cmpmr state r4 ; check whether state matches
+396: 57 518                 jmpne skipTuple
+398: 12 1 3                 addir #1 r3
+401: 9 3 4                  movxr r3 r4
+404: 34 4 2                 cmprr r4 r2 ; checks whether tape character matches
+407: 57 518                 jmpne skipTuple
+409: 12 1 3                 addir #1 r3
 412: 9 3 4                  movxr r3 r4
-415: 8 113 5                movmr head r5 ; set new character
-418: 10 4 6                 movar tape r6
-421: 13 6 5                 addrr r6 r5
-424: 53 4 5                 movrx r4 r5
-427: 12 3                   addir #1 r3
-429: 9 3 4                  movxr r3 r4
-432: 8 113 1                movmr head r1 ; move head
-435: 13 4 1                 addrr r4 r1
-438: 7 1 113                movrm r1 head
-441: 8 113 5                movmr head r5 ; head before being moved
-444: 17 4 5                 subrr r4 r5
-447: 10 4 1                 movar tape r1 ; tape pointer
-450: 1 4                    clrr r4 ; tape index, starting from 0
-452: 56                  headedTapeDisplayIter: nop
-453: 9 1 3                  movxr r1 r3 ; r3 is the tape character
-456: 34 5 4                 cmprr r5 r4
-459: 57 469                 jmpne noHead
-461: 55 249                 outs leftbracket
-463: 45 3                   outcr r3
-465: 55 251                 outs rightbracket
-467: 28 472                 jmp finishDrawingHeadOrNot
-469: 56                  noHead: nop
-470: 45 3                   outcr r3
-472: 56                  finishDrawingHeadOrNot: nop
-473: 33 1                   cmpir #100 r1
-475: 12 1                   addir #1 r1
-477: 12 4                   addir #1 r4
-479: 57 452                 jmpne headedTapeDisplayIter
-481: 55 247                 outs space
-483: 8 3 1                  movmr tupleSearchIndex r1
-486: 39 529                 jsr printTuple
-488: 55 245                 outs newline
-490: 41 1                   push r1
-492: 8 115 1                movmr steps r1
-495: 12 1                   addir #1 r1
-497: 7 1 115                movrm r1 steps
-500: 42 1                   pop r1
-502: 28 527                 jmp endSearch
-504: 56                  skipTuple: nop
-505: 41 1                   push r1
-507: 8 3 1                  movmr tupleSearchIndex r1
-510: 12 1                   addir #1 r1
-512: 7 1 3                  movrm r1 tupleSearchIndex
-515: 42 1                   pop r1
-517: 8 2 1                  movmr numTuples r1
-520: 35 3 1                 cmpmr tupleSearchIndex r1
-523: 37 610                 jmpz stop
-525: 28 358                 jmp searchTuples
-527: 28 355              endSearch: jmp runIteration
-529: 56                  printTuple: nop
-530: 6 1 5                  movrr r1 r5
-533: 20 5                   mulir #5 r5
-535: 10 0 6                 movar startTuples r6
-538: 12 6                   addir #1 r6
-540: 13 6 5                 addrr r6 r5
-543: 9 5 7                  movxr r5 r7
-546: 49 7                   printi r7 ; current state
-548: 55 247                 outs space
-550: 12 5                   addir #1 r5
-552: 9 5 7                  movxr r5 r7
-555: 45 7                   outcr r7 ; current character
-557: 55 247                 outs space
-559: 12 5                   addir #1 r5
-561: 9 5 7                  movxr r5 r7
-564: 49 7                   printi r7 ; new state
-566: 55 247                 outs space
-568: 12 5                   addir #1 r5
+415: 7 4 114                movrm r4 state ; set new state
+418: 12 1 3                 addir #1 r3
+421: 9 3 4                  movxr r3 r4
+424: 8 113 5                movmr head r5 ; set new character
+427: 10 4 6                 movar tape r6
+430: 13 6 5                 addrr r6 r5
+433: 53 4 5                 movrx r4 r5
+436: 12 1 3                 addir #1 r3
+439: 9 3 4                  movxr r3 r4
+442: 8 113 1                movmr head r1 ; move head
+445: 13 4 1                 addrr r4 r1
+448: 7 1 113                movrm r1 head
+451: 8 113 5                movmr head r5 ; head before being moved
+454: 17 4 5                 subrr r4 r5
+457: 10 4 1                 movar tape r1 ; tape pointer
+460: 1 4                    clrr r4 ; tape index, starting from 0
+462: 56                  headedTapeDisplayIter: nop
+463: 9 1 3                  movxr r1 r3 ; r3 is the tape character
+466: 34 5 4                 cmprr r5 r4
+469: 57 479                 jmpne noHead
+471: 55 249                 outs leftbracket
+473: 45 3                   outcr r3
+475: 55 251                 outs rightbracket
+477: 28 482                 jmp finishDrawingHeadOrNot
+479: 56                  noHead: nop
+480: 45 3                   outcr r3
+482: 56                  finishDrawingHeadOrNot: nop
+483: 33 100 1               cmpir #100 r1
+486: 12 1 1                 addir #1 r1
+489: 12 1 4                 addir #1 r4
+492: 57 462                 jmpne headedTapeDisplayIter
+494: 55 247                 outs space
+496: 8 3 1                  movmr tupleSearchIndex r1
+499: 39 544                 jsr printTuple
+501: 55 245                 outs newline
+503: 41 1                   push r1
+505: 8 115 1                movmr steps r1
+508: 12 1 1                 addir #1 r1
+511: 7 1 115                movrm r1 steps
+514: 42 1                   pop r1
+516: 28 542                 jmp endSearch
+518: 56                  skipTuple: nop
+519: 41 1                   push r1
+521: 8 3 1                  movmr tupleSearchIndex r1
+524: 12 1 1                 addir #1 r1
+527: 7 1 3                  movrm r1 tupleSearchIndex
+530: 42 1                   pop r1
+532: 8 2 1                  movmr numTuples r1
+535: 35 3 1                 cmpmr tupleSearchIndex r1
+538: 37 633                 jmpz stop
+540: 28 362                 jmp searchTuples
+542: 28 359              endSearch: jmp runIteration
+544: 56                  printTuple: nop
+545: 6 1 5                  movrr r1 r5
+548: 20 5 5                 mulir #5 r5
+551: 10 0 6                 movar startTuples r6
+554: 12 1 6                 addir #1 r6
+557: 13 6 5                 addrr r6 r5
+560: 9 5 7                  movxr r5 r7
+563: 49 7                   printi r7 ; current state
+565: 55 247                 outs space
+567: 12 1 5                 addir #1 r5
 570: 9 5 7                  movxr r5 r7
-573: 45 7                   outcr r7
-575: 55 247                 outs space ; new character
-577: 12 5                   addir #1 r5
-579: 9 5 7                  movxr r5 r7
-582: 49 7                   printi r7
-584: 55 247                 outs space ; direction
-586: 12 5                   addir #1 r5
-588: 9 5 7                  movxr r5 r7
-591: 40                     ret
-592: 56                  memoryDump: nop
-593: 6 1 4                  movrr r1 r4
-596: 56                  mdumpIter: nop
-597: 9 4 3                  movxr r4 r3
-600: 45 3                   outcr r3
-602: 12 4                   addir #1 r4
-604: 34 4 2                 cmprr r4 r2
-607: 57 596                 jmpne mdumpIter
-609: 40                     ret
-610: 56                  stop: nop
-611: 55 194                 outs done
-613: 55 245                 outs newline
-615: 55 214                 outs finaltape
-617: 41 1                   push r1
-619: 41 2                   push r2
-621: 10 4 1                 movar tape r1
-624: 5 2                    movir #100 r2
-626: 39 592                 jsr memoryDump
-628: 42 2                   pop r2
-630: 42 1                   pop r1
-632: 55 245                 outs newline
-634: 55 227                 outs thattook
-636: 41 1                   push r1
-638: 8 115 1                movmr steps r1
-641: 49 1                   printi r1
-643: 42 1                   pop r1
-645: 55 238                 outs nsteps
-647: 55 245                 outs newline
-649: 0                      halt
+573: 45 7                   outcr r7 ; current character
+575: 55 247                 outs space
+577: 12 1 5                 addir #1 r5
+580: 9 5 7                  movxr r5 r7
+583: 49 7                   printi r7 ; new state
+585: 55 247                 outs space
+587: 12 1 5                 addir #1 r5
+590: 9 5 7                  movxr r5 r7
+593: 45 7                   outcr r7
+595: 55 247                 outs space ; new character
+597: 12 1 5                 addir #1 r5
+600: 9 5 7                  movxr r5 r7
+603: 49 7                   printi r7
+605: 55 247                 outs space ; direction
+607: 12 1 5                 addir #1 r5
+610: 9 5 7                  movxr r5 r7
+613: 40                     ret
+614: 56                  memoryDump: nop
+615: 6 1 4                  movrr r1 r4
+618: 56                  mdumpIter: nop
+619: 9 4 3                  movxr r4 r3
+622: 45 3                   outcr r3
+624: 12 1 4                 addir #1 r4
+627: 34 4 2                 cmprr r4 r2
+630: 57 618                 jmpne mdumpIter
+632: 40                     ret
+633: 56                  stop: nop
+634: 55 194                 outs done
+636: 55 245                 outs newline
+638: 55 214                 outs finaltape
+640: 41 1                   push r1
+642: 41 2                   push r2
+644: 10 4 1                 movar tape r1
+647: 5 100 2                movir #100 r2
+650: 39 614                 jsr memoryDump
+652: 42 2                   pop r2
+654: 42 1                   pop r1
+656: 55 245                 outs newline
+658: 55 227                 outs thattook
+660: 41 1                   push r1
+662: 8 115 1                movmr steps r1
+665: 49 1                   printi r1
+667: 42 1                   pop r1
+669: 55 238                 outs nsteps
+671: 55 245                 outs newline
+673: 0                      halt
 
 Symbol Table:
-head 113
-headedtapedisplayiter 452
-skiptuple 504
-printtuple 529
-initialhead 159
-welcome 116
-newline 245
-searchtuples 358
-mdumpiter 596
-tuplesearchindex 3
-copyinitial 253
-initialstring 104
-runiteration 355
-endprint 318
-tuplestitle 135
-starttuples 0
-steps 115
-finaltape 214
 initialtape 179
-done 194
-startturing 353
-begin 270
-thattook 227
-state 114
-space 247
-initialstate 143
-printnexttuple 301
-finishdrawingheadornot 472
-leftbracket 249
-nohead 469
-nsteps 238
-endsearch 527
-memorydump 592
+memorydump 614
+mdumpiter 618
 rightbracket 251
-stop 610
-tape 4
-endtuples 1
+tuplestitle 135
+nsteps 238
+leftbracket 249
+headedtapedisplayiter 462
+begin 271
+initialhead 159
+thattook 227
+done 194
+printtuple 544
+initialstate 143
+startturing 357
+initialstring 104
+nohead 479
 numtuples 2
+steps 115
+searchtuples 362
+stop 633
+finaltape 214
+newline 245
+endtuples 1
+state 114
+welcome 116
+tape 4
+endprint 322
+runiteration 359
+skiptuple 518
+endsearch 542
+tuplesearchindex 3
+head 113
+copyinitial 253
+finishdrawingheadornot 482
+space 247
+starttuples 0
+printnexttuple 304
