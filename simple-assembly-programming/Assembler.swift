@@ -361,6 +361,17 @@ class Assmbler {
         }
         return out
     }
+    func compileBin() -> [Int] {
+        var out = [Int]()
+        var prgmSize = 0
+        for lineLst in lst {
+            for b in lineLst.bin {
+                out.append(b)
+                prgmSize+=1
+            }
+        }
+        return [prgmSize, symbolTable[entryLabel!]!]+out
+    }
     func getBin() -> String {
         var out = ""
         var prgmSize = 0
