@@ -147,6 +147,16 @@ class Assmbler {
 
         }
     }
+    
+    func parseRawInt (_ intLiteral: String) -> Int {
+        if let intValue = Int(intLiteral) {
+            return intValue
+        } else {
+            lineLst.error = "Invalid integer literal"
+            return 0
+        }
+    }
+
 
     func parseRegister(_ regLiteral: String) -> Int {
         if regLiteral.hasPrefix("r") {
