@@ -50,6 +50,7 @@
 
     func exeBinary(_ arr: [Int]){
         var data = arr
+        print(arr)
         let arrData = [arr[0], arr[1]]
         data.removeFirst(2)
         let loadProg = Program(entry: arrData[1], data: data)
@@ -242,7 +243,6 @@
                     break
                 default:
                     print("Command \(outArr[0]) not recognized")
-                }
                 }
             }
         }

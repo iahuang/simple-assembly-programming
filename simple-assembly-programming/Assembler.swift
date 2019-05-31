@@ -164,10 +164,7 @@ class Assmbler {
     var pos = 0
     var entry = 0
     var entryLabel: String? = nil
-    init (){
-        
-    }
-    
+   
     func assembleLine(_ line: String) {
         var tokens = tokenize(line)
         var err:String? = nil
