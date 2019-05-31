@@ -1,4 +1,4 @@
- 
+
  //
  //  OracleVirtualBox.swift
  //  simple-assembly-programming
@@ -44,12 +44,12 @@
                 } else {
                     print(nice.message!)
                 }
-                
+
 
             }
         }
     }
-    
+
     func exeBinary(_ arr: [Int]){
         var data = arr
         let arrData = [arr[0], arr[1]]
@@ -66,7 +66,7 @@
         }
         return(newArr)
     }
-    
+
     func printHelp()->String{
         var result = ""
         result += "SAP Help: \n"
@@ -82,15 +82,15 @@
         result += "crashandburn  - Summerizes ian and ethan's time spent on this project\n"
         return(result)
     }
-    
+
     func assmCalled(_ prgm: String)-> String{
         return("")
     }
-    
+
     func runCalled(_ prgm: String)-> String{
         return("")
     }
-    
+
     func runAss(){
         print("Welcome to SAP!\n")
         print(printHelp())
