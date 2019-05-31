@@ -49,14 +49,14 @@ func buildMnemonicTable () -> [String:Int] {
     var mnemonics = [String:Int]()
     var names = [String]()
     var instructionCode = 0
-    
+
     for inst in shorthandInstructionSet {
         var parts = inst.split(separator: " ")
         if parts.count == 1 {
             parts.append("") // Ensure that the base mnemonic gets added if there are no variations of it
         }
         let base = parts[0]
-        
+
         for i in 1...parts.count-1 {
             let suffix = parts[i]
             mnemonics[base+String(suffix)] = instructionCode
@@ -71,14 +71,14 @@ func buildOpcodeTable () -> [Int:String] {
     var mnemonics = [Int:String]()
     var names = [String]()
     var instructionCode = 0
-    
+
     for inst in shorthandInstructionSet {
         var parts = inst.split(separator: " ")
         if parts.count == 1 {
             parts.append("") // Ensure that the base mnemonic gets added if there are no variations of it
         }
         let base = parts[0]
-        
+
         for i in 1...parts.count-1 {
             let suffix = parts[i]
             mnemonics[instructionCode] = base+String(suffix)
@@ -97,7 +97,7 @@ func buildArgTable() -> [String:[String]] {
             parts.append("") // Ensure that the base mnemonic gets added if there are no variations of it
         }
         let base = parts[0]
-        
+
         for i in 1...parts.count-1 {
             let suffix = parts[i]
             let mne = base+String(suffix)
@@ -111,7 +111,7 @@ func buildArgTable() -> [String:[String]] {
             } else if suffix == "b" {
                 argtypes = ["r", "r"]
             }
-            
+
             argtable[base+String(suffix)] = argtypes
         }
     }
@@ -131,18 +131,8 @@ class Assmbler {
     var pos = 0
     var entryLabel: String? = nil
     init (){
-        
+
     }
-    
-    func parseRawInt (_ intLiteral: String) -> Int {
-        if let intValue = Int(intLiteral) {
-            return intValue
-        } else {
-            lineLst.error = "Invalid integer literal"
-            return 0
-        }
-    }
-    
     func parseInt (_ intLiteral: String) -> Int {
         if intLiteral.hasPrefix("#") {
             if let intValue = Int(String(intLiteral[1..<intLiteral.count])) {
@@ -154,10 +144,10 @@ class Assmbler {
         } else {
             lineLst.error = "Invalid integer literal"
             return 0
-            
+
         }
     }
-    
+
     func parseRegister(_ regLiteral: String) -> Int {
         if regLiteral.hasPrefix("r") {
             if let regValue = Int(String(regLiteral[1..<regLiteral.count])) {
@@ -173,10 +163,10 @@ class Assmbler {
         } else {
             lineLst.error = "Invalid register"
             return 0
-            
+
         }
     }
-    
+
     func writeToBin(_ v: Int) {
         lineLst.bin.append(v)
         pos+=1
@@ -195,7 +185,7 @@ class Assmbler {
                 writeToBin(0)
                 break
             }
-            
+
             var ascii = String(tokens[1][1..<tokens[1].count-1]).ascii
             writeToBin(ascii.count)
             for n in ascii {
@@ -214,7 +204,7 @@ class Assmbler {
                 lineLst.bin.append(0)
             }
             pos+=al
-            
+
             break
         case ".start":
             entryLabel = tokens[1]
@@ -237,10 +227,10 @@ class Assmbler {
         default:
             lineLst.error = "Invalid directive \(tokens[0])"
             break
-            
+
         }
     }
-    
+
     func assembleInstruction(_ tokens:[String]) {
         var mne = tokens[0]
         if mneTable.keys.contains(mne) {
@@ -281,17 +271,17 @@ class Assmbler {
             lineLst.error = "Invalid instruction"
         }
     }
-    
+
     func assembleLine(_ line: String) {
         var tokens = tokenize(line)
         var err:String? = nil
         lineLst = ("", [], nil)
         tokens = tokens.map{$0.trim()}
-        
+
         if tokens.count == 0 {
             return
         }
-        
+
         if tokens[0].hasSuffix(":") {
             symbolTable[(String(tokens[0][0..<tokens[0].count-1]))] = pos // Strip colon and add to symtable
             tokens = Array(tokens[1..<tokens.count]) // Remove label token
@@ -304,7 +294,7 @@ class Assmbler {
         } else {
             assembleInstruction(tokens)
         }
-        
+
         lineLst.text = line
         lst.append(lineLst)
     }
@@ -342,7 +332,7 @@ class Assmbler {
         for line in lines {
             assembleLine(line)
         }
-        
+
         for (addr, label) in labelPlaceholders {
             if symbolTable.keys.contains(label) {
                 setInBinary(addr, symbolTable[label]!)
@@ -350,10 +340,10 @@ class Assmbler {
                 lst[addressToLst(addr)!].error = "Label \(label) was used but never defined"
             }
         }
-        
+
         return []
     }
-    
+
     func getSymTable() -> String {
         var out = ""
         for (label, addr) in symbolTable {

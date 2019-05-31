@@ -18,8 +18,8 @@
     var symTabStr = ""
     var binStr = ""
     var lstStr = ""
-    
-    var predef = ["path /Users/ianhuang/Desktop/saptest", "asm Doubles"]
+
+    //var predef = ["path /Users/ianhuang/Desktop/saptest", "asm Doubles"]
 
     func run(){
         while(!quit){
@@ -52,6 +52,7 @@
 
     func exeBinary(_ arr: [Int]){
         var data = arr
+        print(arr)
         let arrData = [arr[0], arr[1]]
         data.removeFirst(2)
         let loadProg = Program(entry: arrData[1], data: data)
@@ -245,8 +246,6 @@
                 default:
                     print("Command \(outArr[0]) not recognized")
                 }
-            } else {
-                quit = true
             }
         }
     }
